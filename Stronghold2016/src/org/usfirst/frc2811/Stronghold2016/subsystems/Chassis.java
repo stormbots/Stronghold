@@ -11,10 +11,14 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import org.usfirst.frc2811.Stronghold2016.Robot;
+
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -24,30 +28,47 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  *
  */
-public class Chassis extends Subsystem {
+public class Chassis extends Subsystem implements PIDOutput{
 
-    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
-	
+    public AHRS navxGyro = new AHRS(SPI.Port.kMXP); 
+    private PIDController rotationPID;
+    
     private Solenoid gearShifter = new Solenoid(0, 0);
-   
+    
     private SpeedController frontLeftMotor  = new Talon(0);
     private SpeedController frontRightMotor = new Talon(1);
     private SpeedController backLeftMotor   = new Talon(2);
     private SpeedController backRightMotor  = new Talon(3);
     
-    private RobotDrive chassisRobotDrive4 	= new RobotDrive(frontLeftMotor, 
+    private RobotDrive chassisDrive = new RobotDrive(frontLeftMotor, 
     		frontRightMotor, backLeftMotor, backRightMotor);
     
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-
+    private double rotateRate;
+    private double pVal,iVal,dVal;
+    
+    public Chassis(double p, double i, double d){
+    	pVal=p;
+    	iVal=i;
+    	dVal=d;
+    }
+    
     public void initDefaultCommand() {
     	gearShifter.set(false);
-        chassisRobotDrive4.setSafetyEnabled(true);
-        chassisRobotDrive4.setExpiration(0.1);
-        chassisRobotDrive4.setSensitivity(0.5);
-        chassisRobotDrive4.setMaxOutput(1.0);
+        chassisDrive.setSafetyEnabled(true);
+        chassisDrive.setExpiration(0.1);
+        chassisDrive.setSensitivity(0.5);
+        chassisDrive.setMaxOutput(1.0);
+        
+        rotationPID = new PIDController(pVal, iVal, dVal, navxGyro, this);
+        rotationPID.setInputRange(-180.0, 180.0);
+        rotationPID.setOutputRange(-1.0, 1.0);
+        rotationPID.setAbsoluteTolerance(2);
+        rotationPID.setContinuous(true);
        
+    }
+    
+    public void joystickDrive(){
+    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
     }
     
     public void shiftGears(){
@@ -55,9 +76,17 @@ public class Chassis extends Subsystem {
     
     }
     
-  
-    
-    
-    
+    /** Only set values from -179.9 to 179.9, 0 included */
+    public void setRotation(double degrees){
+    	rotationPID.setSetpoint(degrees);
+    	chassisDrive.arcadeDrive(0, rotateRate);
+    }
+
+	@Override
+	public void pidWrite(double output) {
+		rotateRate = output;
+		
+	}
+ 
 }
 

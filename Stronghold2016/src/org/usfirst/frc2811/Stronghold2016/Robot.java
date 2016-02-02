@@ -65,7 +65,7 @@ public class Robot extends IterativeRobot {
    		vision = new Vision();
         intake = new Intake();
         shooter = new Shooter();
-        chassis = new Chassis();
+        chassis = new Chassis(0, 0, 0);
 
         // OI must be constructed after subsystems. If the OI creates Commands
         //(which it very likely will), subsystems are not guaranteed to be
