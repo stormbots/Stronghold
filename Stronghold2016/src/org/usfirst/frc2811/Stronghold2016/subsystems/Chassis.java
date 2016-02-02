@@ -11,15 +11,14 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
-import org.usfirst.frc2811.Stronghold2016.RobotMap;
-import org.usfirst.frc2811.Stronghold2016.commands.*;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 
 /**
@@ -27,25 +26,36 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Chassis extends Subsystem {
 
-    private Solenoid gearShifter 	= new Solenoid(0, 0);
+    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
+	
+    private Solenoid gearShifter = new Solenoid(0, 0);
    
     private SpeedController frontLeftMotor  = new Talon(0);
     private SpeedController frontRightMotor = new Talon(1);
     private SpeedController backLeftMotor   = new Talon(2);
     private SpeedController backRightMotor  = new Talon(3);
     
-    private RobotDrive chassisRobotDrive4   = new RobotDrive(frontLeftMotor, 
+    private RobotDrive chassisRobotDrive4 	= new RobotDrive(frontLeftMotor, 
     		frontRightMotor, backLeftMotor, backRightMotor);
     
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     public void initDefaultCommand() {
+    	gearShifter.set(false);
         chassisRobotDrive4.setSafetyEnabled(true);
         chassisRobotDrive4.setExpiration(0.1);
         chassisRobotDrive4.setSensitivity(0.5);
         chassisRobotDrive4.setMaxOutput(1.0);
+       
     }
+    
+    public void shiftGears(){
+    	gearShifter.set(!gearShifter.get());
+    
+    }
+    
+  
     
     
     

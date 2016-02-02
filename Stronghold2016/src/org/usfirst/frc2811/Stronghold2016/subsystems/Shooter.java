@@ -11,13 +11,10 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
-import org.usfirst.frc2811.Stronghold2016.RobotMap;
-import org.usfirst.frc2811.Stronghold2016.commands.*;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
-
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 

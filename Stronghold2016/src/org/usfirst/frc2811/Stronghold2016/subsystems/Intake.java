@@ -11,14 +11,10 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
-import org.usfirst.frc2811.Stronghold2016.RobotMap;
-import org.usfirst.frc2811.Stronghold2016.commands.*;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 
 /**

@@ -23,6 +23,15 @@ public class AutonomousCommand extends CommandGroup {
 
     public AutonomousCommand(int defense, int goal) {
     	
+    	/*
+    	// 	Group A: Porticulis = 1, Cheval de Frise = 2
+    	// 	Group B: Ramparts = 3, Moat = 4
+    	// 	Group C: Drawbridge = 5, Sally Port = 6
+    	// 	Group D: Rock Wall = 7, Rough Terrain = 8
+    	// 	Low Bar = 9
+    	// 	Positions: [1][2][3][4][5]
+    	*/
+    	    	
     	addSequential(new BreachDefenses(defense));
        	addSequential(new ResetAlignment(goal));
     	addSequential(new ShootBall());
