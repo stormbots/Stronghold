@@ -53,8 +53,10 @@ public class Chassis extends Subsystem implements PIDOutput{
     }
     
     public void initDefaultCommand() {
+    	//TODO Find default shifter position
     	gearShifter.set(false);
-        chassisDrive.setSafetyEnabled(true);
+        
+    	chassisDrive.setSafetyEnabled(true);
         chassisDrive.setExpiration(0.1);
         chassisDrive.setSensitivity(0.5);
         chassisDrive.setMaxOutput(1.0);

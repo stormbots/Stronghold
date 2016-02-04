@@ -65,6 +65,7 @@ public class Robot extends IterativeRobot {
    		vision = new Vision();
         intake = new Intake();
         shooter = new Shooter();
+        //TODO Find/Set Chassis rotation PID values
         chassis = new Chassis(0, 0, 0);
 
         // OI must be constructed after subsystems. If the OI creates Commands
