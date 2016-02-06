@@ -12,18 +12,16 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
+import 	org.usfirst.frc2811.Stronghold2016.commands.ResetAlignment;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.Compressor;
+import 	edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import 	edu.wpi.first.wpilibj.Compressor;
 import  edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.SerialPort;
+import 	edu.wpi.first.wpilibj.PowerDistributionPanel;
 import  edu.wpi.first.wpilibj.command.Command;
 import  edu.wpi.first.wpilibj.command.Scheduler;
 import  edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -39,6 +37,7 @@ import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
+    public static Command resetAlignment;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -76,6 +75,7 @@ public class Robot extends IterativeRobot {
 
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
+        resetAlignment = new ResetAlignment();
 
     }
 
@@ -120,6 +120,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
         SmartDashboard.putData("Gyro", chassis.navxGyro);
+        SmartDashboard.putBoolean("On Target?", Math.abs(chassis.rotationPID.getSetpoint()-chassis.navxGyro.getAngle())<=5);
+        chassis.setRotation(0);
     }
 
     /**

@@ -19,16 +19,19 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
  */
 public class ResetAlignment extends Command {
 
-    public ResetAlignment(int goal) {
-
+	double angle;
+	
+    public ResetAlignment(double degrees) {
+    	angle=degrees;
     }
     
     public ResetAlignment(){
-    	
+    	angle=0;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.chassis.setRotation(angle);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -37,7 +40,7 @@ public class ResetAlignment extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return Robot.chassis.isOnTarget();
     }
 
     // Called once after isFinished returns true

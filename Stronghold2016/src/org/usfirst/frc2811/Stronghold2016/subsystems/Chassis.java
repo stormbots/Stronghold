@@ -15,6 +15,7 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -31,7 +32,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Chassis extends Subsystem implements PIDOutput{
 
     public AHRS navxGyro = new AHRS(SPI.Port.kMXP); 
-    private PIDController rotationPID;
+    public PIDController rotationPID;
+    
+    private Encoder leftEncoder = new Encoder(0,1);
+    private Encoder rightEncoder = new Encoder(6,7);
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     
@@ -45,6 +49,7 @@ public class Chassis extends Subsystem implements PIDOutput{
     
     private double rotateRate;
     private double pVal,iVal,dVal;
+    private double tolerance = 3;
     
     public Chassis(double p, double i, double d){
     	pVal=p;
@@ -64,24 +69,64 @@ public class Chassis extends Subsystem implements PIDOutput{
         rotationPID = new PIDController(pVal, iVal, dVal, navxGyro, this);
         rotationPID.setInputRange(-180.0, 180.0);
         rotationPID.setOutputRange(-1.0, 1.0);
-        rotationPID.setAbsoluteTolerance(2);
+        rotationPID.setAbsoluteTolerance(tolerance);
         rotationPID.setContinuous(true);
-       
     }
     
     public void joystickDrive(){
     	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
     }
     
-    public void shiftGears(){
-    	gearShifter.set(!gearShifter.get());
-    
+    /**
+     * Used to drive robot autonomously, by setting arcadeDrive values
+     * @param moveValue forward/reverse power, -1 to 1, inclusive
+     * @param rotateValue rotation power, -1 to 1 inclusive
+     */
+    public void manualDrive(double moveValue, double rotateValue){
+    	chassisDrive.arcadeDrive(moveValue, rotateValue);
     }
     
-    /** Only set values from -179.9 to 179.9, 0 included */
+    public void shiftGears(){
+    	gearShifter.set(!gearShifter.get());
+    }
+    
+    /** 
+     * Might have to be called continuously //TODO test this
+     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
+     */
     public void setRotation(double degrees){
     	rotationPID.setSetpoint(degrees);
     	chassisDrive.arcadeDrive(0, rotateRate);
+    }
+    
+    /** 
+     * Might have to be called continuously //TODO test this
+     * @param forwardPower Relative speed from -1.0 to 1.0 inclusive
+     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
+     */
+    public void movingAlign(double forwardPower, double degrees){
+    	rotationPID.setSetpoint(degrees);
+    	chassisDrive.arcadeDrive(forwardPower, rotateRate);
+    }
+    
+    public int getLeftEncoder(){
+    	return leftEncoder.get();
+    }
+    
+    public int getRightEncoder(){
+    	return rightEncoder.get();
+    }
+    
+    public void resetTicks(){
+    	leftEncoder.reset();
+    	rightEncoder.reset();
+    }
+    
+    /**
+     * @return Whether or not the robot is aligned to an angle (in degrees)
+     */
+    public boolean isOnTarget(){
+    	return Math.abs(rotationPID.getSetpoint()-navxGyro.getAngle())<=tolerance;
     }
 
 	@Override
