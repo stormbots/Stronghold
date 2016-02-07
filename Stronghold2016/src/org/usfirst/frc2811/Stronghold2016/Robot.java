@@ -12,7 +12,7 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
-import 	org.usfirst.frc2811.Stronghold2016.commands.ResetAlignment;
+import 	org.usfirst.frc2811.Stronghold2016.commands.SetAngle;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
@@ -37,7 +37,7 @@ import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
-    public static Command resetAlignment;
+    public static Command setAngle;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -75,7 +75,7 @@ public class Robot extends IterativeRobot {
 
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
-        resetAlignment = new ResetAlignment();
+        setAngle = new SetAngle();
 
     }
 
@@ -120,7 +120,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
         SmartDashboard.putData("Gyro", chassis.navxGyro);
-        SmartDashboard.putBoolean("On Target?", Math.abs(chassis.rotationPID.getSetpoint()-chassis.navxGyro.getAngle())<=5);
+        SmartDashboard.putBoolean("On Target?", chassis.isOnTarget()) ;
         chassis.setRotation(0);
     }
 

@@ -15,46 +15,36 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 
 /**
  *
  */
-public class Chassis extends Subsystem implements PIDOutput{
+public class Chassis extends PIDSubsystem{
 
-    public AHRS navxGyro = new AHRS(SPI.Port.kMXP); 
-    public PIDController rotationPID;
-    
-    private Encoder leftEncoder = new Encoder(0,1);
-    private Encoder rightEncoder = new Encoder(6,7);
+    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     
-    private SpeedController frontLeftMotor  = new Talon(0);
-    private SpeedController frontRightMotor = new Talon(1);
-    private SpeedController backLeftMotor   = new Talon(2);
-    private SpeedController backRightMotor  = new Talon(3);
+    private ChassisLeft	 left 	= new ChassisLeft(0, 0, 0);
+    private ChassisRight right 	= new ChassisRight(0, 0, 0);
     
-    private RobotDrive chassisDrive = new RobotDrive(frontLeftMotor, 
-    		frontRightMotor, backLeftMotor, backRightMotor);
-    
-    private double rotateRate;
-    private double pVal,iVal,dVal;
+    /*
+    private RobotDrive chassisDrive = new RobotDrive(left.frontLeftMotor, 
+    		right.frontRightMotor, left.backLeftMotor, right.backRightMotor);
+    */
+    private RobotDrive chassisDrive = new ArcadeDrivePID(left, right);
+
     private double tolerance = 3;
+    private double rotateRate;
+    private double rateTolerance;
     
     public Chassis(double p, double i, double d){
-    	pVal=p;
-    	iVal=i;
-    	dVal=d;
+    	super("GyroPID",p,i,d);
     }
     
     public void initDefaultCommand() {
@@ -65,73 +55,103 @@ public class Chassis extends Subsystem implements PIDOutput{
         chassisDrive.setExpiration(0.1);
         chassisDrive.setSensitivity(0.5);
         chassisDrive.setMaxOutput(1.0);
-        
-        rotationPID = new PIDController(pVal, iVal, dVal, navxGyro, this);
-        rotationPID.setInputRange(-180.0, 180.0);
-        rotationPID.setOutputRange(-1.0, 1.0);
-        rotationPID.setAbsoluteTolerance(tolerance);
-        rotationPID.setContinuous(true);
-    }
-    
-    public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
-    }
-    
-    /**
-     * Used to drive robot autonomously, by setting arcadeDrive values
-     * @param moveValue forward/reverse power, -1 to 1, inclusive
-     * @param rotateValue rotation power, -1 to 1 inclusive
-     */
-    public void manualDrive(double moveValue, double rotateValue){
-    	chassisDrive.arcadeDrive(moveValue, rotateValue);
+
+        getPIDController().setInputRange(-180.0, 180.0);
+        getPIDController().setOutputRange(-1.0, 1.0);
+        getPIDController().setAbsoluteTolerance(tolerance);
+        getPIDController().setContinuous(true);
     }
     
     public void shiftGears(){
     	gearShifter.set(!gearShifter.get());
     }
     
+    public void joystickDrive(){
+    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
+    }
+    
     /** 
-     * Might have to be called continuously //TODO test this
-     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
+     * Might have to be called continuously //TODO test continuous calling
+     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing of 180 deg. 
      */
     public void setRotation(double degrees){
-    	rotationPID.setSetpoint(degrees);
+    	setSetpoint(degrees);
     	chassisDrive.arcadeDrive(0, rotateRate);
     }
     
-    /** 
-     * Might have to be called continuously //TODO test this
-     * @param forwardPower Relative speed from -1.0 to 1.0 inclusive
-     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
-     */
-    public void movingAlign(double forwardPower, double degrees){
-    	rotationPID.setSetpoint(degrees);
-    	chassisDrive.arcadeDrive(forwardPower, rotateRate);
+    public void driveRate(double rate){
+    	left.driveRate(rate);
+    	right.driveRate(rate);
     }
     
-    public int getLeftEncoder(){
-    	return leftEncoder.get();
+    public void adjustForErrorDrive(){
+    	//FIXME TODO FIXME TODO CHECK THE GETTER FUNCTIONS!!!!!
+    	if(Math.abs(left.getLeftRate()-right.getRightRate())>=rateTolerance){
+    		
+    		if(left.getLeftRate()<right.getRightRate()){
+    			right.driveRate(left.getLeftRate());
+    		} else {
+    			left.driveRate(right.getRightRate());
+    		}
+    		
+    	} else if((left.getPIDController().get() == 1 && left.getLeftRate()<right.getRightRate())){
+    		
+    		if(left.getLeftRate()<right.getRightRate()){
+    			right.driveRate(left.getLeftRate());
+    		} else {
+    			left.driveRate(right.getRightRate());
+    		}
+    		
+    	} else if((right.getPIDController().get()==1&&right.getRightRate()<left.getLeftRate())){
+    			
+    		if(left.getLeftRate()<right.getRightRate()){
+    			right.driveRate(left.getLeftRate());
+    		} else {
+    			left.driveRate(right.getRightRate());
+    		}   	
+    	
+    	}
     }
     
-    public int getRightEncoder(){
-    	return rightEncoder.get();
+    public double getLeftRate(){
+    	return left.getLeftRate();
+    }
+    
+    public int getLeftDistance(){
+    	return left.getLeftDistance();
+    }
+    
+    public double getRightRate(){
+    	return right.getRightRate();
+    }
+    
+    public int getRightDistance(){
+    	return right.getRightDistance();
     }
     
     public void resetTicks(){
-    	leftEncoder.reset();
-    	rightEncoder.reset();
+    	left.resetTicksLeft();
+    	right.resetTicksRight();
     }
     
     /**
      * @return Whether or not the robot is aligned to an angle (in degrees)
      */
     public boolean isOnTarget(){
-    	return Math.abs(rotationPID.getSetpoint()-navxGyro.getAngle())<=tolerance;
+    	return Math.abs(getSetpoint()-navxGyro.getAngle())<=tolerance;
     }
 
 	@Override
-	public void pidWrite(double output) {
-		rotateRate = output;
+	protected double returnPIDInput() {
+		// TODO Auto-generated method stub
+		return navxGyro.getAngle();
+	}
+
+	@Override
+	protected void usePIDOutput(double output) {
+		// TODO Auto-generated method stub
+		rotateRate=output;
+		
 		
 	}
  
