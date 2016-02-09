@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Chassis extends Subsystem implements PIDOutput{
 
-    public AHRS navxGyro = new AHRS(SPI.Port.kMXP); 
+    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
     public PIDController rotationPID;
     
     private Encoder leftEncoder = new Encoder(0,1);

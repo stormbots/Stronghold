@@ -12,6 +12,7 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
+import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import 	org.usfirst.frc2811.Stronghold2016.commands.ResetAlignment;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
@@ -38,6 +39,7 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     public static Command resetAlignment;
+    Command joystickDrive;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -76,6 +78,7 @@ public class Robot extends IterativeRobot {
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
         resetAlignment = new ResetAlignment();
+        joystickDrive = new JoystickDrive();
 
     }
 
@@ -116,12 +119,13 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        joystickDrive.start();
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
         SmartDashboard.putData("Gyro", chassis.navxGyro);
         SmartDashboard.putBoolean("On Target?", Math.abs(chassis.rotationPID.getSetpoint()-chassis.navxGyro.getAngle())<=5);
-        chassis.setRotation(0);
+        
     }
 
     /**

@@ -31,11 +31,12 @@ public class ResetAlignment extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.chassis.setRotation(angle);
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Robot.chassis.setRotation(angle);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -45,6 +46,7 @@ public class ResetAlignment extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.chassis.manualDrive(0, 0);
     }
 
     // Called when another command which requires one or more of the same
