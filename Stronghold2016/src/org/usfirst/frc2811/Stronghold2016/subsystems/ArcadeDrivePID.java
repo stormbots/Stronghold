@@ -1,11 +1,13 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import org.usfirst.frc2811.Stronghold2016.Robot;
+
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 
-public class ArcadeDrivePID extends RobotDrive{
+public class ArcadeDrivePID extends RobotDrive {
 
 	ChassisLeft left;
 	ChassisRight right;
@@ -20,7 +22,7 @@ public class ArcadeDrivePID extends RobotDrive{
 		// TODO Auto-generated constructor stub
 	}
 	
-	@Override
+	
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
 	    // local variables to hold the computed PWM values for the motors
 	    if (!kArcadeStandard_Reported) {
@@ -88,7 +90,6 @@ public class ArcadeDrivePID extends RobotDrive{
 		setLeftRightMotorOutputs(adjustedLeft, adjustedRight);
 	}
 	
-	@Override
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	   
 		left.driveRate(leftOutput);
@@ -96,7 +97,7 @@ public class ArcadeDrivePID extends RobotDrive{
 
 	    if (m_safetyHelper != null)
 	      m_safetyHelper.feed();
-	  }
+	}
 	
 	
 }

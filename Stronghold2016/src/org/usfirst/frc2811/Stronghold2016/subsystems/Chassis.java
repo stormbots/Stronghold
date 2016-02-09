@@ -37,7 +37,7 @@ public class Chassis extends PIDSubsystem{
     private RobotDrive chassisDrive = new RobotDrive(left.frontLeftMotor, 
     		right.frontRightMotor, left.backLeftMotor, right.backRightMotor);
     */
-    private RobotDrive chassisDrive = new ArcadeDrivePID(left, right);
+    private ArcadeDrivePID chassisDrive = new ArcadeDrivePID(left, right);
 
     private double tolerance = 3;
     private double rotateRate;
