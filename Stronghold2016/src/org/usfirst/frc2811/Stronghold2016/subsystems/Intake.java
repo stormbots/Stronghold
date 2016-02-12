@@ -11,6 +11,8 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -22,23 +24,26 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 
-	private static SpeedController intakeMotor1 = new Talon(4);
-    private static SpeedController intakeMotor2 = new Talon(5);
+	private static SpeedController intakeMotorBelts = new Talon(4);
     private static Solenoid intakeSolenoid = new Solenoid(0, 1);
+    private Encoder intakeEncoder = new Encoder(6,7);
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     public void initDefaultCommand() {
     	intakeSolenoid.set(false);
-    	intakeMotor2.setInverted(true);
+    	
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
     }
     
     public void intakeSet(double speed){
-    	intakeMotor1.set(speed);
-    	intakeMotor2.set(speed);
+    	intakeMotorBelts.set(speed);
+    	
+    }
+    public void intakeDown(){
+    	//intake
     }
     
     public void intakeToggle(){
