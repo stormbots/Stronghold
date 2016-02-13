@@ -12,7 +12,7 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
-import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
+import  org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import 	org.usfirst.frc2811.Stronghold2016.commands.ResetAlignment;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
@@ -63,7 +63,8 @@ public class Robot extends IterativeRobot {
         powerPanel = new PowerDistributionPanel();
         onboardAccelerometer = new BuiltInAccelerometer();
         
-   		vision = new Vision();
+        //TODO: Set vision offsetX and offsetY correctly. 0.5 is a dummy value for now.
+   		vision = new Vision("GRIP/myContoursReport", 0.5, 0.5);
         intake = new Intake();
         shooter = new Shooter();
         //TODO Find/Set Chassis rotation PID values
