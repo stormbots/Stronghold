@@ -27,7 +27,7 @@ public class ChassisRight extends PIDSubsystem {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
 		getPIDController().setOutputRange(-1, 1);
-	    getPIDController().setContinuous(true);
+	    getPIDController().setContinuous(false);
 	    getPIDController().enable();
 	    
 	    backRightMotor.setInverted(true);

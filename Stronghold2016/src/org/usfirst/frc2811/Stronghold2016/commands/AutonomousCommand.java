@@ -11,10 +11,7 @@
 
 package org.usfirst.frc2811.Stronghold2016.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
-import org.usfirst.frc2811.Stronghold2016.Robot;
 
 /**
  *

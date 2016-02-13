@@ -1,7 +1,5 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
-import org.usfirst.frc2811.Stronghold2016.Robot;
-
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
@@ -9,8 +7,8 @@ import edu.wpi.first.wpilibj.communication.UsageReporting;
 
 public class ArcadeDrivePID extends RobotDrive {
 
-	ChassisLeft left;
-	ChassisRight right;
+	private static ChassisLeft left;
+	private static ChassisRight right;
 	
 	public ArcadeDrivePID(ChassisLeft leftChassis, ChassisRight rightChassis) {
 		
