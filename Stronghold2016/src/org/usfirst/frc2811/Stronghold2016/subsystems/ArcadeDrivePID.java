@@ -1,22 +1,20 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import org.usfirst.frc2811.Stronghold2016.Robot;
+
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 
 public class ArcadeDrivePID extends RobotDrive {
-
-	private static ChassisLeft left;
-	private static ChassisRight right;
 	
-	public ArcadeDrivePID(ChassisLeft leftChassis, ChassisRight rightChassis) {
+	public ArcadeDrivePID() {
 		
-		super(leftChassis.frontLeftMotor, leftChassis.backLeftMotor, 
-				rightChassis.frontRightMotor, rightChassis.backRightMotor);
+		super(Robot.chassisLeft.frontLeftMotor, Robot.chassisLeft.backLeftMotor, 
+				Robot.chassisRight.frontRightMotor, Robot.chassisRight.backRightMotor);
 		
-		left = leftChassis;
-		right = rightChassis;
+		
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -74,8 +72,8 @@ public class ArcadeDrivePID extends RobotDrive {
 	public void pidDrive(double leftSetSpeed, double rightSetSpeed){
 		double adjustedLeft = leftSetSpeed;
 		double adjustedRight = rightSetSpeed;
-		double leftProportion = Math.abs(leftSetSpeed/left.getLeftRate());
-		double rightProportion = Math.abs(rightSetSpeed/right.getRightRate());
+		double leftProportion = Math.abs(leftSetSpeed/Robot.chassisLeft.getLeftRate());
+		double rightProportion = Math.abs(rightSetSpeed/Robot.chassisRight.getRightRate());
 		
 		if( (leftProportion>rightProportion) && (rightSetSpeed==1) ){
 			adjustedLeft = leftSetSpeed*rightProportion;
@@ -90,8 +88,8 @@ public class ArcadeDrivePID extends RobotDrive {
 	
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	   
-		left.driveRate(leftOutput);
-		right.driveRate(rightOutput);
+		Robot.chassisLeft.driveRate(leftOutput); //TODO Causes null pointer exception
+		Robot.chassisRight.driveRate(rightOutput);
 
 	    if (m_safetyHelper != null)
 	      m_safetyHelper.feed();

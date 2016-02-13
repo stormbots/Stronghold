@@ -30,15 +30,15 @@ public class Chassis extends PIDSubsystem{
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     
-    private ChassisLeft	 left 	= new ChassisLeft(0, 0, 0);
-    private ChassisRight right 	= new ChassisRight(0, 0, 0);
+    private ChassisLeft	 left;
+    private ChassisRight right;
     //TODO Calibrate PID values
     
     /*
     private RobotDrive chassisDrive = new RobotDrive(left.frontLeftMotor, 
     		right.frontRightMotor, left.backLeftMotor, right.backRightMotor);
     */
-    private ArcadeDrivePID chassisDrive = new ArcadeDrivePID(left, right);
+    private ArcadeDrivePID chassisDrive;
 
     private double tolerance = 3;
     private double rotateRate;
@@ -49,6 +49,9 @@ public class Chassis extends PIDSubsystem{
     }
     
     public void initDefaultCommand() {
+    	left = Robot.chassisLeft;
+    	right = Robot.chassisRight;
+    	chassisDrive = new ArcadeDrivePID();
     	//TODO Find default shifter position
     	gearShifter.set(false);
         
