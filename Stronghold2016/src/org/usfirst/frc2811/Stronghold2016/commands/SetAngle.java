@@ -17,15 +17,15 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
 /**
  *
  */
-public class ResetAlignment extends Command {
+public class SetAngle extends Command {
 
 	double angle;
 	
-    public ResetAlignment(double degrees) {
+    public SetAngle(double degrees) {
     	angle=degrees;
     }
     
-    public ResetAlignment(){
+    public SetAngle(){
     	angle=0;
     }
 
@@ -46,7 +46,7 @@ public class ResetAlignment extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.chassis.manualDrive(0, 0);
+    	//Robot.chassis.manualDrive(0, 0);
     }
 
     // Called when another command which requires one or more of the same

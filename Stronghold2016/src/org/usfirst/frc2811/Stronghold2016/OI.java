@@ -63,7 +63,7 @@ public class OI {
 
         gamePad = new Joystick(0);
         button2 = new JoystickButton(gamePad,2);
-        button2.whenPressed(new ResetAlignment());
+        //button2.whenPressed(new ResetAlignment());
         
 
 

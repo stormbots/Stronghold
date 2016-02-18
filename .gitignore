@@ -1,5 +1,7 @@
 /bin
 /build
+/build/
+/build/*
 
 #needed? Uncomment if causing conflicts
 /dist
