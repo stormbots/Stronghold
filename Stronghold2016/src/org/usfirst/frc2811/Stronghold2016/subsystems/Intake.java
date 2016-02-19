@@ -12,6 +12,7 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -27,8 +28,10 @@ public class Intake extends Subsystem {
 	private static SpeedController intakeMotorBelts = new Talon(4);
     private static Solenoid intakeSolenoid = new Solenoid(0, 1);
     private Encoder intakeEncoder = new Encoder(6,7);
-
-    // Put methods for controlling this subsystem
+    private DigitalInput ballReadySwitch = new DigitalInput(8);
+    private boolean extended = false;
+    private double intakespeed = .75; // TODO double check that this spins right way
+        // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     public void initDefaultCommand() {
@@ -37,16 +40,28 @@ public class Intake extends Subsystem {
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
     }
+    public boolean isBallReady(){
+    	return ballReadySwitch.get();
+    }
     
     public void intakeSet(double speed){
     	intakeMotorBelts.set(speed);
-    	
+	
     }
-    public void intakeDown(){
-    	//intake
+    public void intakeBall (){
+    	intakeMotorBelts.set(intakespeed); 
     }
+   public void spitBall (){
+	   intakeMotorBelts.set(-intakespeed);
+   }
+   public void extendSolenoid(){
+	   intakeSolenoid.set(extended);
+   } 
+   public void retractSolenoid(){
+	   intakeSolenoid.set(!extended);
+   }
     
-    public void intakeToggle(){
+    public void intakeSolenoidToggle(){
     	intakeSolenoid.set(!intakeSolenoid.get());
     }
     
