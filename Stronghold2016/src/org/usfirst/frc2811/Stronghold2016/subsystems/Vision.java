@@ -211,6 +211,31 @@ public class Vision extends Subsystem {
 		// with the target
 		return Math.abs(calculatedAngle) <= angleTolerance;
 	}
+	
+	/**
+	 * 
+	 * @param dfov diagonal fov of the camera (68.5 degrees for the lifecam)
+	 * @return an array containing {horizontal fov, vertical fov}
+	 */
+	private static double[] diagonalToVerticalFOV(double dfov){
+		int cameraPixelsX = 1280;
+		int cameraPixelsY = 720;
+		
+		
+		
+		//double diagonalLengthPixels = Math.sqrt(Math.pow(cameraPixelsX, 2) + Math.pow(cameraPixelsY, 2));
+		
+		double llAngle = Math.toDegrees(Math.atan((double)cameraPixelsY/cameraPixelsX));
+		
+		double fovX = dfov * Math.cos(Math.toRadians(llAngle));
+		double fovY = dfov * Math.sin(Math.toRadians(llAngle));
+		
+		System.out.println(fovX + " " + fovY);
+		double[] fovArray = {fovX, fovY};
+		return fovArray;
+		
+	}
+
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
