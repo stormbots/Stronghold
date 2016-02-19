@@ -87,6 +87,7 @@ public class Vision extends Subsystem {
 	// TODO: breaks
 	/**
 	 * Initialize the camera for the NIVision framework. Primarily used to send images to the DS/SmartDashboard.
+	 * Do not run this unless you want to break GRIP, or unless you've fixed <b><i><u>the problem</u></i></b>.
 	 */
 	public void cameraInit() {
 		Image frame;
@@ -157,6 +158,10 @@ public class Vision extends Subsystem {
 		}
 	}
 	
+	/**
+	 * Get the angle between the shooter and the target
+	 * @return [TEMP VALUE IS WRONG] The angle (with respect to robot rotation on the ground) between the shooter and the target
+	 */
 	public double getAngleToTarget() {		
 		// TODO: Set this correctly
 		return 9999.0;
@@ -168,10 +173,13 @@ public class Vision extends Subsystem {
 	public double getDistanceToTarget() {
 		//TODO: get angle from getAngleToTarget method. needs data points to acc for camera FOV
 		double angleToTarget = 60.0;
+		
 		//TODO: Figure out robot/shooter height (origin of shot)
 		int robotHeight = 2;
-		// goal height is always 7'1". Subtract the robot height to get the height difference (opp in trig)
-		double goalHeight = 7.0 + (double)1/12 - robotHeight;
+		
+		// goal center height is 8'1". Subtract the robot height to get the height difference (opp in trig)
+		// this height is the distance from the ground to the middle of the target/goal
+		double goalHeight = 8.0 + (double)1/12 - robotHeight;
 		
 		/*  tan(angle) = goalHeight / distanceX
 		    
