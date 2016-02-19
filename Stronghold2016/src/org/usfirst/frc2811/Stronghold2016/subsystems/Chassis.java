@@ -74,7 +74,7 @@ public class Chassis extends PIDSubsystem{
     }
     
     public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
+    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3), false);
     }
     
     /** 
