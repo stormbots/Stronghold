@@ -30,6 +30,7 @@ public class Chassis extends PIDSubsystem{
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     
+    //TODO: ChassisLeft and ChassisRight need to be moved here 
     private ChassisLeft	 left;
     private ChassisRight right;
     //TODO Calibrate PID values
@@ -71,7 +72,7 @@ public class Chassis extends PIDSubsystem{
     }
     
     public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3),false);
+    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), Robot.oi.gamePad.getRawAxis(2),false);
     }
     
     /** 

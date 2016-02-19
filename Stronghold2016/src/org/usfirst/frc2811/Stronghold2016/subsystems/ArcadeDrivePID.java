@@ -66,7 +66,8 @@ public class ArcadeDrivePID extends RobotDrive {
 	      }
 	    }
 
-	    pidDrive(leftMotorSpeed,rightMotorSpeed);
+	    //pidDrive(leftMotorSpeed,rightMotorSpeed);
+	    setLeftRightMotorOutputs(leftMotorSpeed,rightMotorSpeed);
 	  }
 	
 	public void pidDrive(double leftSetSpeed, double rightSetSpeed){
@@ -88,7 +89,7 @@ public class ArcadeDrivePID extends RobotDrive {
 	
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	   
-		Robot.chassisLeft.driveRate(leftOutput); //TODO Causes null pointer exception
+		Robot.chassisLeft.driveRate(leftOutput);
 		Robot.chassisRight.driveRate(rightOutput);
 
 	    if (m_safetyHelper != null)

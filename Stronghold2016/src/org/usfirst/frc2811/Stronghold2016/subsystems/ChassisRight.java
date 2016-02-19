@@ -13,7 +13,8 @@ public class ChassisRight extends PIDSubsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
-	public SpeedController frontRightMotor  = new Talon(1);
+	//TODO: These ideally would be private
+	public  SpeedController frontRightMotor  = new Talon(1);
 	public SpeedController backRightMotor   = new Talon(3);
 	 
 	public Encoder rightEncoder = new Encoder(2,3);
@@ -29,8 +30,16 @@ public class ChassisRight extends PIDSubsystem {
 		getPIDController().setOutputRange(-1, 1);
 	    getPIDController().setContinuous(false);
 	    getPIDController().enable();
+	    rightEncoder.setReverseDirection(true);
+	    //doesn't cause a racket, wrong
+	    //frontRightMotor.setInverted(true);
+	    //backRightMotor.setInverted(true);
 	    
-	    backRightMotor.setInverted(true);
+	    //Causes racket
+	    //frontRightMotor.setInverted(false);
+	    //backRightMotor.setInverted(false);
+	    //NOTE: This code should be in the constructor. 
+	    //This function has no guarantees that it's only run a single time.
     }
 	 
 	public void driveRate(double rate){
@@ -58,8 +67,10 @@ public class ChassisRight extends PIDSubsystem {
 	@Override
 	protected void usePIDOutput(double output) {
 		// TODO Auto-generated method stub
+		//TODO: Ask supervisor if we need to constrain output, and to what value
 		frontRightMotor.set(output);
-		backRightMotor.set(output);		
+		backRightMotor.set(output);
+		System.out.println("Chassis Right: " + this.getPIDController().getError());
 	}
 }
 

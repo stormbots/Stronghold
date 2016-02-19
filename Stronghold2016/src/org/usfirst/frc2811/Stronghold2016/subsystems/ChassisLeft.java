@@ -59,6 +59,8 @@ public class ChassisLeft extends PIDSubsystem{
 		// TODO Auto-generated method stub
 		frontLeftMotor.set(output);
 		backLeftMotor.set(output);
+		System.out.println("Chassis Left: " + this.getPIDController().getError());
+		
 		
 	}
 }
