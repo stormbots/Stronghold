@@ -3,6 +3,10 @@
 /build/
 /build/*
 
+/Stronghold2016/build/
+/Stronghold2016/build
+/Stronghold2016/build/*
+
 #needed? Uncomment if causing conflicts
 /dist
 /dist/*
