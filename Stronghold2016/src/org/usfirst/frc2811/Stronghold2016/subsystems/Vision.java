@@ -19,10 +19,6 @@ import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
-
-/**
- * 
- */
 public class Vision extends Subsystem {
 	
 	/**
@@ -64,6 +60,20 @@ public class Vision extends Subsystem {
 	 */
 	private double cameraOffsetDistanceY = 0;
 	
+	/**
+	 * Diagonal field of view of the camera
+	 */
+	private double diagonalFieldOfView = 0;
+	
+	/**
+	 * Number of horizontal pixels provided by the camera
+	 */
+	private double cameraPixelsX = 0;
+	
+	/**
+	 * Number of vertical pixels provided by the camera
+	 */
+	private double cameraPixelsY = 0;
 	
 	
 	/**
@@ -72,12 +82,21 @@ public class Vision extends Subsystem {
 	 * @param networkTableName Network Table name for GRIP to post values to
 	 * @param offsetX Left/Right offset of camera, in feet, relative to shooter. left: < 0; right > 0
 	 * @param offsetY Up/Down offset of camera, in feet, relative to shooter. down: < 0; up > 0
+	 * @param diagonalFieldOfView The diagonal field of view (in degrees) of the camera used by the subsystem
+	 * @param cameraPixelsX Number of horizontal pixels provided by the camera used by the subsystem
+	 * @param cameraPixelsY Number of vertical pixels provided by the camera used by the subsystem
 	 */
-	public Vision(String networkTableName, double offsetX, double offsetY) {
-	//initial set up code	
-		tableName = networkTableName; //name of the network table. Ex: "GRIP/myContoursReport"
-		cameraOffsetDistanceX = offsetX;
-		cameraOffsetDistanceY = offsetY;
+	public Vision(String networkTableName,
+				  double offsetX, double offsetY, // Physical attributes of the camera
+				  double diagonalFieldOfView, int cameraPixelsX, int cameraPixelsY){ // Technical attributes of camera
+		this.tableName = networkTableName;
+		
+		this.cameraOffsetDistanceX = offsetX;
+		this.cameraOffsetDistanceY = offsetY;
+		
+		this.diagonalFieldOfView = diagonalFieldOfView;
+		this.cameraPixelsX = cameraPixelsX;
+		this.cameraPixelsY = cameraPixelsY;
 
 		//this.cameraInit();
 
@@ -162,7 +181,7 @@ public class Vision extends Subsystem {
 	
 	/**
 	 * Get the angle between the shooter and the target
-	 * @return [TEMP VALUE IS WRONG] The angle (with respect to robot rotation on the ground) between the shooter and the target
+	 * @return TODO[TEMP VALUE IS WRONG] The angle (with respect to robot rotation on the ground) between the shooter and the target
 	 */
 	public double getAngleToTarget() {		
 		// TODO: Set this correctly
@@ -202,7 +221,6 @@ public class Vision extends Subsystem {
 	}
 	
 	/**
-	 *
 	 * @param angleTolerance Tolerance, in degrees, within which the actual angle can differ from "perfect" alignment
 	 * @return Whether or not the robot/shooter is aligned with the target, +- angleTolerance degrees.
 	 */
@@ -215,23 +233,65 @@ public class Vision extends Subsystem {
 	}
 	
 	/**
-	 * 
-	 * @param dfov diagonal fov of the camera (68.5 degrees for the lifecam)
-	 * @param Horizontal pixels provided by the camera
-	 * @param Vertical pixels provided by the camera
+	 * Break down the diagonal field of view of the camera into horizontal FOV and vertical FOV
 	 * @return an array containing {horizontal fov, vertical fov} in degrees
 	 */
-	private static double[] diagonalFieldOfViewToXYFieldOfView(double dfov, int cameraPxX, int cameraPxY){
+	private double[] diagonalFieldOfViewToXYFieldOfView(){
 		
 		// just an angle for the trig stuff... lower left acute angle for a 720p camera
-		double angle = Math.toDegrees(Math.atan((double)cameraPxY/cameraPxX));
+		double angle = Math.toDegrees(Math.atan((double)this.cameraPixelsY/this.cameraPixelsX));
 		
-		double fovX = dfov * Math.cos(Math.toRadians(angle));
-		double fovY = dfov * Math.sin(Math.toRadians(angle));
+		double fovX = this.diagonalFieldOfView * Math.cos(Math.toRadians(angle));
+		double fovY = this.diagonalFieldOfView * Math.sin(Math.toRadians(angle));
 
 		double[] fovArray = {fovX, fovY};
 		
 		return fovArray;
+	}
+	
+	/**
+	 * Automatically returns the angle of the target, based on values in the NetworkTable
+	 * @return double[] {angleHorizontal, angleVertical}. Negative values represent left or down. Positive values represent right or up
+	 */
+	public double[] objectPositionToAngle() {
+		
+		double[] objectPosition = this.getTargetCoordinate();
+		
+		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
+		
+		/* Take the pixel offsets of the object from the center of the image
+		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
+		 * in each direction on that axis.
+		 */
+		double angleOffsetX = (objectPosition[0] - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
+		double angleOffsetY = (objectPosition[1] - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
+		
+		double[] anglesArray = {angleOffsetX, angleOffsetY};
+		
+		return anglesArray;
+	}
+	
+	/**
+	 * Returns the horizontal and vertical angles from the robot to the target
+	 * @param objectPositionX The X coordinate of the object in the frame
+	 * @param objectPositionY The Y coordinate of the object in the frame
+	 * @return double[] {angleHorizontal, angleVertical}. Negative values represent left or down. Positive values represent right or up
+	 */
+	//TODO: May be unnecessary
+	public double[] objectPositionToAngle(double objectPositionX, double objectPositionY) {
+		
+		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
+		
+		/* Take the pixel offsets of the object from the center of the image
+		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
+		 * in each direction on that axis.
+		 */
+		double angleOffsetX = (objectPositionX - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
+		double angleOffsetY = (objectPositionY - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
+		
+		double[] anglesArray = {angleOffsetX, angleOffsetY};
+		
+		return anglesArray;
 	}
 
 
