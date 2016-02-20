@@ -64,6 +64,8 @@ public class Vision extends Subsystem {
 	 */
 	private double cameraOffsetDistanceY = 0;
 	
+	
+	
 	/**
 	 * Initialize the Vision subsystem
 	 * 
@@ -215,25 +217,21 @@ public class Vision extends Subsystem {
 	/**
 	 * 
 	 * @param dfov diagonal fov of the camera (68.5 degrees for the lifecam)
-	 * @return an array containing {horizontal fov, vertical fov}
+	 * @param Horizontal pixels provided by the camera
+	 * @param Vertical pixels provided by the camera
+	 * @return an array containing {horizontal fov, vertical fov} in degrees
 	 */
-	private static double[] diagonalToVerticalFOV(double dfov){
-		int cameraPixelsX = 1280;
-		int cameraPixelsY = 720;
+	private static double[] diagonalFieldOfViewToXYFieldOfView(double dfov, int cameraPxX, int cameraPxY){
 		
+		// just an angle for the trig stuff... lower left acute angle for a 720p camera
+		double angle = Math.toDegrees(Math.atan((double)cameraPxY/cameraPxX));
 		
-		
-		//double diagonalLengthPixels = Math.sqrt(Math.pow(cameraPixelsX, 2) + Math.pow(cameraPixelsY, 2));
-		
-		double llAngle = Math.toDegrees(Math.atan((double)cameraPixelsY/cameraPixelsX));
-		
-		double fovX = dfov * Math.cos(Math.toRadians(llAngle));
-		double fovY = dfov * Math.sin(Math.toRadians(llAngle));
-		
-		System.out.println(fovX + " " + fovY);
+		double fovX = dfov * Math.cos(Math.toRadians(angle));
+		double fovY = dfov * Math.sin(Math.toRadians(angle));
+
 		double[] fovArray = {fovX, fovY};
-		return fovArray;
 		
+		return fovArray;
 	}
 
 
