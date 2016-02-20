@@ -180,15 +180,6 @@ public class Vision extends Subsystem {
 	}
 	
 	/**
-	 * Get the angle between the shooter and the target
-	 * @return TODO[TEMP VALUE IS WRONG] The angle (with respect to robot rotation on the ground) between the shooter and the target
-	 */
-	public double getAngleToTarget() {		
-		// TODO: Set this correctly
-		return 9999.0;
-	}
-	
-	/**
 	 * @return Horizontal distance to target
 	 */
 	public double getDistanceToTarget() {
@@ -253,7 +244,7 @@ public class Vision extends Subsystem {
 	 * Automatically returns the angle of the target, based on values in the NetworkTable
 	 * @return double[] {angleHorizontal, angleVertical}. Negative values represent left or down. Positive values represent right or up
 	 */
-	public double[] objectPositionToAngle() {
+	public double[] getAngleToTarget() {
 		
 		double[] objectPosition = this.getTargetCoordinate();
 		
@@ -278,7 +269,7 @@ public class Vision extends Subsystem {
 	 * @return double[] {angleHorizontal, angleVertical}. Negative values represent left or down. Positive values represent right or up
 	 */
 	//TODO: May be unnecessary
-	public double[] objectPositionToAngle(double objectPositionX, double objectPositionY) {
+	public double[] getAngleToTarget(double objectPositionX, double objectPositionY) {
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
