@@ -34,13 +34,15 @@ public class ShooterWheelPID extends Subsystem {
         //setDefaultCommand(new MySpecialCommand());
     }
     public void setVelocityInTicks(double ticksPerSecond){
+    	 shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.Speed);
+    	 shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.Speed);
     	shooterMotorLeft.set(ticksPerSecond);
     	shooterMotorRight.set(ticksPerSecond);
     	//Are ducks lactose intolerant?
     	//useful, non-tangential things
     	//stuff that makes the code better
     	//real thing
-    	
+    	// shut up Austin ~Laurel
     }
     public double FPSToTicksPerSecond(double feetPerSecond){
     	double wheelRadius=1;
@@ -52,7 +54,19 @@ public class ShooterWheelPID extends Subsystem {
     	//TODO do math to convert velocity from feet per second to ticks per second
     	return rotationPerSecond;
     }
-    
+    //Lets me test that the robot can shoot.  Should not be used in competition unless code goes very badly 
+    public void testShooterMotors(){
+    	shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+    	shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+    	shooterMotorRight.set(.75); //TODO do these spin the right ways?
+    	shooterMotorLeft.set(-.75);
+    }
+    public void shooterWheelsOff(){
+    	shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+    	shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+    	shooterMotorRight.set(0);
+    	shooterMotorLeft.set(0);
+    }
     
     
     

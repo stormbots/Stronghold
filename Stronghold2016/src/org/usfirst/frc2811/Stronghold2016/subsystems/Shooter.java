@@ -93,6 +93,7 @@ public class Shooter extends Subsystem {
     }
     
     
+    
     protected double map( double input, double maximum, double minimum, double outputMax, double outputMin){
     	double output = (input/(maximum-minimum)-minimum/(maximum-minimum))*(outputMax-outputMin)+outputMin;
     	if (output==Double.NaN){
