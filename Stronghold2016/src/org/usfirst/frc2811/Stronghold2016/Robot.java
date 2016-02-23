@@ -15,8 +15,6 @@ import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import 	org.usfirst.frc2811.Stronghold2016.commands.SetAngle;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
-import org.usfirst.frc2811.Stronghold2016.subsystems.ChassisLeft;
-import org.usfirst.frc2811.Stronghold2016.subsystems.ChassisRight;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
@@ -41,7 +39,7 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     Command joystickDrive;
-    public static Command setAngle;
+    Command setAngle;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -51,11 +49,6 @@ public class Robot extends IterativeRobot {
     public static Vision vision;
     public static Intake intake;
     public static Shooter shooter;
-    
-    //TODO: ChassisLeft and ChassisRight need to be moved and created in Chassis
-    // Mark them as private
-    public static ChassisLeft chassisLeft;
-    public static ChassisRight chassisRight;
     
     public static Chassis chassis;
     
@@ -74,9 +67,8 @@ public class Robot extends IterativeRobot {
         vision = new Vision();
         intake = new Intake();
         shooter = new Shooter();
-        //TODO Find/Set Chassis rotation PID values
-        chassisLeft = new ChassisLeft(1, 0, 0);
-        chassisRight = new ChassisRight(1, 0, 0);
+
+        //TODO Find Gyro rotation PID values
         chassis = new Chassis(3, 0, 0);
 
         // OI must be constructed after subsystems. If the OI creates Commands
@@ -135,11 +127,6 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Compressor", compressor);
         SmartDashboard.putData("Gyro", chassis.navxGyro);
         SmartDashboard.putBoolean("On Target?", chassis.isOnTarget()) ;
-        
-        SmartDashboard.putNumber("Encoder rate", chassisLeft.leftEncoder.getRate());
-        SmartDashboard.putNumber("Encoder get", chassisLeft.leftEncoder.get());
-        //System.out.println(chassisLeft.leftEncoder.getRate());
-        //chassis.setRotation(0);
     }
 
     /**

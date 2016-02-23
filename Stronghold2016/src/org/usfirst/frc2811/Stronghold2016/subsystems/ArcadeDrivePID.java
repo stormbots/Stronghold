@@ -1,7 +1,5 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
-import org.usfirst.frc2811.Stronghold2016.Robot;
-
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
@@ -9,20 +7,21 @@ import edu.wpi.first.wpilibj.communication.UsageReporting;
 
 public class ArcadeDrivePID extends RobotDrive {
 	
-	public ArcadeDrivePID() {
+	private ChassisSide left;
+	private ChassisSide right;
+	
+	public ArcadeDrivePID(ChassisSide leftSide, ChassisSide rightSide) {
 		
-		super(Robot.chassisLeft.frontLeftMotor, Robot.chassisLeft.backLeftMotor, 
-				Robot.chassisRight.frontRightMotor, Robot.chassisRight.backRightMotor);
-		
-		
-		// TODO Auto-generated constructor stub
+		super(leftSide.getFront(),leftSide.getBack(),rightSide.getFront(), rightSide.getBack());
+		left = leftSide;
+		right = rightSide;		
+
 	}
-	
-	
+		
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
 	    // local variables to hold the computed PWM values for the motors
 	    if (!kArcadeStandard_Reported) {
-	      UsageReporting.report(tResourceType.kResourceType_RobotDrive, getNumMotors(),
+	      UsageReporting.report(tResourceType.kResourceType_RobotDrive, 4,
 	          tInstances.kRobotDrive_ArcadeStandard);
 	      kArcadeStandard_Reported = true;
 	    }
@@ -66,21 +65,21 @@ public class ArcadeDrivePID extends RobotDrive {
 	      }
 	    }
 
-	    //pidDrive(leftMotorSpeed,rightMotorSpeed);
-	    setLeftRightMotorOutputs(leftMotorSpeed,rightMotorSpeed);
+	    pidDrive(leftMotorSpeed,rightMotorSpeed);
+	    //setLeftRightMotorOutputs(leftMotorSpeed,rightMotorSpeed);
 	  }
 	
-	public void pidDrive(double leftSetSpeed, double rightSetSpeed){
-		double adjustedLeft = leftSetSpeed;
-		double adjustedRight = rightSetSpeed;
-		double leftProportion = Math.abs(leftSetSpeed/Robot.chassisLeft.getLeftRate());
-		double rightProportion = Math.abs(rightSetSpeed/Robot.chassisRight.getRightRate());
+	public void pidDrive(double leftTargetSpeed, double rightTargetSpeed){
+		double adjustedLeft = leftTargetSpeed;
+		double adjustedRight = rightTargetSpeed;
+		double leftProportion = Math.abs(leftTargetSpeed/left.getSideRate());
+		double rightProportion = Math.abs(rightTargetSpeed/right.getSideRate());
 		
-		if( (leftProportion>rightProportion) && (rightSetSpeed==1) ){
-			adjustedLeft = leftSetSpeed*rightProportion;
+		if( (leftProportion>rightProportion) && (right.getSideRate()==1) ){
+			adjustedLeft = leftTargetSpeed*rightProportion;
 			
-		} else if ( (rightProportion>leftProportion) && (leftSetSpeed==1) ) {
-			adjustedRight = rightSetSpeed*leftProportion;
+		} else if ( (rightProportion>leftProportion) && (left.getSideRate()==1) ) {
+			adjustedRight = rightTargetSpeed*leftProportion;
 			
 		}
 		
@@ -89,8 +88,8 @@ public class ArcadeDrivePID extends RobotDrive {
 	
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	   
-		Robot.chassisLeft.driveRate(leftOutput);
-		Robot.chassisRight.driveRate(rightOutput);
+		left.driveRate(leftOutput);
+		right.driveRate(rightOutput);
 
 	    if (m_safetyHelper != null)
 	      m_safetyHelper.feed();

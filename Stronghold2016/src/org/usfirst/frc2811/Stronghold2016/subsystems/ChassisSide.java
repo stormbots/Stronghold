@@ -13,47 +13,80 @@ public class ChassisSide extends PIDSubsystem {
 	
 	private double tickRateMax = 800;
 	private double tickRateMin = -tickRateMax;
+	private boolean oppositeMotors;
 	
 	private static double P;
 	private static double I;
 	private static double D;
 	
-	private double rotationRate;
-	
-	
-	public ChassisSide(String name, int frontPort, int backPort, int encoderPort1, int encoderPort2) {
+	public ChassisSide(String name, int frontPort, int backPort, int encoderPort1, int encoderPort2, boolean opposingMotors) {
 		super(name, P,I,D);
 		frontMotor = new Talon(frontPort);
 		backMotor = new Talon(backPort);
-		
-		// TODO Auto-generated constructor stub
+		oppositeMotors=opposingMotors;
+
 	}
 
 	protected void initDefaultCommand() {
-		// TODO Auto-generated method stub
+
 		getPIDController().enable();
 		getPIDController().setOutputRange(-1, 1);
 		getPIDController().setContinuous(false);
+		frontMotor.setInverted(false);
+		backMotor.setInverted(oppositeMotors);
 	}
 	
+		
+	public void driveRate(double rate){
+		setSetpoint(rate);
+	}
+	
+	
+	public int getSideDistance(){
+	   	return gearboxEncoder.get();
+	}
+	
+	/**
+	 * 
+	 * @return Rate from -1 to 1 inclusive
+	 */
+	public double getSideRate(){
+		return map(gearboxEncoder.getRate(),tickRateMax,tickRateMin,1,-1);
+	}
+	
+	/**
+	 * Resets ticks traveled
+	 */
+	public void resetSideTicks(){
+    	gearboxEncoder.reset();
+    }
+	
+	public SpeedController getFront(){
+		return frontMotor;
+	}
+	
+	public SpeedController getBack(){
+		return backMotor;
+	}
+		
 	@Override
-	protected double returnPIDInput() {
-		// TODO Auto-generated method stub
+	protected double returnPIDInput(){
 		return map(gearboxEncoder.getRate(),tickRateMax,tickRateMin,1,-1);
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {
-		// TODO Auto-generated method stub
-		rotationRate=output;
+
+		frontMotor.set(output);
+		backMotor.set(output);
 		
 	}
 
-	protected double map( double input, double maximum, double minimum, double outputMax, double outputMin){
+	private double map(double input, double maximum, double minimum, double outputMax, double outputMin){
     	double output = (input/(maximum-minimum)-minimum/(maximum-minimum))*(outputMax-outputMin)+outputMin;
     	if (output==Double.NaN){
     		output=minimum;//Shouldn't happen unless we divide by zero somewhere
-    		}
+    	}
     	return output; 
     }
 

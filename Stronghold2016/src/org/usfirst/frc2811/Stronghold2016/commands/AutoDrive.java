@@ -25,6 +25,6 @@ public class AutoDrive extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	addSequential(new SetAngle(angle));
-    	addSequential(new LinearDrive(feet,power));
+    	//addSequential(new LinearDrive(feet,power));
     }
 }

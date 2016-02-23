@@ -31,8 +31,8 @@ public class Chassis extends PIDSubsystem{
     private Solenoid gearShifter = new Solenoid(0, 0);
     
     //TODO: ChassisLeft and ChassisRight need to be moved here 
-    private ChassisLeft	 left;
-    private ChassisRight right;
+    private ChassisSide	 left;
+    private ChassisSide right;
     //TODO Calibrate PID values
     
     /*
@@ -50,9 +50,9 @@ public class Chassis extends PIDSubsystem{
     }
     
     public void initDefaultCommand() {
-    	left = Robot.chassisLeft;
-    	right = Robot.chassisRight;
-    	chassisDrive = new ArcadeDrivePID();
+    	left = new ChassisSide("Left", 0,1, 0,1, false);
+    	right = new ChassisSide("Right", 2,3, 2,3, false);
+    	chassisDrive = new ArcadeDrivePID(left,right);
     	//TODO Find default shifter position
     	gearShifter.set(false);
         
@@ -89,54 +89,25 @@ public class Chassis extends PIDSubsystem{
     	right.driveRate(rate);
     }
     
-    public void adjustForErrorDrive(){
-    	//FIXME TODO FIXME TODO CHECK THE GETTER FUNCTIONS!!!!!
-    	if(Math.abs(left.getLeftRate()-right.getRightRate())>=rateTolerance){
-    		
-    		if(left.getLeftRate()<right.getRightRate()){
-    			right.driveRate(left.getLeftRate());
-    		} else {
-    			left.driveRate(right.getRightRate());
-    		}
-    		
-    	} else if((left.getPIDController().get() == 1 && left.getLeftRate()<right.getRightRate())){
-    		
-    		if(left.getLeftRate()<right.getRightRate()){
-    			right.driveRate(left.getLeftRate());
-    		} else {
-    			left.driveRate(right.getRightRate());
-    		}
-    		
-    	} else if((right.getPIDController().get()==1&&right.getRightRate()<left.getLeftRate())){
-    			
-    		if(left.getLeftRate()<right.getRightRate()){
-    			right.driveRate(left.getLeftRate());
-    		} else {
-    			left.driveRate(right.getRightRate());
-    		}   	
-    	
-    	}
-    }
-    
     public double getLeftRate(){
-    	return left.getLeftRate();
+    	return left.getSideRate();
     }
     
     public int getLeftDistance(){
-    	return left.getLeftDistance();
+    	return left.getSideDistance();
     }
     
     public double getRightRate(){
-    	return right.getRightRate();
+    	return right.getSideRate();
     }
     
     public int getRightDistance(){
-    	return right.getRightDistance();
+    	return right.getSideDistance();
     }
     
     public void resetTicks(){
-    	left.resetTicksLeft();
-    	right.resetTicksRight();
+    	left.resetSideTicks();
+    	right.resetSideTicks();
     }
     
     /**
