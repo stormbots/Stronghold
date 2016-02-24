@@ -61,6 +61,12 @@ public class Vision extends Subsystem {
 	private double cameraOffsetDistanceY = 0;
 	
 	/**
+	 * Camera angle offset rel to ground
+	 * TODO: Get better measurement. Halfway between 35 and 45 for now.
+	 */
+	private double cameraAngleOffset = 0;
+	
+	/**
 	 * Diagonal field of view of the camera
 	 */
 	private double diagonalFieldOfView = 0;
@@ -82,17 +88,19 @@ public class Vision extends Subsystem {
 	 * @param networkTableName Network Table name for GRIP to post values to
 	 * @param offsetX Left/Right offset of camera, in feet, relative to shooter. left: < 0; right > 0
 	 * @param offsetY Up/Down offset of camera, in feet, relative to shooter. down: < 0; up > 0
+	 * @param cameraAngleOffset Angular offset of camera... how many degrees upward are we looking by default?
 	 * @param diagonalFieldOfView The diagonal field of view (in degrees) of the camera used by the subsystem
 	 * @param cameraPixelsX Number of horizontal pixels provided by the camera used by the subsystem
 	 * @param cameraPixelsY Number of vertical pixels provided by the camera used by the subsystem
 	 */
 	public Vision(String networkTableName,
-				  double offsetX, double offsetY, // Physical attributes of the camera
+				  double offsetX, double offsetY, double cameraAngleOffset, // Physical attributes of the camera
 				  double diagonalFieldOfView, int cameraPixelsX, int cameraPixelsY){ // Technical attributes of camera
 		this.tableName = networkTableName;
 		
 		this.cameraOffsetDistanceX = offsetX;
 		this.cameraOffsetDistanceY = offsetY;
+		this.cameraAngleOffset = cameraAngleOffset;
 		
 		this.diagonalFieldOfView = diagonalFieldOfView;
 		this.cameraPixelsX = cameraPixelsX;
@@ -287,7 +295,7 @@ public class Vision extends Subsystem {
 		 */
 		double angleOffsetY = (objectPosition[1] - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
 		
-		return angleOffsetY;
+		return angleOffsetY + this.cameraAngleOffset;
 	}
 	
     // Put methods for controlling this subsystem
