@@ -123,7 +123,9 @@ public class Vision extends Subsystem {
 	 * Initialize the tableName NetworkTable for vision values
 	 */
 	public void netTableInit() {
+		// getTable initializes tableName when it doesn't already exist
 		grip = NetworkTable.getTable(tableName);
+		
 		System.out.println("VISION: NT Connected: " + grip.isConnected());
 	}
 	
@@ -132,11 +134,14 @@ public class Vision extends Subsystem {
 	 */
 	public void gripInit() { //initializes grip on the roborio
 		try {
-    		new ProcessBuilder("/usr/local/frc/JRE/bin/java", "-jar", "/home/lvuser/grip.jar",
+			//				 prep to execute a new java program (GRIP) from the GRIP jarfile		
+			new ProcessBuilder("/usr/local/frc/JRE/bin/java", "-jar", "/home/lvuser/grip.jar",
+					// with our GRIP project file, the parent IO stream, and finally start the process
     				"/home/lvuser/project.grip").inheritIO().start();
     		//TODO add print statement to make sure things work right
     		
     	} catch (IOException e) {
+    		// The GRIP jarfile is not there, our project file is not there, or something else went horribly wrong.
     		e.printStackTrace();
     	}
 	}
@@ -183,15 +188,18 @@ public class Vision extends Subsystem {
 	 * @return Horizontal distance to target
 	 */
 	public double getDistanceToTarget() {
-		//TODO: get angle from getAngleToTarget method. needs data points to acc for camera FOV
-		double angleToTarget = 60.0;
+		double angleToTarget = this.getYAngleToTarget();
 		
-		//TODO: Figure out robot/shooter height (origin of shot)
-		int robotHeight = 2;
+		//TODO: Figure out camera height off the ground. The calculation is affected by this.
+		/* NOTE: This is NOT the same as cameraOffsetDistanceY!!! cameraOffsetDistanceY is used to account
+		 * for the difference in position between the shooter and the camera, and ignores the positioning
+		 * off of the ground because that doesn't affect the other trig that will do that stuff.
+		 */
+		double cameraHeight = .75; // 9 inches = .75 feet
 		
-		// goal center height is 8'1". Subtract the robot height to get the height difference (opp in trig)
+		// goal center height is 8'1". Subtract the camera height to get the height difference (opp in trig)
 		// this height is the distance from the ground to the middle of the target/goal
-		double goalHeight = 8.0 + (double)1/12 - robotHeight;
+		double goalHeight = 8.0 + (double)1/12 - cameraHeight;
 		
 		/*  tan(angle) = goalHeight / distanceX
 		    
@@ -216,11 +224,12 @@ public class Vision extends Subsystem {
 	 * @return Whether or not the robot/shooter is aligned with the target, +- angleTolerance degrees.
 	 */
 	public boolean isOnTarget(double angleTolerance) {
-		double calculatedAngle = this.getAngleToTarget();
+		double horizontalAngleOffset = this.getXAngleToTarget();
 		
-		// Return true if the robot needs to turn less than angleTolerance degrees to be aligned
-		// with the target
-		return Math.abs(calculatedAngle) <= angleTolerance;
+		/* Return true if the robot needs to turn less than angleTolerance degrees to be aligned
+		 * with the target
+		 */
+		return Math.abs(horizontalAngleOffset) <= angleTolerance;
 	}
 	
 	/**
@@ -232,6 +241,7 @@ public class Vision extends Subsystem {
 		// just an angle for the trig stuff... lower left acute angle for a 720p camera
 		double angle = Math.toDegrees(Math.atan((double)this.cameraPixelsY/this.cameraPixelsX));
 		
+		// You can decompose a diagonal FOV with just basic trig
 		double fovX = this.diagonalFieldOfView * Math.cos(Math.toRadians(angle));
 		double fovY = this.diagonalFieldOfView * Math.sin(Math.toRadians(angle));
 
@@ -241,10 +251,10 @@ public class Vision extends Subsystem {
 	}
 	
 	/**
-	 * Automatically returns the angle of the target, based on values in the NetworkTable
-	 * @return double[] {angleHorizontal, angleVertical}. Negative values represent left or down. Positive values represent right or up
+	 * Automatically returns the horizontal angle of the target (parallel to the plane of the field), based on values in the NetworkTable
+	 * @return double angleHorizontal. Left - negative; Right - positive
 	 */
-	public double[] getAngleToTarget() {
+	public double getXAngleToTarget() {
 		
 		double[] objectPosition = this.getTargetCoordinate();
 		
@@ -255,21 +265,19 @@ public class Vision extends Subsystem {
 		 * in each direction on that axis.
 		 */
 		double angleOffsetX = (objectPosition[0] - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
-		double angleOffsetY = (objectPosition[1] - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
-		
-		double[] anglesArray = {angleOffsetX, angleOffsetY};
-		
-		return anglesArray;
+				
+		return angleOffsetX;
 	}
 	
 	/**
-	 * Returns the horizontal and vertical angles from the robot to the target
-	 * @param objectPositionX The X coordinate of the object in the frame
-	 * @param objectPositionY The Y coordinate of the object in the frame
-	 * @return double[] {angleHorizontal, angleVertical}. Negative values represent left or down. Positive values represent right or up
+	 * Automatically returns the vertical angle of the target (perpendicular to the plane of the field), based on values in the NetworkTable
+	 * @return double angleVertical. Down - negative; up - positive
+	 * We should *NEVER* get a negative value, because that means the robot (or camera) is above the goal, which
+	 * means it's probably flying.
 	 */
-	//TODO: May be unnecessary
-	public double[] getAngleToTarget(double objectPositionX, double objectPositionY) {
+	public double getYAngleToTarget() {
+		
+		double[] objectPosition = this.getTargetCoordinate();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -277,15 +285,11 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetX = (objectPositionX - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
-		double angleOffsetY = (objectPositionY - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
+		double angleOffsetY = (objectPosition[1] - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
 		
-		double[] anglesArray = {angleOffsetX, angleOffsetY};
-		
-		return anglesArray;
+		return angleOffsetY;
 	}
-
-
+	
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
