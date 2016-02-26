@@ -12,12 +12,16 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
 import org.usfirst.frc2811.Stronghold2016.Robot;
+import org.usfirst.frc2811.Stronghold2016.RobotMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 
@@ -30,16 +34,8 @@ public class Chassis extends PIDSubsystem{
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     
-    //TODO: ChassisLeft and ChassisRight need to be moved here 
-    private ChassisSide	 left;
-    private ChassisSide right;
-    //TODO Calibrate PID values
+    public ArcadeDrivePID chassisDrive;
     
-    /*
-    private RobotDrive chassisDrive = new RobotDrive(left.frontLeftMotor, 
-    		right.frontRightMotor, left.backLeftMotor, right.backRightMotor);
-    */
-    private ArcadeDrivePID chassisDrive;
 
     private double tolerance = 3;
     private double rotateRate;
@@ -47,20 +43,21 @@ public class Chassis extends PIDSubsystem{
     
     public Chassis(double p, double i, double d){
     	super("GyroPID",p,i,d);
-    }
-    
-    public void initDefaultCommand() {
-    	left = new ChassisSide("Left", 0,1, 0,1, false);
-    	right = new ChassisSide("Right", 2,3, 2,3, false);
-    	chassisDrive = new ArcadeDrivePID(left,right);
-    	//TODO Find default shifter position
-    	gearShifter.set(false);
-        
+    	
+    	chassisDrive = new ArcadeDrivePID();
+    	
     	chassisDrive.setSafetyEnabled(true);
         chassisDrive.setExpiration(0.1);
         chassisDrive.setSensitivity(0.5);
         chassisDrive.setMaxOutput(1.0);
+    	
+    }
+    
+    public void initDefaultCommand() {
 
+    	//TODO Find default shifter position
+    	gearShifter.set(false);
+        
         getPIDController().setInputRange(-180.0, 180.0);
         getPIDController().setOutputRange(-1.0, 1.0);
         getPIDController().setAbsoluteTolerance(tolerance);
@@ -85,29 +82,29 @@ public class Chassis extends PIDSubsystem{
     }
     
     public void driveRate(double rate){
-    	left.driveRate(rate);
-    	right.driveRate(rate);
+    	chassisDrive.leftSide.setSetpoint(rate);
+    	chassisDrive.rightSide.setSetpoint(rate);
     }
     
     public double getLeftRate(){
-    	return left.getSideRate();
+    	return chassisDrive.leftSide.getSideRate();
     }
     
     public int getLeftDistance(){
-    	return left.getSideDistance();
+    	return chassisDrive.leftSide.getSideDistance();
     }
     
     public double getRightRate(){
-    	return right.getSideRate();
+    	return chassisDrive.rightSide.getSideRate();
     }
     
     public int getRightDistance(){
-    	return right.getSideDistance();
+    	return chassisDrive.rightSide.getSideDistance();
     }
     
     public void resetTicks(){
-    	left.resetSideTicks();
-    	right.resetSideTicks();
+    	chassisDrive.leftSide.resetSideTicks();
+    	chassisDrive.rightSide.resetSideTicks();
     }
     
     /**

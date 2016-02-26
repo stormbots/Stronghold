@@ -15,6 +15,7 @@ import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import 	org.usfirst.frc2811.Stronghold2016.commands.SetAngle;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
+import org.usfirst.frc2811.Stronghold2016.subsystems.ChassisSide;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
@@ -40,6 +41,8 @@ public class Robot extends IterativeRobot {
     Command autonomousCommand;
     Command joystickDrive;
     Command setAngle;
+    
+    public static RobotMap robotMap;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -59,7 +62,8 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-
+    	robotMap = new RobotMap();
+    	robotMap.init();
     	compressor = new Compressor();
         powerPanel = new PowerDistributionPanel();
         onboardAccelerometer = new BuiltInAccelerometer();
@@ -126,7 +130,12 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
         SmartDashboard.putData("Gyro", chassis.navxGyro);
-        SmartDashboard.putBoolean("On Target?", chassis.isOnTarget()) ;
+        SmartDashboard.putBoolean("On Target?", chassis.isOnTarget());
+        
+        SmartDashboard.putNumber("Left Rate", robotMap.leftEncoder.getRate());
+        SmartDashboard.putNumber("Left Error", chassis.chassisDrive.leftSide.getPIDController().getError());
+        SmartDashboard.putNumber("Right Rate", robotMap.rightEncoder.getRate());
+        SmartDashboard.putNumber("Right Error", chassis.chassisDrive.rightSide.getPIDController().getError());
     }
 
     /**

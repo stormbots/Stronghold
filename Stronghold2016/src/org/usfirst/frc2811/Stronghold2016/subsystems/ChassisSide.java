@@ -11,18 +11,19 @@ public class ChassisSide extends PIDSubsystem {
 	private SpeedController backMotor;
 	private Encoder gearboxEncoder;
 	
-	private double tickRateMax = 800;
-	private double tickRateMin = -tickRateMax;
+	private static double tickRateMax = 800;
+	private static double tickRateMin = -tickRateMax;
 	private boolean oppositeMotors;
 	
-	private static double P;
-	private static double I;
-	private static double D;
+	private static double P=3;
+	private static double I=0;
+	private static double D=0;
 	
-	public ChassisSide(String name, int frontPort, int backPort, int encoderPort1, int encoderPort2, boolean opposingMotors) {
+	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
-		frontMotor = new Talon(frontPort);
-		backMotor = new Talon(backPort);
+		frontMotor = front;
+		backMotor = back;
+		gearboxEncoder = wheelEncoder;
 		oppositeMotors=opposingMotors;
 
 	}
@@ -82,7 +83,7 @@ public class ChassisSide extends PIDSubsystem {
 		
 	}
 
-	private double map(double input, double maximum, double minimum, double outputMax, double outputMin){
+	private static double map(double input, double maximum, double minimum, double outputMax, double outputMin){
     	double output = (input/(maximum-minimum)-minimum/(maximum-minimum))*(outputMax-outputMin)+outputMin;
     	if (output==Double.NaN){
     		output=minimum;//Shouldn't happen unless we divide by zero somewhere

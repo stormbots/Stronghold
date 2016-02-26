@@ -1,23 +1,34 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import org.usfirst.frc2811.Stronghold2016.RobotMap;
+
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 
 public class ArcadeDrivePID extends RobotDrive {
 	
-	private ChassisSide left;
-	private ChassisSide right;
+	private static SpeedController frontLeft = RobotMap.frontLeft;
+	private static SpeedController backLeft = RobotMap.backLeft;
+	private static SpeedController frontRight = RobotMap.frontRight;
+	private static SpeedController backRight = RobotMap.backRight;
+	private static Encoder leftEncoder = RobotMap.leftEncoder;
+	private static Encoder rightEncoder = RobotMap.rightEncoder;
 	
-	public ArcadeDrivePID(ChassisSide leftSide, ChassisSide rightSide) {
-		
-		super(leftSide.getFront(),leftSide.getBack(),rightSide.getFront(), rightSide.getBack());
-		left = leftSide;
-		right = rightSide;		
+	public ChassisSide leftSide;
+	public ChassisSide rightSide;
+	
+	public ArcadeDrivePID() {		
+		super(frontLeft,backLeft,frontRight,backRight);
+		leftSide = new ChassisSide("Left",frontLeft,backLeft,leftEncoder,false);
+		rightSide = new ChassisSide("Right",frontRight,backRight,rightEncoder,false);
 
 	}
 		
+	@Override
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
 	    // local variables to hold the computed PWM values for the motors
 	    if (!kArcadeStandard_Reported) {
@@ -72,13 +83,13 @@ public class ArcadeDrivePID extends RobotDrive {
 	public void pidDrive(double leftTargetSpeed, double rightTargetSpeed){
 		double adjustedLeft = leftTargetSpeed;
 		double adjustedRight = rightTargetSpeed;
-		double leftProportion = Math.abs(leftTargetSpeed/left.getSideRate());
-		double rightProportion = Math.abs(rightTargetSpeed/right.getSideRate());
+		double leftProportion = Math.abs(leftTargetSpeed/leftSide.getSideRate());
+		double rightProportion = Math.abs(rightTargetSpeed/rightSide.getSideRate());
 		
-		if( (leftProportion>rightProportion) && (right.getSideRate()==1) ){
+		if( (leftProportion>rightProportion) && (rightSide.getSideRate()==1) ){
 			adjustedLeft = leftTargetSpeed*rightProportion;
 			
-		} else if ( (rightProportion>leftProportion) && (left.getSideRate()==1) ) {
+		} else if ( (rightProportion>leftProportion) && (leftSide.getSideRate()==1) ) {
 			adjustedRight = rightTargetSpeed*leftProportion;
 			
 		}
@@ -86,10 +97,11 @@ public class ArcadeDrivePID extends RobotDrive {
 		setLeftRightMotorOutputs(adjustedLeft, adjustedRight);
 	}
 	
+	@Override
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	   
-		left.driveRate(leftOutput);
-		right.driveRate(rightOutput);
+		leftSide.setSetpoint(leftOutput);
+		rightSide.setSetpoint(rightOutput);
 
 	    if (m_safetyHelper != null)
 	      m_safetyHelper.feed();
