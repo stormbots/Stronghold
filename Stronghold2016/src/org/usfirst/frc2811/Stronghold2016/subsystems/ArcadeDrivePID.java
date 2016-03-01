@@ -18,20 +18,25 @@ public class ArcadeDrivePID extends RobotDrive {
 	private static Encoder leftEncoder = RobotMap.leftEncoder;
 	private static Encoder rightEncoder = RobotMap.rightEncoder;
 	
-	public ChassisSide leftSide;
-	public ChassisSide rightSide;
+	public ChassisSide leftSide = new ChassisSide("Left",frontLeft,backLeft,leftEncoder,false);
+	public ChassisSide rightSide = new ChassisSide("Right",frontRight,backRight,rightEncoder,false);
 	
 	public ArcadeDrivePID() {		
 		super(frontLeft,backLeft,frontRight,backRight);
-		leftSide = new ChassisSide("Left",frontLeft,backLeft,leftEncoder,false);
-		rightSide = new ChassisSide("Right",frontRight,backRight,rightEncoder,false);
+		System.out.println("ArcadeDriveConstructor, Statement #" + RobotMap.counter);
+		RobotMap.counter++;
+		//leftSide 
+		//rightSide 
 
 	}
 		
 	@Override
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
 	    // local variables to hold the computed PWM values for the motors
-	    if (!kArcadeStandard_Reported) {
+		System.out.println("ArcadeDrive method, Statement #" + RobotMap.counter);
+		RobotMap.counter++;
+		
+		if (!kArcadeStandard_Reported) {
 	      UsageReporting.report(tResourceType.kResourceType_RobotDrive, 4,
 	          tInstances.kRobotDrive_ArcadeStandard);
 	      kArcadeStandard_Reported = true;
@@ -81,6 +86,8 @@ public class ArcadeDrivePID extends RobotDrive {
 	  }
 	
 	public void pidDrive(double leftTargetSpeed, double rightTargetSpeed){
+		System.out.println("ArcadeDrive PID method, Statement #" + RobotMap.counter);
+		RobotMap.counter++;
 		double adjustedLeft = leftTargetSpeed;
 		double adjustedRight = rightTargetSpeed;
 		double leftProportion = Math.abs(leftTargetSpeed/leftSide.getSideRate());
@@ -99,13 +106,27 @@ public class ArcadeDrivePID extends RobotDrive {
 	
 	@Override
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
+		System.out.println("ArcadeDrive setLeftRight, Statement #" + RobotMap.counter);
+		RobotMap.counter++;
 	   
-		leftSide.setSetpoint(leftOutput);
-		rightSide.setSetpoint(rightOutput);
+		leftSide.driveRate(leftOutput);
+		rightSide.driveRate(rightOutput);
 
 	    if (m_safetyHelper != null)
 	      m_safetyHelper.feed();
 	}
+	
+	@Override
+	public void drive(double outputMagnitude, double curve) {
+		System.out.println("ArcadeDrive override drive, Statement #" + RobotMap.counter);
+		RobotMap.counter++;
+	   if (!kArcadeRatioCurve_Reported) {
+	      UsageReporting.report(tResourceType.kResourceType_RobotDrive, getNumMotors(),
+	          tInstances.kRobotDrive_ArcadeRatioCurve);
+	      kArcadeRatioCurve_Reported = true;
+	    }
+
+	  }
 	
 	
 }

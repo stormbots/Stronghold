@@ -42,9 +42,14 @@ public class Chassis extends PIDSubsystem{
     private double rateTolerance;
     
     public Chassis(double p, double i, double d){
-    	super("GyroPID",p,i,d);
     	
+    	
+    	super("GyroPID",p,i,d);
+    	System.out.println("Chassis, Statement #" + RobotMap.counter);
+    	RobotMap.counter++;
     	chassisDrive = new ArcadeDrivePID();
+    	System.out.println("Chassis after ArcadeDrivePID, Statement #" + RobotMap.counter);
+    	RobotMap.counter++;
     	
     	chassisDrive.setSafetyEnabled(true);
         chassisDrive.setExpiration(0.1);

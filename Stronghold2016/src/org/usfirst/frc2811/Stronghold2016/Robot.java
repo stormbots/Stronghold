@@ -42,6 +42,7 @@ public class Robot extends IterativeRobot {
     Command joystickDrive;
     Command setAngle;
     
+    
     public static RobotMap robotMap;
 
 	public static PowerDistributionPanel powerPanel;
@@ -62,6 +63,8 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	System.out.println("Start of RobotInit, Statement #" + RobotMap.counter);
+    	RobotMap.counter++;
     	robotMap = new RobotMap();
     	robotMap.init();
     	compressor = new Compressor();
@@ -85,6 +88,9 @@ public class Robot extends IterativeRobot {
         autonomousCommand = new AutonomousCommand(0,0);
         joystickDrive = new JoystickDrive();
         setAngle = new SetAngle();
+        
+        System.out.println("RobotInit End, Statement #" + RobotMap.counter);
+        RobotMap.counter++;
 
     }
 

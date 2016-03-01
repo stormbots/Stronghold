@@ -1,5 +1,7 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import org.usfirst.frc2811.Stronghold2016.RobotMap;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -21,6 +23,8 @@ public class ChassisSide extends PIDSubsystem {
 	
 	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
+		System.out.println("ChassisSide " + name + ", " + "Statement #" + RobotMap.counter);
+		RobotMap.counter++;
 		frontMotor = front;
 		backMotor = back;
 		gearboxEncoder = wheelEncoder;

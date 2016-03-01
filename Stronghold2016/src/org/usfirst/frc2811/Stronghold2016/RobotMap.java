@@ -13,8 +13,11 @@ public class RobotMap {
 	public static Encoder leftEncoder;
 	public static Encoder rightEncoder;
 	
+	public static int counter = 1;
+	
 	public void init() {
-		 
+		System.out.println("RobotMap, Statement #" + RobotMap.counter);
+		RobotMap.counter++;
 		frontLeft = new Talon(0);
 		backLeft = new Talon(1);
 	    frontRight = new Talon(2);
