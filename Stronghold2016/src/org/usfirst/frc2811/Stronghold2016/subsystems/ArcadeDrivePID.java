@@ -23,14 +23,12 @@ public class ArcadeDrivePID extends RobotDrive {
 	
 	public ArcadeDrivePID() {		
 		super(frontLeft,backLeft,frontRight,backRight);
+		
 		System.out.println("ArcadeDriveConstructor, Statement #" + RobotMap.counter);
 		RobotMap.counter++;
-		//leftSide 
-		//rightSide 
 
 	}
 		
-	@Override
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
 	    // local variables to hold the computed PWM values for the motors
 		System.out.println("ArcadeDrive method, Statement #" + RobotMap.counter);
@@ -104,7 +102,6 @@ public class ArcadeDrivePID extends RobotDrive {
 		setLeftRightMotorOutputs(adjustedLeft, adjustedRight);
 	}
 	
-	@Override
 	public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 		System.out.println("ArcadeDrive setLeftRight, Statement #" + RobotMap.counter);
 		RobotMap.counter++;
@@ -116,17 +113,21 @@ public class ArcadeDrivePID extends RobotDrive {
 	      m_safetyHelper.feed();
 	}
 	
-	@Override
 	public void drive(double outputMagnitude, double curve) {
 		System.out.println("ArcadeDrive override drive, Statement #" + RobotMap.counter);
 		RobotMap.counter++;
-	   if (!kArcadeRatioCurve_Reported) {
+		if (!kArcadeRatioCurve_Reported) {
 	      UsageReporting.report(tResourceType.kResourceType_RobotDrive, getNumMotors(),
 	          tInstances.kRobotDrive_ArcadeRatioCurve);
 	      kArcadeRatioCurve_Reported = true;
 	    }
-
-	  }
-	
+		
+		frontLeft.stopMotor();
+		frontRight.stopMotor();
+		backLeft.stopMotor();
+		backRight.stopMotor();
+		
+	}
+		
 	
 }

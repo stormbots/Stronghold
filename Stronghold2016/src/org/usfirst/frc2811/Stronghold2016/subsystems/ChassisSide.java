@@ -15,11 +15,14 @@ public class ChassisSide extends PIDSubsystem {
 	
 	private static double tickRateMax = 800;
 	private static double tickRateMin = -tickRateMax;
+	
+	private static double rateTolerance = .01;
+	
 	private boolean oppositeMotors;
 	
-	private static double P=3;
-	private static double I=0;
-	private static double D=0;
+	private static double P=.5;
+	private static double I=0.0001;
+	private static double D=0.0001;
 	
 	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
