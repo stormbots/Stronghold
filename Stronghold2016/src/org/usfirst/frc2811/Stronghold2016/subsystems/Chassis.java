@@ -32,7 +32,6 @@ public class Chassis extends PIDSubsystem{
     
     private double tolerance = 3;
     private double rotateRate;
-    public boolean pidRotate;
     public boolean operatorControl;
        
     public Chassis(double p, double i, double d){
@@ -71,17 +70,10 @@ public class Chassis extends PIDSubsystem{
     
     public void setOperatorControl(){
     	operatorControl=true;
-    	pidRotate=false;
     }
     
-    public void setManualControl(){
+    public void setCodeControl(){
     	operatorControl=false;
-    	pidRotate=false;
-    }
-    
-    public void setRotationControl(){
-    	operatorControl=false;
-    	pidRotate=true;
     }
     
     /**
@@ -98,16 +90,17 @@ public class Chassis extends PIDSubsystem{
      * @param rotate
      */
     public void manualDrive(double forward, double rotate){
-   	   	setManualControl();	
+   	   	setCodeControl();	
     	chassisDrive.arcadeDrive(forward, rotate, false);
     }
     
     /** 
+     * Rotates the robot based on gyro values to a specified degree value
      * Might have to be called continuously //TODO test continuous calling
      * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing of 180 deg. 
      */
     public void setRotation(double degrees){
-    	setRotationControl();
+    	setCodeControl();
     	setSetpoint(degrees);
     	chassisDrive.arcadeDrive(0, rotateRate);
     }
