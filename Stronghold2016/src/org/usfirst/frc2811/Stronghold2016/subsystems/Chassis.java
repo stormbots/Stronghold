@@ -12,16 +12,11 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
 import org.usfirst.frc2811.Stronghold2016.Robot;
-import org.usfirst.frc2811.Stronghold2016.RobotMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 
@@ -31,25 +26,23 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class Chassis extends PIDSubsystem{
 
     public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
-    
     private Solenoid gearShifter = new Solenoid(0, 0);
     
     public ArcadeDrivePID chassisDrive;
     
-
     private double tolerance = 3;
     private double rotateRate;
-    private double rateTolerance;
-    
+    public boolean pidRotate;
+    public boolean operatorControl;
+       
     public Chassis(double p, double i, double d){
     	
-    	
     	super("GyroPID",p,i,d);
-    	System.out.println("Chassis, Statement #" + RobotMap.counter);
-    	RobotMap.counter++;
+    	System.out.println("Chassis, Statement #" + Robot.counter);
+    	Robot.counter++;
     	chassisDrive = new ArcadeDrivePID();
-    	System.out.println("Chassis after ArcadeDrivePID, Statement #" + RobotMap.counter);
-    	RobotMap.counter++;
+    	System.out.println("Chassis after ArcadeDrivePID, Statement #" + Robot.counter);
+    	Robot.counter++;
     	
     	chassisDrive.setSafetyEnabled(true);
         chassisDrive.setExpiration(0.1);
@@ -69,12 +62,44 @@ public class Chassis extends PIDSubsystem{
         getPIDController().setContinuous(true);
     }
     
+    /**
+     * Toggles the gear state of the robot Low<->High
+     */
     public void shiftGears(){
     	gearShifter.set(!gearShifter.get());
     }
     
+    public void setOperatorControl(){
+    	operatorControl=true;
+    	pidRotate=false;
+    }
+    
+    public void setManualControl(){
+    	operatorControl=false;
+    	pidRotate=false;
+    }
+    
+    public void setRotationControl(){
+    	operatorControl=false;
+    	pidRotate=true;
+    }
+    
+    /**
+     * Drives using direct joystick reads. The boolean operatorControl must be true for it to work.
+     */
     public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), Robot.oi.gamePad.getRawAxis(2),false);
+    	if(operatorControl) chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), 
+    			Robot.oi.gamePad.getRawAxis(2), false);
+    }
+    
+    /**
+     * Allows for manual setting of movement values   
+     * @param forward
+     * @param rotate
+     */
+    public void manualDrive(double forward, double rotate){
+   	   	setManualControl();	
+    	chassisDrive.arcadeDrive(forward, rotate, false);
     }
     
     /** 
@@ -82,35 +107,17 @@ public class Chassis extends PIDSubsystem{
      * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing of 180 deg. 
      */
     public void setRotation(double degrees){
+    	setRotationControl();
     	setSetpoint(degrees);
     	chassisDrive.arcadeDrive(0, rotateRate);
     }
     
-    public void driveRate(double rate){
-    	chassisDrive.leftSide.setSetpoint(rate);
-    	chassisDrive.rightSide.setSetpoint(rate);
-    }
-    
-    public double getLeftRate(){
-    	return chassisDrive.leftSide.getSideRate();
-    }
-    
-    public int getLeftDistance(){
-    	return chassisDrive.leftSide.getSideDistance();
-    }
-    
-    public double getRightRate(){
-    	return chassisDrive.rightSide.getSideRate();
-    }
-    
-    public int getRightDistance(){
-    	return chassisDrive.rightSide.getSideDistance();
-    }
-    
+    /*
     public void resetTicks(){
     	chassisDrive.leftSide.resetSideTicks();
     	chassisDrive.rightSide.resetSideTicks();
     }
+    */
     
     /**
      * @return Whether or not the robot is aligned to an angle (in degrees)

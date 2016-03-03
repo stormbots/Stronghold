@@ -1,10 +1,9 @@
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
-import org.usfirst.frc2811.Stronghold2016.RobotMap;
+import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 public class ChassisSide extends PIDSubsystem {
@@ -26,8 +25,8 @@ public class ChassisSide extends PIDSubsystem {
 	
 	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
-		System.out.println("ChassisSide " + name + ", " + "Statement #" + RobotMap.counter);
-		RobotMap.counter++;
+		System.out.println("ChassisSide " + name + ", " + "Statement #" + Robot.counter);
+		Robot.counter++;
 		frontMotor = front;
 		backMotor = back;
 		gearboxEncoder = wheelEncoder;
@@ -54,11 +53,18 @@ public class ChassisSide extends PIDSubsystem {
 	   	return gearboxEncoder.get();
 	}
 	
+	
 	/**
-	 * 
-	 * @return Rate from -1 to 1 inclusive
+	 * @return Motor values written by the PIDController (-1 to 1 inclusive)
 	 */
-	public double getSideRate(){
+	public double getSideSetpoint(){
+		return getPIDController().get();
+	}
+	
+	/**
+	 * @return Ticks per second mapped to -1 to 1 inclusive
+	 */
+	public double getSideEncoderRate(){
 		return map(gearboxEncoder.getRate(),tickRateMax,tickRateMin,1,-1);
 	}
 	

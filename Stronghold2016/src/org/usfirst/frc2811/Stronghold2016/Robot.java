@@ -38,12 +38,11 @@ import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-    Command autonomousCommand;
+    public static int counter = 1;
+	
+	Command autonomousCommand;
     Command joystickDrive;
     Command setAngle;
-    
-    
-    public static RobotMap robotMap;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -63,10 +62,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	System.out.println("Start of RobotInit, Statement #" + RobotMap.counter);
-    	RobotMap.counter++;
-    	robotMap = new RobotMap();
-    	robotMap.init();
+    	System.out.println("Start of RobotInit, Statement #" + counter);
     	compressor = new Compressor();
         powerPanel = new PowerDistributionPanel();
         onboardAccelerometer = new BuiltInAccelerometer();
@@ -87,10 +83,10 @@ public class Robot extends IterativeRobot {
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
         joystickDrive = new JoystickDrive();
-        setAngle = new SetAngle();
+        setAngle = new SetAngle(0);
         
-        System.out.println("RobotInit End, Statement #" + RobotMap.counter);
-        RobotMap.counter++;
+        System.out.println("RobotInit End, Statement #" + counter);
+        counter++;
 
     }
 
@@ -132,15 +128,19 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
         SmartDashboard.putData("Gyro", chassis.navxGyro);
+        
         SmartDashboard.putBoolean("On Target?", chassis.isOnTarget());
         
-        SmartDashboard.putNumber("Left Rate", robotMap.leftEncoder.getRate());
+        SmartDashboard.putNumber("Left Write Value", chassis.chassisDrive.leftSide.getSideSetpoint());
+        SmartDashboard.putNumber("Left Rate", chassis.chassisDrive.leftSide.getSideEncoderRate());
         SmartDashboard.putNumber("Left Error", chassis.chassisDrive.leftSide.getPIDController().getError());
-        SmartDashboard.putNumber("Right Rate", robotMap.rightEncoder.getRate());
+        SmartDashboard.putNumber("Right Write Value", chassis.chassisDrive.rightSide.getSideSetpoint());
+        SmartDashboard.putNumber("Right Rate", chassis.chassisDrive.rightSide.getSideEncoderRate());
         SmartDashboard.putNumber("Right Error", chassis.chassisDrive.rightSide.getPIDController().getError());
     }
 

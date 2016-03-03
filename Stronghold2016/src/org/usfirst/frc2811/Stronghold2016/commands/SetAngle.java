@@ -24,18 +24,15 @@ public class SetAngle extends Command {
     public SetAngle(double degrees) {
     	angle=degrees;
     }
-    
-    public SetAngle(){
-    	angle=0;
-    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.chassis.setRotation(angle);
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Robot.chassis.setRotation(angle);
     }
 
     // Make this return true when this Command no longer needs to run execute()
