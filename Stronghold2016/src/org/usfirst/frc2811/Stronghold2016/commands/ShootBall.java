@@ -37,13 +37,7 @@ public class ShootBall extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.shooterWheelPID.setVelocityInTicks(
-    			Robot.shooterWheelPID.FPSToTicksPerSecond(
-    					Robot.shooter.distanceToFPS(
-    							Robot.vision.getDistance()
-    					)
-    			)
-    	);
+    	
 
     }
 

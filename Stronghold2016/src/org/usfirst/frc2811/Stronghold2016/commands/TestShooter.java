@@ -20,20 +20,23 @@ public class TestShooter extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("Initializing the shooter");
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.shooterWheelPID.testShooterMotors();
+    	Robot.shooter.setShooterDistance(10);//THis is a TEST!!!
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return !Robot.oi.button2.get();
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("Ending the Shooter");
     }
 
     // Called when another command which requires one or more of the same

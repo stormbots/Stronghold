@@ -21,18 +21,20 @@ public class ShooterWheelPID extends Subsystem {
     // here. Call these from Commands.
     
     public void initDefaultCommand() {
-        shooterMotorLeft = new CANTalon(0);
+        shooterMotorLeft = new CANTalon(5);
         shooterMotorRight = new CANTalon(1);
         shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.Speed);
-        shooterMotorLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+        shooterMotorLeft.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
         shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.Speed);
-        shooterMotorRight.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+        shooterMotorRight.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+        shooterMotorRight.setPID(5,0,0);
         //shooterEncoderLeft = new Encoder(4, 5, false, EncodingType.k4X);
     	//shooterEncoderRight = new Encoder(2, 3, false, EncodingType.k4X);
          
     	// Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
+    /*
     public void setVelocityInTicks(double ticksPerSecond){
     	 shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.Speed);
     	 shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.Speed);
@@ -44,16 +46,17 @@ public class ShooterWheelPID extends Subsystem {
     	//real thing
     	// shut up Austin ~Laurel
     }
-    public double FPSToTicksPerSecond(double feetPerSecond){
-    	double wheelRadius=1;
-    	double fpsToRPSRatio=1;
-    	double rotationPerSecond = feetPerSecond/wheelRadius;
-    	
-    	
-    	//Get Velocity from shooter
-    	//TODO do math to convert velocity from feet per second to ticks per second
-    	return rotationPerSecond;
+    */
+   
+    public void setMotorVelocity(double output){
+    	shooterMotorLeft.set(output);
+    	shooterMotorRight.set(output);
+    	System.out.print("Shooter Error: ");
+    	System.out.println(shooterMotorLeft.getError());
     }
+    
+     
+    
     //Lets me test that the robot can shoot.  Should not be used in competition unless code goes very badly 
     public void testShooterMotors(){
     	shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.PercentVbus);

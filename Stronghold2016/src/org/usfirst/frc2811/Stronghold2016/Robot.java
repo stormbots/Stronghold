@@ -13,6 +13,8 @@ package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import 	org.usfirst.frc2811.Stronghold2016.commands.ResetAlignment;
+import  org.usfirst.frc2811.Stronghold2016.commands.TestIntake;
+import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
@@ -39,7 +41,9 @@ import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
+    Command testIntake;
     public static Command resetAlignment;
+    Command testShooter;
 
 	public static PowerDistributionPanel powerPanel;
     public static Compressor compressor;
@@ -80,7 +84,9 @@ public class Robot extends IterativeRobot {
 
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
+        testIntake = new TestIntake();
         resetAlignment = new ResetAlignment();
+        testShooter= new TestShooter();
 
     }
 
@@ -94,6 +100,8 @@ public class Robot extends IterativeRobot {
 
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
+        //System.out.println("Intake encoder Ticks" + intakeLifter.getTicks());
+        //System.out.println("Current Angle"+intakeLifter.getCurrentAngle());
     }
 
     public void autonomousInit() {
@@ -114,6 +122,7 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
+        
     }
 
     /**
@@ -123,11 +132,14 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
-        SmartDashboard.putData("Compressor", compressor);
+       // SmartDashboard.putData("Compressor", compressor);
      //   SmartDashboard.putData("Gyro", chassis.navxGyro);
     //    SmartDashboard.putBoolean("On Target?", Math.abs(chassis.rotationPID.getSetpoint()-chassis.navxGyro.getAngle())<=5);
-        chassis.setRotation(0);
-        System.out.println("Intake Lifter Encoder Ticks"+Robot.intakeLifter.getTicks());
+        //chassis.setRotation(0);
+        //System.out.println("Intake Lifter Encoder Ticks"+Robot.intakeLifter.getTicks());
+       // System.out.println("Intake encoder Ticks" + intakeLifter.getTicks());
+        //System.out.println("Current Angle"+intakeLifter.getCurrentAngle());
+    
     }
 
     /**
