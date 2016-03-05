@@ -19,9 +19,9 @@ public class ChassisSide extends PIDSubsystem {
 	
 	private boolean oppositeMotors;
 	
-	private static double P=.5;
+	private static double P=1;
 	private static double I=0.0001;
-	private static double D=0.0001;
+	private static double D=0.001;
 	
 	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
