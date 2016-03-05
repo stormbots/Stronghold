@@ -111,7 +111,7 @@ public class ArcadeDrivePID extends RobotDrive {
 		Robot.counter++;
 	   
 		leftSide.driveRate(leftOutput);
-		rightSide.driveRate(rightOutput);
+		rightSide.driveRate(-rightOutput);
 
 	    if (m_safetyHelper != null)
 	      m_safetyHelper.feed();
