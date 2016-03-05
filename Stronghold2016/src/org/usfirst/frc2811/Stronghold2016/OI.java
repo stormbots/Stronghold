@@ -82,7 +82,7 @@ public class OI {
         button4.whenPressed(new IntakeToggle());
         button5.whenPressed(new TestIntake());
   */     
-        button2.whenPressed(new TestShooter());
+        button2.whileHeld(new TestShooter());
 
 
         // SmartDashboard Buttons

@@ -25,13 +25,16 @@ public class TestShooter extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.shooter.setShooterDistance(10);//THis is a TEST!!!
+    	//Robot.shooter.setShooterDistance(10);//THis is a TEST!!!
+    	double d=(-Robot.oi.gamePad.getRawAxis(3)+1)*8;
+    	Robot.shooter.setShooterDistance(d);
+    
     	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !Robot.oi.button2.get();
+        return false && !Robot.oi.button2.get();
     }
 
     // Called once after isFinished returns true
@@ -42,5 +45,9 @@ public class TestShooter extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.out.println("Shooter command was killed! Stopping");
+    	Robot.shooter.setShooterDistance(0);
+
+
     }
 }
