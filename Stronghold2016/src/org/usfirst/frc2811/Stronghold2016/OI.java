@@ -11,6 +11,7 @@
 
 package org.usfirst.frc2811.Stronghold2016;
 
+import org.usfirst.frc2811.Stronghold2016.commands.ShiftGears;
 import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -68,6 +69,7 @@ public class OI {
 
         gamePad = new Joystick(0);
         button2 = new JoystickButton(gamePad,2);
+        button3 = new JoystickButton(gamePad,3);
 /*
         button2 = new JoystickButton(gamePad, 2);
         button3 = new JoystickButton(gamePad,3);
@@ -83,6 +85,7 @@ public class OI {
         button5.whenPressed(new TestIntake());
   */     
         button2.whileHeld(new TestShooter());
+        button3.whenPressed(new ShiftGears());
 
 
         // SmartDashboard Buttons

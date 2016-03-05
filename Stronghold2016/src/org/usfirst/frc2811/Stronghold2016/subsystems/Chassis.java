@@ -38,12 +38,12 @@ public class Chassis extends Subsystem{
     private Solenoid gearShifter = new Solenoid(0, 0);
     
     private SpeedController frontLeftMotor  = new Talon(0);
-    private SpeedController frontRightMotor = new Talon(1);
-    private SpeedController backLeftMotor   = new Talon(2);
-    private SpeedController backRightMotor  = new Talon(3);
+    private SpeedController backLeftMotor = new Talon(1);
+    private SpeedController frontRightMotor   = new Talon(2);
+    private SpeedController	backRightMotor  = new Talon(3);
     
     private RobotDrive chassisDrive = new RobotDrive(frontLeftMotor, 
-    		frontRightMotor, backLeftMotor, backRightMotor);
+    		 backLeftMotor,frontRightMotor, backRightMotor);
 
 
     public void initDefaultCommand() {
@@ -65,7 +65,7 @@ public class Chassis extends Subsystem{
         }
     
     public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
+    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), Robot.oi.gamePad.getRawAxis(2));
     }
     
     /**
