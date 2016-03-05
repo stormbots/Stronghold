@@ -41,6 +41,8 @@ public class SpitBall extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	//reverses the intake to get rid of a ball
+    	Robot.intake.spitBall();
     }
 
     // Make this return true when this Command no longer needs to run execute()

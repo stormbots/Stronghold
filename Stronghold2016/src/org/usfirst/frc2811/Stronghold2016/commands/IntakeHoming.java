@@ -4,51 +4,34 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- *	Used to drive the robot directly forward at a 0 degree angle, autonomously
+/** This command homes the intake. It leaves the arm in a 90 degree state where zero is parallel to the ground
+ *  *
  */
-public class AutoDrive extends Command {
+public class IntakeHoming extends Command {
 
-	double distance;
-	double speed;
-	double moveValue;
-	double targetAngle;
-	
-    public AutoDrive(double feet, double power) {
+    public IntakeHoming() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	distance=feet;
-    	speed=power;
- //   	targetAngle = Robot.chassis.navxGyro.getAngle();
-    	
-    }
-    
-    public AutoDrive(double feet, double power, double degrees) {
-    	distance=feet;
-    	speed=power;
-    	targetAngle=degrees;    	
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.chassis.resetTicks();
+    	System.out.println("Initializing Homing Command");
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.chassis.movingAlign(speed, targetAngle);
-    	
+    	Robot.intakeLifter.setHomingIntake();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return 	Robot.chassis.getLeftEncoder()==moveValue||
-        		Robot.chassis.getRightEncoder()==moveValue;
+       return Robot.intakeLifter.setHomingIntake();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	    	
+    	System.out.println("Finishing Homing Command");
     }
 
     // Called when another command which requires one or more of the same

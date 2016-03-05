@@ -31,7 +31,8 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	    	
+    	
+    	 addSequential(new IntakeHoming());   	
     	addSequential(new BreachDefenses(defense));
        	addSequential(new ResetAlignment(goal));
     	addSequential(new ShootBall());

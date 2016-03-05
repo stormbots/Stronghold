@@ -13,7 +13,7 @@ package org.usfirst.frc2811.Stronghold2016.subsystems;
 
 import org.usfirst.frc2811.Stronghold2016.Robot;
 
-import com.kauailabs.navx.frc.AHRS;
+ //import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -32,10 +32,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Chassis extends Subsystem implements PIDOutput{
 
     public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
+
     public PIDController rotationPID;
     
     private Encoder leftEncoder = new Encoder(0,1);
-    private Encoder rightEncoder = new Encoder(6,7);
+    private Encoder rightEncoder = new Encoder(12,13);
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     
@@ -66,12 +67,14 @@ public class Chassis extends Subsystem implements PIDOutput{
         chassisDrive.setSensitivity(0.5);
         chassisDrive.setMaxOutput(1.0);
         
-        rotationPID = new PIDController(pVal, iVal, dVal, navxGyro, this);
-        rotationPID.setInputRange(-180.0, 180.0);
+ //       rotationPID = new PIDController(pVal, iVal, dVal, navxGyro, this);
+        /*rotationPID.setInputRange(-180.0, 180.0);
         rotationPID.setOutputRange(-1.0, 1.0);
         rotationPID.setAbsoluteTolerance(tolerance);
         rotationPID.setContinuous(true);
-    }
+    
+    */
+        }
     
     public void joystickDrive(){
     	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(0), Robot.oi.gamePad.getRawAxis(3));
@@ -95,7 +98,7 @@ public class Chassis extends Subsystem implements PIDOutput{
      * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
      */
     public void setRotation(double degrees){
-    	rotationPID.setSetpoint(degrees);
+    //	rotationPID.setSetpoint(degrees);
     	chassisDrive.arcadeDrive(0, rotateRate);
     }
     
@@ -125,9 +128,9 @@ public class Chassis extends Subsystem implements PIDOutput{
     /**
      * @return Whether or not the robot is aligned to an angle (in degrees)
      */
-    public boolean isOnTarget(){
+  /*public boolean isOnTarget(){
     	return Math.abs(rotationPID.getSetpoint()-navxGyro.getAngle())<=tolerance;
-    }
+    } */
 
 	@Override
 	public void pidWrite(double output) {

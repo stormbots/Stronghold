@@ -1,54 +1,38 @@
 package org.usfirst.frc2811.Stronghold2016.commands;
 
 import org.usfirst.frc2811.Stronghold2016.Robot;
+import org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *	Used to drive the robot directly forward at a 0 degree angle, autonomously
+ *
  */
-public class AutoDrive extends Command {
+public class TestIntake extends Command {
 
-	double distance;
-	double speed;
-	double moveValue;
-	double targetAngle;
-	
-    public AutoDrive(double feet, double power) {
+    public TestIntake() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	distance=feet;
-    	speed=power;
- //   	targetAngle = Robot.chassis.navxGyro.getAngle();
-    	
-    }
-    
-    public AutoDrive(double feet, double power, double degrees) {
-    	distance=feet;
-    	speed=power;
-    	targetAngle=degrees;    	
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.chassis.resetTicks();
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	Robot.chassis.movingAlign(speed, targetAngle);
-    	
+    protected void execute() {;
+    	Robot.chassis.manualDrive(1, 0);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return 	Robot.chassis.getLeftEncoder()==moveValue||
-        		Robot.chassis.getRightEncoder()==moveValue;
+        return !Robot.oi.button5.get();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	    	
+    	Robot.intakeLifter.setMotor(0);
     }
 
     // Called when another command which requires one or more of the same
