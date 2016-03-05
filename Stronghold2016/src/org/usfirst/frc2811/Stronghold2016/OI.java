@@ -11,16 +11,11 @@
 
 package org.usfirst.frc2811.Stronghold2016;
 
-import org.usfirst.frc2811.Stronghold2016.commands.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-<<<<<<< HEAD
-=======
 import edu.wpi.first.wpilibj.command.Command;
->>>>>>> refs/remotes/origin/Shooter
-
-import org.usfirst.frc2811.Stronghold2016.subsystems.*;
 
 
 /**
@@ -73,11 +68,7 @@ public class OI {
 
         gamePad = new Joystick(0);
         button2 = new JoystickButton(gamePad,2);
-        button2.whenPressed(new ResetAlignment());
 /*
-        
-        
-       
         button2 = new JoystickButton(gamePad, 2);
         button3 = new JoystickButton(gamePad,3);
         button4 = new JoystickButton(gamePad,4);

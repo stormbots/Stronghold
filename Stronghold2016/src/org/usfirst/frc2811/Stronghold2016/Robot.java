@@ -13,14 +13,10 @@ package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
-import 	org.usfirst.frc2811.Stronghold2016.commands.ResetAlignment;
-import  org.usfirst.frc2811.Stronghold2016.commands.TestIntake;
-import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
-import org.usfirst.frc2811.Stronghold2016.subsystems.ShooterWheelPID;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
 
 import 	edu.wpi.first.wpilibj.BuiltInAccelerometer;
@@ -75,7 +71,7 @@ public class Robot extends IterativeRobot {
         intake = new Intake();
         shooter = new Shooter();
         //TODO Find/Set Chassis rotation PID values
-        chassis = new Chassis(0, 0, 0);
+        chassis = new Chassis();
         intakeLifter = new IntakeLifter();
         // OI must be constructed after subsystems. If the OI creates Commands
         //(which it very likely will), subsystems are not guaranteed to be
@@ -85,6 +81,7 @@ public class Robot extends IterativeRobot {
 
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
+        joystickDrive = new JoystickDrive();
         //testIntake = new TestIntake();
         //resetAlignment = new ResetAlignment();
         //testShooter= new TestShooter();
@@ -124,6 +121,7 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
+        joystickDrive.start();
         
     }
 
@@ -136,8 +134,6 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
-        SmartDashboard.putData("Gyro", chassis.navxGyro);
-        SmartDashboard.putBoolean("On Target?", Math.abs(chassis.rotationPID.getSetpoint()-chassis.navxGyro.getAngle())<=5);
 
        // SmartDashboard.putData("Compressor", compressor);
      //   SmartDashboard.putData("Gyro", chassis.navxGyro);

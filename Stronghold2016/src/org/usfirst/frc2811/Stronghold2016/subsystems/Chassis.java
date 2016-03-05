@@ -29,12 +29,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  *
  */
-public class Chassis extends Subsystem implements PIDOutput{
+public class Chassis extends Subsystem{
 
-    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
 
-    public PIDController rotationPID;
-    
     private Encoder leftEncoder = new Encoder(0,1);
     private Encoder rightEncoder = new Encoder(12,13);
     
@@ -47,17 +44,8 @@ public class Chassis extends Subsystem implements PIDOutput{
     
     private RobotDrive chassisDrive = new RobotDrive(frontLeftMotor, 
     		frontRightMotor, backLeftMotor, backRightMotor);
-    
-    private double rotateRate;
-    private double pVal,iVal,dVal;
-    private double tolerance = 3;
-    
-    public Chassis(double p, double i, double d){
-    	pVal=p;
-    	iVal=i;
-    	dVal=d;
-    }
-    
+
+
     public void initDefaultCommand() {
     	//TODO Find default shifter position
     	gearShifter.set(false);
@@ -92,26 +80,7 @@ public class Chassis extends Subsystem implements PIDOutput{
     public void shiftGears(){
     	gearShifter.set(!gearShifter.get());
     }
-    
-    /** 
-     * Might have to be called continuously //TODO test this
-     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
-     */
-    public void setRotation(double degrees){
-    //	rotationPID.setSetpoint(degrees);
-    	chassisDrive.arcadeDrive(0, rotateRate);
-    }
-    
-    /** 
-     * Might have to be called continuously //TODO test this
-     * @param forwardPower Relative speed from -1.0 to 1.0 inclusive
-     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing. 
-     */
-    public void movingAlign(double forwardPower, double degrees){
-    	rotationPID.setSetpoint(degrees);
-    	chassisDrive.arcadeDrive(forwardPower, rotateRate);
-    }
-    
+
     public int getLeftEncoder(){
     	return leftEncoder.get();
     }
@@ -125,18 +94,5 @@ public class Chassis extends Subsystem implements PIDOutput{
     	rightEncoder.reset();
     }
     
-    /**
-     * @return Whether or not the robot is aligned to an angle (in degrees)
-     */
-  /*public boolean isOnTarget(){
-    	return Math.abs(rotationPID.getSetpoint()-navxGyro.getAngle())<=tolerance;
-    } */
-
-	@Override
-	public void pidWrite(double output) {
-		rotateRate = output;
-		
-	}
- 
 }
 

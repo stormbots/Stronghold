@@ -33,9 +33,7 @@ public class AutonomousCommand extends CommandGroup {
     	*/
     	
     	 addSequential(new IntakeHoming());   	
-    	addSequential(new BreachDefenses(defense));
-       	addSequential(new ResetAlignment(goal));
-    	addSequential(new ShootBall());
+    	 addSequential(new ShootBall());
     	
     }
 
