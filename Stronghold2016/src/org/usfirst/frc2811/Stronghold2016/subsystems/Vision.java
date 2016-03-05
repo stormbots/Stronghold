@@ -11,7 +11,9 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
@@ -25,6 +27,11 @@ public class Vision extends Subsystem {
 	 * NetworkTables handle to the NetworkTable GRIP will push values to
 	 */
 	private NetworkTable grip;
+	
+	/**
+	 * Handle to the GRIP process
+	 */
+	Process gripProcess;
 	
 	/**
 	 * Name of the NetworkTable that GRIP will push values to
@@ -46,6 +53,12 @@ public class Vision extends Subsystem {
 	 */
 	private String unconnectedError = "VISION: Error -> NT not connected!";
 	
+	
+	/**
+	 * Height of camera off the ground
+	 */
+	private double cameraHeight = 0;
+	
 	/**
 	 * Distance left or right from the shooter to the camera
 	 * Camera right of shooter: Positive value
@@ -61,10 +74,10 @@ public class Vision extends Subsystem {
 	private double cameraOffsetDistanceY = 0;
 	
 	/**
-	 * Camera angle offset rel to ground
+	 * Camera angle rel to vertical plane
 	 * TODO: Get better measurement. Halfway between 35 and 45 for now.
 	 */
-	private double cameraAngleOffset = 0;
+	private double cameraOffsetAngleY = 0;
 	
 	/**
 	 * Diagonal field of view of the camera
@@ -94,13 +107,14 @@ public class Vision extends Subsystem {
 	 * @param cameraPixelsY Number of vertical pixels provided by the camera used by the subsystem
 	 */
 	public Vision(String networkTableName,
-				  double offsetX, double offsetY, double cameraAngleOffset, // Physical attributes of the camera
+				  double cameraHeight, double offsetX, double offsetY, double cameraOffsetAngleY, // Physical attributes of the camera
 				  double diagonalFieldOfView, int cameraPixelsX, int cameraPixelsY){ // Technical attributes of camera
 		this.tableName = networkTableName;
 		
+		this.cameraHeight = cameraHeight;
 		this.cameraOffsetDistanceX = offsetX;
 		this.cameraOffsetDistanceY = offsetY;
-		this.cameraAngleOffset = cameraAngleOffset;
+		this.cameraOffsetAngleY = cameraOffsetAngleY;
 		
 		this.diagonalFieldOfView = diagonalFieldOfView;
 		this.cameraPixelsX = cameraPixelsX;
@@ -113,20 +127,6 @@ public class Vision extends Subsystem {
 		this.gripInit();
 	}
 
-	// TODO: breaks
-	/**
-	 * Initialize the camera for the NIVision framework. Primarily used to send images to the DS/SmartDashboard.
-	 * Do not run this unless you want to break GRIP, or unless you've fixed <b><i><u>the problem</u></i></b>.
-	 */
-	public void cameraInit() {
-		Image frame;
-		int session;
-		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-    	session = NIVision.IMAQdxOpenCamera("cam0",
-                NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-        NIVision.IMAQdxConfigureGrab(session);
-	}
-	
 	/**
 	 * Initialize the tableName NetworkTable for vision values
 	 */
@@ -141,18 +141,54 @@ public class Vision extends Subsystem {
 	 * Start the GRIP process
 	 */
 	public void gripInit() { //initializes grip on the roborio
+		System.out.println("Attempting to restart Grip");
+		
+		boolean gripIsRunning = false;
+		
+		//Attempt to detect already running GRIP Process
 		try {
-			//				 prep to execute a new java program (GRIP) from the GRIP jarfile		
-			new ProcessBuilder("/usr/local/frc/JRE/bin/java", "-jar", "/home/lvuser/grip.jar",
-					// with our GRIP project file, the parent IO stream, and finally start the process
-    				"/home/lvuser/project.grip").inheritIO().start();
-    		//TODO add print statement to make sure things work right
-    		
-    	} catch (IOException e) {
-    		// The GRIP jarfile is not there, our project file is not there, or something else went horribly wrong.
-    		e.printStackTrace();
-    	}
+			String process;
+			// getRuntime: Returns the runtime object associated with the current Java application.
+			// exec: Executes the specified string command in a separate process.
+			Process p = Runtime.getRuntime().exec("ps -a | grep '*[p]roject.*' | awk '{print $1}'");
+			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			while ((process = input.readLine()) != null) {
+				if (process.indexOf("project.grip") != -1) {
+					int grippid = Integer.parseInt(process.substring(1, process.indexOf(" ",1)));
+					System.out.println("PROCESS FOUND!!!!!!!!!!! " + grippid); // <-- Print all Process here line by line
+					gripIsRunning = true;
+				}
+			}
+			input.close();
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+
+		if (!gripIsRunning) { 
+			try {
+				//				 prep to execute a new java program (GRIP) from the GRIP jarfile		
+				gripProcess = new ProcessBuilder("/usr/local/frc/JRE/bin/java", "-jar", "/home/lvuser/grip.jar",
+						// with our GRIP project file, the parent IO stream, and finally start the process
+	    				"/home/lvuser/project.grip").start();
+	    		//TODO add print statement to make sure things work right
+				System.out.println("Grip successfully started");
+	    		
+	    	} catch (IOException e) {
+	    		// The GRIP jarfile is not there, our project file is not there, or something else went horribly wrong.
+	    		System.out.println("Exception! Grip could not be started");
+	    		e.printStackTrace();
+	    	}
+		
+		}
 	}
+	
+	/**
+	 * Kill the GRIP process
+	 */
+	public void gripStop() {
+		gripProcess.destroyForcibly();
+	}
+	
 	
 	/**
 	 * @return If the handle to GRIP's NetworkTable is valid and functioning
@@ -177,18 +213,46 @@ public class Vision extends Subsystem {
 		}
 	}
 	
-	/**
-	 * @return Coordinate of the center of the target
+	/*
+	 * Get X part of coordinate
+	 * @return double the x coord
 	 */
-	public double[] getTargetCoordinate() { //returns (x, y) coordinate 
-		if(this.tableConnected()) {
-			double getX = grip.getNumber("centerX", defaultSingleValue);
-			double getY = grip.getNumber("centerY", defaultSingleValue);
-			double[] centerXY = {getX, getY};
-			return centerXY;
+	public double getTargetCoordX() {
+		if (this.tableConnected()) {
+			double[] coordinates = grip.getNumberArray("centerX", defaultValue);
+			System.out.println("Pre-Map targetCoordX result: " + coordinates[0]);
+			
+			System.out.println("Post-Map targetCoordX result: " + (coordinates[0] - this.cameraPixelsX/2));
+			
+			// GRIP maps (0,0) to top left
+			// We want to remap the coordinate to be relative to center=(0,0)
+			
+			return (1280 - coordinates[0]) - this.cameraPixelsX/2;
 		} else {
 			System.out.println(unconnectedError);
-			return defaultValue;
+			return defaultSingleValue;
+		}
+	}
+	
+	/**
+	 * Returns the Y part of the target coordinate
+	 * @return the Y part of the target center coordinate
+	 */
+	public double getTargetCoordY() {
+		if (this.tableConnected()) {
+			//double coordinate = grip.getNumber("centerY", defaultSingleValue);
+			double[] coordinate = grip.getNumberArray("centerY", defaultValue);
+			if (coordinate.length==0){
+				return 0;
+			}
+			
+			System.out.println("getTargetCoordY result: " + coordinate[0]);
+			
+			// remap from GRIP pixel mapping to center-based pixel mapping
+			return -(coordinate[0] - this.cameraPixelsY/2); //return first value of centerY arrays
+		} else {
+			System.out.println(unconnectedError);
+			return defaultSingleValue;
 		}
 	}
 	
@@ -198,16 +262,9 @@ public class Vision extends Subsystem {
 	public double getDistanceToTarget() {
 		double angleToTarget = this.getYAngleToTarget();
 		
-		//TODO: Figure out camera height off the ground. The calculation is affected by this.
-		/* NOTE: This is NOT the same as cameraOffsetDistanceY!!! cameraOffsetDistanceY is used to account
-		 * for the difference in position between the shooter and the camera, and ignores the positioning
-		 * off of the ground because that doesn't affect the other trig that will do that stuff.
-		 */
-		double cameraHeight = .75; // 9 inches = .75 feet
-		
 		// goal center height is 8'1". Subtract the camera height to get the height difference (opp in trig)
 		// this height is the distance from the ground to the middle of the target/goal
-		double goalHeight = 8.0 + (double)1/12 - cameraHeight;
+		double goalHeight = 8.0 + (double)1/12 - this.cameraHeight;
 		
 		/*  tan(angle) = goalHeight / distanceX
 		    
@@ -244,7 +301,7 @@ public class Vision extends Subsystem {
 	 * Break down the diagonal field of view of the camera into horizontal FOV and vertical FOV
 	 * @return an array containing {horizontal fov, vertical fov} in degrees
 	 */
-	private double[] diagonalFieldOfViewToXYFieldOfView(){
+	private double[] diagonalFieldOfViewToXYFieldOfView(){ //this method is CLEAN
 		
 		// just an angle for the trig stuff... lower left acute angle for a 720p camera
 		double angle = Math.toDegrees(Math.atan((double)this.cameraPixelsY/this.cameraPixelsX));
@@ -264,7 +321,7 @@ public class Vision extends Subsystem {
 	 */
 	public double getXAngleToTarget() {
 		
-		double[] objectPosition = this.getTargetCoordinate();
+		double objectPositionX = this.getTargetCoordX();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -272,8 +329,8 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetX = (objectPosition[0] - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
-				
+		double angleOffsetX = (objectPositionX - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
+
 		return angleOffsetX;
 	}
 	
@@ -285,7 +342,7 @@ public class Vision extends Subsystem {
 	 */
 	public double getYAngleToTarget() {
 		
-		double[] objectPosition = this.getTargetCoordinate();
+		double objectPositionY = this.getTargetCoordY();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -293,9 +350,48 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetY = (objectPosition[1] - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
+		double angleOffsetY = (objectPositionY - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
 		
-		return angleOffsetY + this.cameraAngleOffset;
+		return angleOffsetY + this.cameraOffsetAngleY;
+	}
+	
+	/**
+	 * @return IN THEORY, the true X (horizontal) offset in feet from the shooter to the target.
+	 * <br>GUIDE: greater than 0: need to drive rightward || less than 0: need to drive leftward
+	 */
+	public double getRealXOffsetToTarget() {
+		double angleToTarget = this.getXAngleToTarget();
+		
+		System.out.println("getRealXOffsetToTarget -> angleToTarget = " + angleToTarget);
+		
+		double distanceToTarget = this.getDistanceToTarget();
+		
+		System.out.println("getRealXOffsetToTarget -> distanceToTarget = " + distanceToTarget);
+		
+		//tan(angleToTarget) = offsetToCamera / distanceToTarget
+		//offsetToCamera = distanceToTarget * tan(angleToTarget)
+		
+		// We're constructing a right triangle on a plane parallel to the field
+		// With (usually) long leg distanceToTarget and an adjacent angle derived from
+		// camera FOV. Math.tan() helps work out the ratio to get the small leg length.
+		double offsetXToCamera = distanceToTarget * Math.toDegrees(Math.tan(angleToTarget));
+		
+		// If the target is to the left, the offset increases our net X offset
+		// Otherwise, it decreases our offset if the target is to the right.
+		if (angleToTarget < 0) {
+			// the negative sign denotes that movement leftward is required
+			return -(Math.abs(offsetXToCamera) + this.cameraOffsetDistanceX);
+		} else {
+			return Math.abs(offsetXToCamera) - this.cameraOffsetDistanceX;
+		}
+	}
+	
+	/**
+	 * @return IN THEORY, the true distance from the shooter to the target
+	 */
+	public double getRealDistanceToTarget() {
+		// Should be as simple as this since these distances are in parallel directions
+		return this.getDistanceToTarget() + this.cameraOffsetDistanceY;
 	}
 	
     // Put methods for controlling this subsystem
