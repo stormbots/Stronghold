@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 
 /**
- *
+ * The Chassis impliments a PID System that is controlled by the NavX gyro and compass
  */
 public class Chassis extends PIDSubsystem{
 
@@ -34,9 +34,9 @@ public class Chassis extends PIDSubsystem{
     private double rotateRate;
     public boolean operatorControl;
        
-    public Chassis(double p, double i, double d){
+    public Chassis(){
     	
-    	super("GyroPID",p,i,d);
+    	super("GyroPID",.0075,.002,.0075);
     	System.out.println("Chassis, Statement #" + Robot.counter);
     	Robot.counter++;
     	chassisDrive = new ArcadeDrivePID();
@@ -55,7 +55,7 @@ public class Chassis extends PIDSubsystem{
     	//TODO Find default shifter position
     	gearShifter.set(false);
         
-        getPIDController().setInputRange(-180.0, 180.0);
+        getPIDController().setInputRange(0, 360);
         getPIDController().setOutputRange(-1.0, 1.0);
         getPIDController().setAbsoluteTolerance(tolerance);
         getPIDController().setContinuous(true);
@@ -105,18 +105,40 @@ public class Chassis extends PIDSubsystem{
     	chassisDrive.arcadeDrive(0, rotateRate);
     }
     
-    /*
+    
     public void resetTicks(){
     	chassisDrive.leftSide.resetSideTicks();
     	chassisDrive.rightSide.resetSideTicks();
     }
-    */
     
+    public boolean isRobotStable(){
+    	return Math.abs(Robot.onboardAccelerometer.getZ()-1)<.1;
+    }
+        
     /**
      * @return Whether or not the robot is aligned to an angle (in degrees)
      */
     public boolean isOnTarget(){
+    	System.out.println("Target Angle"+getSetpoint());
+    	System.out.println("Actual Angle"+navxGyro.getAngle());
     	return Math.abs(getSetpoint()-navxGyro.getAngle())<=tolerance;
+    }
+    
+    public void resetPID(){
+    	getPIDController().reset();
+    	getPIDController().enable();
+    }
+    
+    public double getError(){
+    	return getPIDController().getError();
+    }
+    
+    public double getPIDOutput(){
+    	return getPIDController().get();
+    }
+    
+    public double getSetpoint(){
+    	return getPIDController().getSetpoint();
     }
 
 	@Override

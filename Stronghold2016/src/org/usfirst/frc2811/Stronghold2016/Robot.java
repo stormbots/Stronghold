@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
         shooter = new Shooter();
 
         //TODO Find Gyro rotation PID values
-        chassis = new Chassis(3, 0, 0);
+        chassis = new Chassis();
 
         // OI must be constructed after subsystems. If the OI creates Commands
         //(which it very likely will), subsystems are not guaranteed to be
@@ -142,6 +142,11 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Right Write Value", chassis.chassisDrive.rightSide.getSideSetpoint());
         SmartDashboard.putNumber("Right Rate", chassis.chassisDrive.rightSide.getSideEncoderRate());
         SmartDashboard.putNumber("Right Error", chassis.chassisDrive.rightSide.getPIDController().getError());
+        
+        SmartDashboard.putNumber("Rotation Error", chassis.getError());
+        SmartDashboard.putNumber("Rotation Output", chassis.getPIDOutput());
+        SmartDashboard.putNumber("Rotation Setpoint", chassis.getSetpoint());
+        SmartDashboard.putNumber("Rotation Current Position", chassis.navxGyro.getAngle());
     }
 
     /**

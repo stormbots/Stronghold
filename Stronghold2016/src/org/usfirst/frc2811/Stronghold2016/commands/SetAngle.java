@@ -19,33 +19,38 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
  */
 public class SetAngle extends Command {
 
-	double angle;
+	private double angle;
 	
     public SetAngle(double degrees) {
     	angle=degrees;
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
-    	
+    public void initialize() {
+    	Robot.chassis.resetPID();    	    	
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
+    public void execute() {
     	Robot.chassis.setRotation(angle);
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return Robot.chassis.isOnTarget();
+    public boolean isFinished() {
+    	System.out.println("Attempting to determine if robot should stop");
+        return Robot.chassis.isOnTarget();//||!Robot.oi.button4.get();
+    	//return false;
     }
 
     // Called once after isFinished returns true
-    protected void end() {
+    public void end() {
+    	Robot.chassis.resetPID();
+    	Robot.chassis.setOperatorControl();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
-    protected void interrupted() {
+     public void interrupted() {
+    	end();
     }
 }

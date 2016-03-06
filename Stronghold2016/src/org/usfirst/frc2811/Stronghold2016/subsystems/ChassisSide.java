@@ -39,6 +39,7 @@ public class ChassisSide extends PIDSubsystem {
 		getPIDController().enable();
 		getPIDController().setOutputRange(-1, 1);
 		getPIDController().setContinuous(false);
+		//getPIDController().getAvgError()>.1&& targetSpeed~=-0; then reset();
 		frontMotor.setInverted(false);
 		backMotor.setInverted(oppositeMotors);
 	}
