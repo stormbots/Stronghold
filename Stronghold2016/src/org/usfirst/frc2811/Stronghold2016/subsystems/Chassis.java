@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  */
 public class Chassis extends PIDSubsystem{
 
-    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
+    //public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
 
     public PIDController rotationPID;
     
@@ -145,13 +145,15 @@ public class Chassis extends PIDSubsystem{
      * @return Whether or not the robot is aligned to an angle (in degrees)
      */
     public boolean isOnTarget(){
-    	return Math.abs(getSetpoint()-navxGyro.getAngle())<=tolerance;
+    	return true;
+    	// Math.abs(getSetpoint()-navxGyro.getAngle())<=tolerance;
     }
 
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return navxGyro.getAngle();
+		return 0;
+				//navxGyro.getAngle();
 	}
 
 	@Override
