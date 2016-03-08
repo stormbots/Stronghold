@@ -12,10 +12,10 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
-import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
+import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
-import org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
+import	org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
 
@@ -37,7 +37,9 @@ import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-    Command autonomousCommand;
+    public static int counter = 1;
+	
+	Command autonomousCommand;
     Command joystickDrive;
 
     //Command testIntake;
@@ -52,6 +54,7 @@ public class Robot extends IterativeRobot {
     public static Vision vision;
     public static Intake intake;
     public static Shooter shooter;
+    
     public static Chassis chassis;
 	public static IntakeLifter intakeLifter;
     
@@ -62,17 +65,19 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-
+    	System.out.println("Start of RobotInit, Statement #" + counter);
     	compressor = new Compressor();
         powerPanel = new PowerDistributionPanel();
         onboardAccelerometer = new BuiltInAccelerometer();
-        
-   		vision = new Vision();
+
+        vision = new Vision();
         intake = new Intake();
         shooter = new Shooter();
+
         //TODO Find/Set Chassis rotation PID values
         chassis = new Chassis();
         intakeLifter = new IntakeLifter();
+
         // OI must be constructed after subsystems. If the OI creates Commands
         //(which it very likely will), subsystems are not guaranteed to be
         // constructed yet. Thus, their requires() statements may grab null
@@ -82,9 +87,13 @@ public class Robot extends IterativeRobot {
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
         joystickDrive = new JoystickDrive();
+
         //testIntake = new TestIntake();
         //resetAlignment = new ResetAlignment();
         //testShooter= new TestShooter();
+        
+        System.out.println("RobotInit End, Statement #" + counter);
+        counter++;
 
 
     }
@@ -122,7 +131,7 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         joystickDrive.start();
-        
+
     }
 
     /**
@@ -130,18 +139,26 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        joystickDrive.start();
+        
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
-
-       // SmartDashboard.putData("Compressor", compressor);
-     //   SmartDashboard.putData("Gyro", chassis.navxGyro);
-    //    SmartDashboard.putBoolean("On Target?", Math.abs(chassis.rotationPID.getSetpoint()-chassis.navxGyro.getAngle())<=5);
-        //chassis.setRotation(0);
-        //System.out.println("Intake Lifter Encoder Ticks"+Robot.intakeLifter.getTicks());
-       // System.out.println("Intake encoder Ticks" + intakeLifter.getTicks());
-        //System.out.println("Current Angle"+intakeLifter.getCurrentAngle());
+        SmartDashboard.putData("Gyro", chassis.navxGyro);
+        
+        SmartDashboard.putBoolean("On Target?", chassis.isOnTarget());
+        
+        SmartDashboard.putNumber("Left Write Value", chassis.chassisDrive.leftSide.getSideSetpoint());
+        SmartDashboard.putNumber("Left Rate", chassis.chassisDrive.leftSide.getSideEncoderRate());
+        SmartDashboard.putNumber("Left Error", chassis.chassisDrive.leftSide.getPIDController().getError());
+        SmartDashboard.putNumber("Right Write Value", chassis.chassisDrive.rightSide.getSideSetpoint());
+        SmartDashboard.putNumber("Right Rate", chassis.chassisDrive.rightSide.getSideEncoderRate());
+        SmartDashboard.putNumber("Right Error", chassis.chassisDrive.rightSide.getPIDController().getError());
+        
+        SmartDashboard.putNumber("Rotation Error", chassis.getError());
+        SmartDashboard.putNumber("Rotation Output", chassis.getPIDOutput());
+        SmartDashboard.putNumber("Rotation Setpoint", chassis.getSetpoint());
+        SmartDashboard.putNumber("Rotation Current Position", chassis.navxGyro.getAngle());
+        SmartDashboard.putNumber("NavX Yaw", chassis.navxGyro.getYaw());
 
     }
 

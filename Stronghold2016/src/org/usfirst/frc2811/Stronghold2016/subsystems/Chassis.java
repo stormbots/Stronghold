@@ -13,86 +13,161 @@ package org.usfirst.frc2811.Stronghold2016.subsystems;
 
 import org.usfirst.frc2811.Stronghold2016.Robot;
 
- //import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
+
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 
 /**
- *
+ * The Chassis implements a PID System that is controlled by the NavX gyro and compass
  */
-public class Chassis extends Subsystem{
 
+public class Chassis extends PIDSubsystem{
 
-    private Encoder leftEncoder = new Encoder(0,1);
-    private Encoder rightEncoder = new Encoder(12,13);
-    
+    public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
     private Solenoid gearShifter = new Solenoid(0, 0);
     
-    private SpeedController frontLeftMotor  = new Talon(0);
-    private SpeedController backLeftMotor = new Talon(1);
-    private SpeedController frontRightMotor   = new Talon(2);
-    private SpeedController	backRightMotor  = new Talon(3);
+    public ArcadeDrivePID chassisDrive;
     
-    private RobotDrive chassisDrive = new RobotDrive(frontLeftMotor, 
-    		 backLeftMotor,frontRightMotor, backRightMotor);
+    private double tolerance = 1.5;
+    private double rotateRate;
+    public boolean operatorControl;
+       
+    public Chassis(){
+    	
+    	super("GyroPID",.015,.003,.015);
+    	System.out.println("Chassis, Statement #" + Robot.counter);
+    	Robot.counter++;
+    	chassisDrive = new ArcadeDrivePID();
+    	System.out.println("Chassis after ArcadeDrivePID, Statement #" + Robot.counter);
+    	Robot.counter++;
 
-
-    public void initDefaultCommand() {
-    	//TODO Find default shifter position
-    	gearShifter.set(false);
-        
     	chassisDrive.setSafetyEnabled(true);
         chassisDrive.setExpiration(0.1);
         chassisDrive.setSensitivity(0.5);
         chassisDrive.setMaxOutput(1.0);
+
+    	
+    }
+    
+    public void initDefaultCommand() {
+
+    	//TODO Find default shifter position
+    	gearShifter.set(false);
         
- //       rotationPID = new PIDController(pVal, iVal, dVal, navxGyro, this);
-        /*rotationPID.setInputRange(-180.0, 180.0);
-        rotationPID.setOutputRange(-1.0, 1.0);
-        rotationPID.setAbsoluteTolerance(tolerance);
-        rotationPID.setContinuous(true);
-    
-    */
-        }
-    
-    public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), Robot.oi.gamePad.getRawAxis(2));
+        getPIDController().setInputRange(0, 360);
+        getPIDController().setOutputRange(-1.0, 1.0);
+        getPIDController().setAbsoluteTolerance(tolerance);
+        getPIDController().setContinuous(true);
+
     }
     
     /**
-     * Used to drive robot autonomously, by setting arcadeDrive values
-     * @param moveValue forward/reverse power, -1 to 1, inclusive
-     * @param rotateValue rotation power, -1 to 1 inclusive
+     * Toggles the gear state of the robot Low<->High
      */
-    public void manualDrive(double moveValue, double rotateValue){
-    	chassisDrive.arcadeDrive(moveValue, rotateValue);
-    }
-    
     public void shiftGears(){
     	gearShifter.set(!gearShifter.get());
     }
-
-    public int getLeftEncoder(){
-    	return leftEncoder.get();
+    
+    public void setOperatorControl(){
+    	operatorControl=true;
     }
     
-    public int getRightEncoder(){
-    	return rightEncoder.get();
+    public void setCodeControl(){
+    	operatorControl=false;
     }
+    
+    /**
+     * Drives using direct joystick reads. The boolean operatorControl must be true for it to work.
+     */
+    public void joystickDrive(){
+    	if(operatorControl) chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), 
+    			Robot.oi.gamePad.getRawAxis(2), false);
+    }
+    
+    /**
+     * Allows for manual setting of movement values   
+     * @param forward
+     * @param rotate
+     */
+    public void manualDrive(double forward, double rotate){
+   	   	setCodeControl();	
+    	chassisDrive.arcadeDrive(forward, rotate, false);
+    }
+    
+    /** 
+     * Rotates the robot based on gyro values to a specified degree value
+     * Needs to be called continuously
+     */
+    public void setRotation(double degrees){
+    	setCodeControl();
+    	getPIDController().enable();
+    	setSetpoint(degrees);
+    	
+    	if(Math.abs(getPIDController().getError())<30){
+    		chassisDrive.arcadeDrive(0, rotateRate);
+    	} else {
+    		chassisDrive.arcadeDrive(0, Math.signum(getPIDController().getError())*.75);
+    		getPIDController().reset();
+    	}
+    }
+    
     
     public void resetTicks(){
-    	leftEncoder.reset();
-    	rightEncoder.reset();
+    	chassisDrive.leftSide.resetSideTicks();
+    	chassisDrive.rightSide.resetSideTicks();
     }
     
+    public boolean isRobotStable(){
+    	return Math.abs(Robot.onboardAccelerometer.getZ()-1)<.1;
+    }
+        
+    /**
+     * @return Whether or not the robot is aligned to an angle (in degrees)
+     */
+    public boolean isOnTarget(){
+    	System.out.println("Target Angle"+getSetpoint());
+    	System.out.println("Actual Angle"+navxGyro.getAngle());
+    	return Math.abs(getSetpoint()-navxGyro.getAngle())<=tolerance;
+    }
+    
+    public void resetPID(){
+    	getPIDController().reset();
+    	getPIDController().enable();
+    }
+    
+    public double getError(){
+    	return getPIDController().getError();
+    }
+    
+    public double getPIDOutput(){
+    	return getPIDController().get();
+    }
+    
+    public double getSetpoint(){
+    	return getPIDController().getSetpoint();
+    }
+
+	@Override
+	protected double returnPIDInput() {
+		// TODO Auto-generated method stub
+		return navxGyro.getAngle();
+	}
+
+	@Override
+	protected void usePIDOutput(double output) {
+		// TODO Auto-generated method stub
+		rotateRate=output;
+		
+		
+	}
+
 }
 

@@ -2,9 +2,17 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="build"/>
+<!--
+	Not sure if these work. Uncommented ones are from the split-chassis branch
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/navx_frc.jar"/>
 	<classpathentry kind="var" path="networktables"/>
 	<classpathentry kind="var" path="wpilib"/>
+-->
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/navx_frc.jar"/>
+	<classpathentry exported="true" kind="var" path="networktables"/>
+	<classpathentry exported="true" kind="var" path="wpilib"/>
+
 	<classpathentry kind="output" path="bin"/>
 </classpath>

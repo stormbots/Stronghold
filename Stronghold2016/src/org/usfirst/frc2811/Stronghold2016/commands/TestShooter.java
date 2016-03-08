@@ -48,6 +48,5 @@ public class TestShooter extends Command {
     	System.out.println("Shooter command was killed! Stopping");
     	Robot.shooter.setShooterDistance(0);
 
-
     }
 }

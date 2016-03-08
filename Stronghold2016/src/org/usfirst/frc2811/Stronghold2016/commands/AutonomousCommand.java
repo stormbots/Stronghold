@@ -11,10 +11,7 @@
 
 package org.usfirst.frc2811.Stronghold2016.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
-import org.usfirst.frc2811.Stronghold2016.Robot;
 
 /**
  *
@@ -31,10 +28,12 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	
-    	 addSequential(new IntakeHoming());   	
-    	 addSequential(new ShootBall());
-    	
+/*
+    	addSequential(new IntakeHoming());   	
+		addSequential(new BreachDefenses(defense)); 
+       	addSequential(new SetAngle(goal));
+		addSequential(new ShootBall());
+*/
     }
 
    
