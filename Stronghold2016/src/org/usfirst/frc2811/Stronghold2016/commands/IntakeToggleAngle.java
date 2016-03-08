@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class IntakeToggle extends Command {
+public class IntakeToggleAngle extends Command {
 
-    public IntakeToggle() {
+    public IntakeToggleAngle() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
@@ -26,7 +26,7 @@ public class IntakeToggle extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	//FIXME should this be false, or can this exit after the setpoint is changed?
-        return true;
+        return Robot.intakeLifter.onTarget(5);
     }
 
     // Called once after isFinished returns true

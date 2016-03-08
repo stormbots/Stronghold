@@ -27,7 +27,6 @@ public class Intake extends Subsystem {
 
 	private static SpeedController intakeMotorBelts = new Talon(4);
     private static Solenoid intakeSolenoid = new Solenoid(0, 1);
-    private Encoder intakeEncoder = new Encoder(6,7);
     private DigitalInput ballReadySwitch = new DigitalInput(8);
     private boolean extended = false;
     private double intakespeed = .25; // TODO double check that this spins right way, also if it needs to be faster/slower
