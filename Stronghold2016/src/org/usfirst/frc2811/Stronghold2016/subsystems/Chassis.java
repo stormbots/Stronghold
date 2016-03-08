@@ -30,13 +30,13 @@ public class Chassis extends PIDSubsystem{
     
     public ArcadeDrivePID chassisDrive;
     
-    private double tolerance = 3;
+    private double tolerance = 1.5;
     private double rotateRate;
     public boolean operatorControl;
        
     public Chassis(){
     	
-    	super("GyroPID",.0075,.002,.0075);
+    	super("GyroPID",.015,.003,.015);
     	System.out.println("Chassis, Statement #" + Robot.counter);
     	Robot.counter++;
     	chassisDrive = new ArcadeDrivePID();
@@ -96,13 +96,19 @@ public class Chassis extends PIDSubsystem{
     
     /** 
      * Rotates the robot based on gyro values to a specified degree value
-     * Might have to be called continuously //TODO test continuous calling
-     * @param degrees Only set values from -179.9 to 179.9, 0 included. //TODO Requires testing of 180 deg. 
+     * Needs to be called continuously
      */
     public void setRotation(double degrees){
     	setCodeControl();
+    	getPIDController().enable();
     	setSetpoint(degrees);
-    	chassisDrive.arcadeDrive(0, rotateRate);
+    	
+    	if(Math.abs(getPIDController().getError())<30){
+    		chassisDrive.arcadeDrive(0, rotateRate);
+    	} else {
+    		chassisDrive.arcadeDrive(0, Math.signum(getPIDController().getError())*.75);
+    		getPIDController().reset();
+    	}
     }
     
     

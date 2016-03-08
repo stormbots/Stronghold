@@ -147,6 +147,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Rotation Output", chassis.getPIDOutput());
         SmartDashboard.putNumber("Rotation Setpoint", chassis.getSetpoint());
         SmartDashboard.putNumber("Rotation Current Position", chassis.navxGyro.getAngle());
+        SmartDashboard.putNumber("NavX Yaw", chassis.navxGyro.getYaw());
     }
 
     /**
