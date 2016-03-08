@@ -36,12 +36,13 @@ public class SetAngle extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.chassis.setRotation(angle);
+    	//Robot.chassis.setRotation(angle);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.chassis.isOnTarget();
+    	return true;
+        //return Robot.chassis.isOnTarget();
     }
 
     // Called once after isFinished returns true

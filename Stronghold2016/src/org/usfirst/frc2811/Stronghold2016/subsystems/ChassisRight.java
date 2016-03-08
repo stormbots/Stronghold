@@ -16,7 +16,7 @@ public class ChassisRight extends PIDSubsystem {
 	public SpeedController frontRightMotor  = new Talon(1);
 	public SpeedController backRightMotor   = new Talon(3);
 	 
-	public Encoder rightEncoder = new Encoder(2,3);
+	public Encoder rightEncoder = new Encoder(0,1);
 
     public ChassisRight(double p, double i, double d) {
 		super("RightPID", p, i, d);

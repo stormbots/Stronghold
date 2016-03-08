@@ -264,7 +264,7 @@ public class Vision extends Subsystem {
 		
 		// goal center height is 8'1". Subtract the camera height to get the height difference (opp in trig)
 		// this height is the distance from the ground to the middle of the target/goal
-		double goalHeight = 8.0 + (double)1/12 - this.cameraHeight;
+		double goalHeight = 8.0 + (double)1/12.0 - this.cameraHeight;
 		
 		/*  tan(angle) = goalHeight / distanceX
 		    

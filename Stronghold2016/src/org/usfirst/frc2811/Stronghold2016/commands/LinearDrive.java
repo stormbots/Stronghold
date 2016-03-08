@@ -20,24 +20,23 @@ public class LinearDrive extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.chassis.resetTicks();
-    	Robot.chassis.driveRate(power);
+    	//Robot.chassis.resetTicks();
+    	//Robot.chassis.driveRate(power);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.chassis.adjustForErrorDrive();
+    	//Robot.chassis.adjustForErrorDrive();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Robot.chassis.getLeftDistance()==ticks
-    		   ||Robot.chassis.getRightDistance()==ticks;
+    	return true; //Robot.chassis.getLeftDistance()==ticks     		   ||Robot.chassis.getRightDistance()==ticks;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.chassis.driveRate(0);
+    	//Robot.chassis.driveRate(0);
     }
 
     // Called when another command which requires one or more of the same

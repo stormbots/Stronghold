@@ -32,8 +32,8 @@ public class Chassis extends PIDSubsystem{
 
     public PIDController rotationPID;
     
-    private Encoder leftEncoder = new Encoder(0,1);
-    private Encoder rightEncoder = new Encoder(6,7);
+//    private Encoder leftEncoder = new Encoder(2,3);
+//    private Encoder rightEncoder = new Encoder(8,9);
     
     private Solenoid gearShifter = new Solenoid(0, 0);
     

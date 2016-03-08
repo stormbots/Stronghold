@@ -16,7 +16,7 @@ public class ChassisLeft extends PIDSubsystem{
 	public SpeedController frontLeftMotor  = new Talon(0);
 	public SpeedController backLeftMotor   = new Talon(2);
 	
-	public Encoder leftEncoder = new Encoder(0,1);
+	public Encoder leftEncoder = new Encoder(2,3);
 
 	public ChassisLeft(double p, double i, double d){
 	  	super("LeftPID", p,i,d);
