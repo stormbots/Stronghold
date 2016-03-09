@@ -21,7 +21,7 @@ public class ShooterWheelPID extends Subsystem {
     // here. Call these from Commands.
     
 	public ShooterWheelPID(){
-        shooterMotorLeft = new CANTalon(4);
+        shooterMotorLeft = new CANTalon(7);
         shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.Speed);
         shooterMotorLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
         shooterMotorLeft.clearStickyFaults();
