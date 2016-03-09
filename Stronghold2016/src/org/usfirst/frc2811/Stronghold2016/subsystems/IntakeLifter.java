@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class IntakeLifter extends Subsystem {
-	private static CANTalon intakeMotorLifter = new CANTalon(7); //TODO what should this be
+	public static CANTalon intakeMotorLifter = new CANTalon(7); //TODO what should this be
 	
 	
     // Put methods for controlling this subsystem

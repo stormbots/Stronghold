@@ -37,6 +37,7 @@ public class ChassisSide extends PIDSubsystem {
 	protected void initDefaultCommand() {
 
 		getPIDController().enable();
+		getPIDController().setInputRange(-1, 1);
 		getPIDController().setOutputRange(-1, 1);
 		getPIDController().setContinuous(false);
 		//getPIDController().getAvgError()>.1&& targetSpeed~=-0; then reset();

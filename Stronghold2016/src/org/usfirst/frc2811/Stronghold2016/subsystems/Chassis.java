@@ -92,6 +92,10 @@ public class Chassis extends PIDSubsystem{
     			Robot.oi.gamePad.getRawAxis(2), false);
     }
     
+    public void triggerDrive(){
+    	if(operatorControl) chassisDrive.arcadeDrive(Robot.oi.triggerMath(), Robot.oi.xBox.getRawAxis(0));
+    }
+            
     /**
      * Allows for manual setting of movement values   
      * @param forward

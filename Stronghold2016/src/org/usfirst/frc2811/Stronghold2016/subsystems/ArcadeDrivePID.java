@@ -83,8 +83,8 @@ public class ArcadeDrivePID extends RobotDrive {
 	      }
 	    }
 
-	    pidDrive(leftMotorSpeed,rightMotorSpeed);
-	    //setLeftRightMotorOutputs(leftMotorSpeed,rightMotorSpeed);
+	    //pidDrive(leftMotorSpeed,rightMotorSpeed);
+	    setLeftRightMotorOutputs(leftMotorSpeed,rightMotorSpeed);
 	  }
 	
 	public void pidDrive(double leftTargetSpeed, double rightTargetSpeed){

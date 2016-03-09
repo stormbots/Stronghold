@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Shooter extends Subsystem {
 	
-	private ShooterWheelPID shooterWheelPID;
+	public ShooterWheelPID shooterWheelPID;
  
     // Initialize your subsystem here
     public Shooter() {

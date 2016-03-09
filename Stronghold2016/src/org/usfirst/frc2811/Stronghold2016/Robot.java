@@ -13,7 +13,9 @@ package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import 	org.usfirst.frc2811.Stronghold2016.commands.IntakeLifterManual;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeManual;
 import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
+import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import	org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
@@ -42,6 +44,8 @@ public class Robot extends IterativeRobot {
 	
 	Command autonomousCommand;
     Command joystickDrive;
+    Command intakeManual;
+    Command shooterManual;
 
     //Command testIntake;
     //public static Command resetAlignment;
@@ -89,8 +93,9 @@ public class Robot extends IterativeRobot {
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
         joystickDrive = new JoystickDrive();
-
-        lifterController = new IntakeLifterManual();
+        //lifterController = new IntakeLifterManual();
+        intakeManual = new IntakeManual();
+        shooterManual = new ShooterManual();
         //testIntake = new TestIntake();
         //resetAlignment = new ResetAlignment();
         //testShooter= new TestShooter();
@@ -138,6 +143,9 @@ public class Robot extends IterativeRobot {
 
         // It lets us adjust the angle of the lifter during teleop with the D pad
         lifterController.start();
+        
+        intakeManual.start();
+        shooterManual.start();
     }
 
     /**
@@ -152,6 +160,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Gyro", chassis.navxGyro);
         
         SmartDashboard.putBoolean("On Target?", chassis.isOnTarget());
+        SmartDashboard.putNumber("Z Accel", onboardAccelerometer.getZ());
+        SmartDashboard.putBoolean("Is It Flat?", chassis.isRobotStable());
         
         SmartDashboard.putNumber("Left Write Value", chassis.chassisDrive.leftSide.getSideSetpoint());
         SmartDashboard.putNumber("Left Rate", chassis.chassisDrive.leftSide.getSideEncoderRate());
