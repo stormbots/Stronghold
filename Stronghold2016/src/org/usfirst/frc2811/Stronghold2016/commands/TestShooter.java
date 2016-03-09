@@ -34,7 +34,7 @@ public class TestShooter extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false && !Robot.oi.button2.get();
+        return Robot.oi.button2.get();
     }
 
     // Called once after isFinished returns true

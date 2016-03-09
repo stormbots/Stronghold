@@ -22,6 +22,7 @@ public class IntakeHoming extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.intakeLifter.setHomingIntake();
+  
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -32,6 +33,7 @@ public class IntakeHoming extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	System.out.println("Finishing Homing Command");
+    	 System.out.println("Current Lifter Angle At End Of Homing" + Robot.intakeLifter.getCurrentAngle());
     }
 
     // Called when another command which requires one or more of the same

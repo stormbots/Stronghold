@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class IntakeLifter extends Subsystem {
-	private static CANTalon intakeMotorLifter = new CANTalon(7); //TODO what should this be
+	private static CANTalon intakeMotorLifter = new CANTalon(5); //TODO what should this be
 	
 	
     // Put methods for controlling this subsystem
@@ -22,14 +22,12 @@ public class IntakeLifter extends Subsystem {
 	private double maxAmountofDegrees= 360; //TODO measure what max is
 	private double minAmountofDegrees=0;// TODO check if min is actually zero degrees
 	
-	
-
-    public void initDefaultCommand() {
+	public IntakeLifter(){
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     	//intakeMotorLifter.setProfile(0); //FIXME This was in recycle rush code.  Is it needed? 
     	//intakeMotorLifter.enableControl(); // didn't do anything? 
-    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
+    	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
     	intakeMotorLifter.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
     	intakeMotorLifter.setVoltageRampRate(1); //FIXME find what a sane value is, this might be to slow
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
@@ -40,28 +38,47 @@ public class IntakeLifter extends Subsystem {
     	intakeMotorLifter.setPID(.5,.0001, .0001); //TODO Testbench values. figure out if we need this/ tune it
     	intakeMotorLifter.enable();
     
-    	//TODO Make it go down to 0 after seting homing
+    	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
     	
-    	
+    	//Does not work on testbench
+    	intakeMotorLifter.reverseOutput(true);//FIXME I think this enables the limit switches, but not sure
+    	intakeMotorLifter.reverseSensor(false);;//FIXME I think this enables the limit switches, but not sure
+
+    	//Does not work on testbench
+    	intakeMotorLifter.reverseOutput(false);//FIXME I think this enables the limit switches, but not sure
+    	intakeMotorLifter.reverseSensor(true);;//FIXME I think this enables the limit switches, but not sure
+
+	}
+
+    public void initDefaultCommand() {
     }
     /**
      * Makes the Motor go up and hit the hard upper limit and set encoder to zero when hit.
      * @return true when the limit switch is hit and false when it is not true. Only valid while performing the homing sequence
      */
     public boolean setHomingIntake(){
-    	double goUp= -0.25; 
+    	double goUp= -0.5; 
     	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);//TODO make sure it actually going up
     	intakeMotorLifter.set(goUp);
     	
-    	if(!intakeMotorLifter.isFwdLimitSwitchClosed()){
-	    	intakeMotorLifter.setEncPosition((int) angleToTicks(100));
+    	if(intakeMotorLifter.isFwdLimitSwitchClosed()){
+	    	intakeMotorLifter.setEncPosition((int) angleToTicks(0));
 	    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
+	    	intakeMotorLifter.enable();
+	    	intakeMotorLifter.clearIAccum();
+	    	
+	    	//Print some status things
+	    	System.out.println("Enabled? "+ intakeMotorLifter.isEnabled());
+	    	System.out.println("Setpoint? "+ intakeMotorLifter.getSetpoint());
+	    	
 	    	return true;
     	}
     	else {
     		return false;
     	}
+    
     }
+    
     /**
      * @param 
      * @return Math that converts angles to ticks
@@ -105,7 +122,7 @@ public class IntakeLifter extends Subsystem {
      * Sets motor from negative one to one. It should only be used for basic motor functionality
      * @param 
      */
-    public void setMotor (double set){
+    private void setMotor (double set){
 		intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		intakeMotorLifter.set(set);
 		

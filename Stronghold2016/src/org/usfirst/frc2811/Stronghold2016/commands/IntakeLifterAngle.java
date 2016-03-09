@@ -1,6 +1,5 @@
 package org.usfirst.frc2811.Stronghold2016.commands;
 
-import org.usfirst.frc2811.Stronghold2016.OI;
 import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -8,43 +7,33 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class IntakeLifterManual extends Command {
-
-    public IntakeLifterManual() {
+public class IntakeLifterAngle extends Command {
+	double angle;
+    public IntakeLifterAngle(double Angle) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	
+		angle=Angle;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        System.out.println("starting intake liver command");
-
+    	System.out.println("Moving lifter, starting from " + Robot.intakeLifter.getCurrentAngle());
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        double angle=4;
-        if(Robot.oi.gamePad.getPOV(0)==0){
-            Robot.intakeLifter.setAngleRelative(angle);
-        }
-        else if(Robot.oi.gamePad.getPOV(0)==180){
-            Robot.intakeLifter.setAngleRelative(-angle);
-        }
-        else {
-        	//do nothing
-        }
-        
+    	Robot.intakeLifter.setAngle(angle);
     }
-    
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return Robot.intakeLifter.onTarget(10);
+       
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("Current Lifter Angle" + Robot.intakeLifter.getCurrentAngle());
     }
 
     // Called when another command which requires one or more of the same

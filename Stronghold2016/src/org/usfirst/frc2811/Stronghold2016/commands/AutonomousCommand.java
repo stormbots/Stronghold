@@ -32,7 +32,11 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Positions: [1][2][3][4][5]
     	*/
     	
-    	 addSequential(new IntakeHoming());   	
+   	 addSequential(new IntakeHoming()); 
+	 addSequential(new IntakeLifterAngle(0));   	
+	 addSequential(new IntakeLifterAngle(40));   	
+	 addSequential(new IntakeLifterAngle(0));   	
+	 addSequential(new IntakeLifterAngle(40));   	
     	addSequential(new BreachDefenses(defense));
        	addSequential(new ResetAlignment(goal));
     	addSequential(new ShootBall());

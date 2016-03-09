@@ -142,6 +142,7 @@ public class Shooter extends Subsystem {
 	double calculatedoutput = FPSToTicksPer10MS(distanceToFPS(distanceToTarget));
 
 	 System.out.println("Feet Per second:"+ distanceToFPS(distanceToTarget));
+	 //System.out.printlin("" + )
 	 System.out.println("Calculated output:"+ calculatedoutput);
 
 	 //Plan for fudging the numbers
