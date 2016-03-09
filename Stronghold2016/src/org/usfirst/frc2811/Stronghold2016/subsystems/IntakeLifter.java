@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class IntakeLifter extends Subsystem {
-	private static CANTalon intakeMotorLifter = new CANTalon(0); //TODO what should this be
+	private static CANTalon intakeMotorLifter = new CANTalon(7); //TODO what should this be
 	
 	
     // Put methods for controlling this subsystem
@@ -21,7 +21,7 @@ public class IntakeLifter extends Subsystem {
 	private double minAmountofTicks=0;//TODO might be zero, but test to find actual min
 	private double maxAmountofDegrees= 360; //TODO measure what max is
 	private double minAmountofDegrees=0;// TODO check if min is actually zero degrees
-	 
+	
 	
 
     public void initDefaultCommand() {
@@ -54,7 +54,7 @@ public class IntakeLifter extends Subsystem {
     	intakeMotorLifter.set(goUp);
     	
     	if(!intakeMotorLifter.isFwdLimitSwitchClosed()){
-	    	intakeMotorLifter.setEncPosition((int) angleToTicks(90));
+	    	intakeMotorLifter.setEncPosition((int) angleToTicks(100));
 	    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
 	    	return true;
     	}
@@ -62,14 +62,20 @@ public class IntakeLifter extends Subsystem {
     		return false;
     	}
     }
-   /**
-    * 
-    * @param 
-    * @return Math that converts angles to ticks
-    */
-    public double angleToTicks(double angle){
-    	return map(angle, maxAmountofDegrees, minAmountofDegrees,maxAmountofTicks,minAmountofTicks);
-    }
+    /**
+     * @param 
+     * @return Math that converts angles to ticks
+     */
+     private double angleToTicks(double angle){
+     	return map(angle, maxAmountofDegrees, minAmountofDegrees,maxAmountofTicks,minAmountofTicks);
+     }
+     /**
+      * @param 
+      * @return Math that converts angles to ticks
+      */
+      private double ticksToAngle(double ticks){
+      	return map(ticks,maxAmountofTicks,minAmountofTicks, maxAmountofDegrees, minAmountofDegrees);
+      }
     
     /**
      *  lets you set a target angle (converted to ticks) for the arm
@@ -107,18 +113,35 @@ public class IntakeLifter extends Subsystem {
     }
     /**
      * Toggles between 90 and 0 degrees
-     * if the angle is greater than 45, it set the angle to 90, or to the homed position
-     * If the angle is less that 45, then it will set the intake to 0 TODO: Calibrate-might want different angles for toggle
+     * if the angle is greater than 45, it set the angle to 0, or to the homed position
+     * If the angle is less that 45, then it will set the intake to 100 TODO: Calibrate-might want different angles for toggle
      */
     public void toggleAngle() {
     	if(getCurrentAngle()>45) {
     		intakeMotorLifter.set(angleToTicks(0));
     	}
     	else{
-    		intakeMotorLifter.set(angleToTicks(90));
+    		intakeMotorLifter.set(angleToTicks(100));
     	}
     }
-    public double getTicks(){
+    /**
+     *  Move the arm up or down a few degrees
+     * @param input number of degrees to move
+     */
+    public void setAngleRelative(double input){
+    	if(intakeMotorLifter.getEncPosition() + input > maxAmountofDegrees){
+    		//intakeMotorLifter.set(maxAmountofTicks);
+    	 }
+    	else if(intakeMotorLifter.getEncPosition()+ input < minAmountofDegrees){
+    		//intakeMotorLifter.set(minAmountofTicks);    		
+    	}
+    	else{
+    		intakeMotorLifter.set(intakeMotorLifter.getEncPosition() + angleToTicks(input));
+    	}
+    	
+    }
+    
+    private double getTicks(){
     	return intakeMotorLifter.getEncPosition();
     }
     //TODO test and find good numbers for changing setpoint
@@ -132,7 +155,37 @@ public class IntakeLifter extends Subsystem {
     		output=minimum;//Shouldn't happen unless we divide by zero somewhere 
     	} 
     	return output;  
-    } 	 
+    }
+    
+    /**
+     * Determine whether the intake is currently where it's intended to be set
+     * @param tolerance in degrees for success
+     * @return true if within tolerance
+     */
+	public boolean onTarget(double tolerance) {
+		// TODO Auto-generated method stub
+		
+		return Math.abs(getCurrentAngle()-getSetpoint())<tolerance;
+	}
+	
+    /**
+     * Determine whether the intake is currently where it's intended to be set
+     * Shorthand for onTarget(5 degrees)
+     * @return true if within tolerance
+     */
+	
+	public boolean onTarget() {
+		return onTarget(5);
+	}
+
+	/**
+	 * 
+	 * @return current setpoint in degrees
+	 */
+	private double getSetpoint() {
+		// TODO Auto-generated method stub
+		return ticksToAngle(intakeMotorLifter.getSetpoint());
+	} 	 
     
 
 }
