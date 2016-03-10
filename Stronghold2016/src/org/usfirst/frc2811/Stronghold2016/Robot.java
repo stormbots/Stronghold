@@ -67,7 +67,7 @@ public class Robot extends IterativeRobot {
         onboardAccelerometer = new BuiltInAccelerometer();
         
         //TODO: Set vision offsetX and offsetY correctly. 0.5 is a dummy value for now.
-   		vision = new Vision("GRIP/myContoursReport", .75, -1 * (6.5/12.0), 0.0, 40, 68.5, 1280, 720);
+   		vision = new Vision("GRIP/myContoursReport", .75, -1 * (6.5/12.0), 0.0, 40, 68.5, 720, 1280);
         intake = new Intake();
         shooter = new Shooter();
         //TODO Find/Set Chassis rotation PID values

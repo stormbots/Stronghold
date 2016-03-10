@@ -227,7 +227,7 @@ public class Vision extends Subsystem {
 			// GRIP maps (0,0) to top left
 			// We want to remap the coordinate to be relative to center=(0,0)
 			
-			return (1280 - coordinates[0]) - this.cameraPixelsX/2;
+			return (this.cameraPixelsX - coordinates[0]) - this.cameraPixelsX/2;
 		} else {
 			System.out.println(unconnectedError);
 			return defaultSingleValue;
