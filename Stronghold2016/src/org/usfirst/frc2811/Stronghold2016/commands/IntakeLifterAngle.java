@@ -17,7 +17,7 @@ public class IntakeLifterAngle extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	System.out.println("Moving lifter, starting from " + Robot.intakeLifter.getCurrentAngle());
+    	System.out.println("Moving lifter, going to "+angle+" from " + Robot.intakeLifter.getCurrentAngle());
     }
 
     // Called repeatedly when this Command is scheduled to run

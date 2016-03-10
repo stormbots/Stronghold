@@ -122,7 +122,9 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         // It lets us adjust the angle of the lifter during teleop with the D pad
-        lifterController.start();
+        
+        //TODO: We need this but it's making lots of noise
+        //lifterController.start();
     }
 
     /**
@@ -148,5 +150,7 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
+        intakeLifter.disable();
+        System.out.println(intakeLifter.getCurrentAngle());
     }
 }
