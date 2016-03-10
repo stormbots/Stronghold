@@ -15,9 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.Image;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
@@ -141,7 +138,7 @@ public class Vision extends Subsystem {
 	 * Start the GRIP process
 	 */
 	public void gripInit() { //initializes grip on the roborio
-		System.out.println("Attempting to restart Grip");
+		System.out.println("Attempting to start/restart Grip");
 		
 		boolean gripIsRunning = false;
 		
@@ -166,6 +163,7 @@ public class Vision extends Subsystem {
 
 		if (!gripIsRunning) { 
 			try {
+				System.out.println("GRIP not running -- starting");
 				//				 prep to execute a new java program (GRIP) from the GRIP jarfile		
 				gripProcess = new ProcessBuilder("/usr/local/frc/JRE/bin/java", "-jar", "/home/lvuser/grip.jar",
 						// with our GRIP project file, the parent IO stream, and finally start the process
@@ -217,12 +215,18 @@ public class Vision extends Subsystem {
 	 * Get X part of coordinate
 	 * @return double the x coord
 	 */
-	public double getTargetCoordX() {
+	public double getTargetCoordY() {
 		if (this.tableConnected()) {
-			double[] coordinates = grip.getNumberArray("centerX", defaultValue);
-			System.out.println("Pre-Map targetCoordX result: " + coordinates[0]);
 			
-			System.out.println("Post-Map targetCoordX result: " + (coordinates[0] - this.cameraPixelsX/2));
+			if (grip.getNumberArray("centerX", defaultValue).length < 1) {
+				System.out.println("NO TARGET FOUND. RETURNING -9999.");
+				return -9999;
+			}
+			
+			double[] coordinates = grip.getNumberArray("centerX", defaultValue);
+			System.out.println("Pre-Map targetCoordY result: " + coordinates[0]);
+			
+			System.out.println("Post-Map targetCoordY result: " + (coordinates[0] - this.cameraPixelsX/2));
 			
 			// GRIP maps (0,0) to top left
 			// We want to remap the coordinate to be relative to center=(0,0)
@@ -238,17 +242,20 @@ public class Vision extends Subsystem {
 	 * Returns the Y part of the target coordinate
 	 * @return the Y part of the target center coordinate
 	 */
-	public double getTargetCoordY() {
+	public double getTargetCoordX() {
 		if (this.tableConnected()) {
 			//double coordinate = grip.getNumber("centerY", defaultSingleValue);
 			double[] coordinate = grip.getNumberArray("centerY", defaultValue);
 			if (coordinate.length==0){
-				return 0;
+				System.out.println("NO TARGET FOUND. RETURNING -9999.");
+				return -9999;
 			}
 			
-			System.out.println("getTargetCoordY result: " + coordinate[0]);
+			System.out.println("getTargetCoordX result: " + coordinate[0]);
 			
 			// remap from GRIP pixel mapping to center-based pixel mapping
+			
+			System.out.println("-(" + coordinate[0] + " - " + this.cameraPixelsY/2 + ")");
 			return -(coordinate[0] - this.cameraPixelsY/2); //return first value of centerY arrays
 		} else {
 			System.out.println(unconnectedError);
