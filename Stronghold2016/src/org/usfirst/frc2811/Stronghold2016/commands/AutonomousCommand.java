@@ -9,6 +9,7 @@
 // it from being updated in the future.
 
 
+
 package org.usfirst.frc2811.Stronghold2016.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -28,7 +29,8 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	   	addSequential(new IntakeHoming()); 
+    	   	//addSequential(new IntakeHoming());
+    	addSequential(new SketchyDrive(2));
 
    	 //addSequential(new IntakeLifterAngle(0),2);   	
 	 //addSequential(new IntakeLifterAngle(90)); 

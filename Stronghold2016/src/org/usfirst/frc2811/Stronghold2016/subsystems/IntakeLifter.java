@@ -36,7 +36,7 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.enableControl(); // didn't do anything? 
     	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
     	intakeMotorLifter.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
+    	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
     	intakeMotorLifter.setVoltageRampRate(2); //FIXME find what a sane value is, this might be to slow
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
     	//intakeMotorLifter.setForwardSoftLimit(maxAmountofTicks); // TODO find what this needs to be
