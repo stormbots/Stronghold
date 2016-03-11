@@ -22,6 +22,7 @@ public class ArcadeDrivePID extends RobotDrive {
 	public ChassisSide leftSide = new ChassisSide("Left",frontLeft,backLeft,leftEncoder,false);
 	public ChassisSide rightSide = new ChassisSide("Right",frontRight,backRight,rightEncoder,false);
 	
+	
 	public ArcadeDrivePID() {		
 		super(frontLeft,backLeft,frontRight,backRight);
 		
@@ -32,7 +33,7 @@ public class ArcadeDrivePID extends RobotDrive {
 		Robot.counter++;
 
 	}
-		
+
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
 	    // local variables to hold the computed PWM values for the motors
 		System.out.println("ArcadeDrive method, Statement #" + Robot.counter);

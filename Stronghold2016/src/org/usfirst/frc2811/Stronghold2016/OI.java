@@ -12,7 +12,12 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeBall;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeDown;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeHoming;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeLifterOff;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeOff;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeToggleAngle;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeUp;
 import org.usfirst.frc2811.Stronghold2016.commands.SetAngle;
 import org.usfirst.frc2811.Stronghold2016.commands.ShiftGears;
 import org.usfirst.frc2811.Stronghold2016.commands.ShootBall;
@@ -20,6 +25,7 @@ import org.usfirst.frc2811.Stronghold2016.commands.SpitBall;
 import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -92,6 +98,7 @@ public class OI {
     public Joystick gamePad;
     public JoystickButton gamePadButton1;
     public JoystickButton gamePadButton2;
+    public JoystickButton gamePadButton4;
     public JoystickButton gamePadButton5;
     public JoystickButton gamePadButton6;
     public JoystickButton gamePadButton8;
@@ -127,16 +134,24 @@ public class OI {
     	gamePadButton1.whenPressed(new IntakeToggleAngle());
     	
     	gamePadButton2 = new JoystickButton(gamePad,2);
+    	gamePadButton2.whileHeld(new IntakeDown() );
+    	gamePadButton2.whenReleased(new IntakeLifterOff());
+
     	//gamePadButton2.whenPressed(new TogglePokingThing());
+    	gamePadButton4 = new JoystickButton(gamePad,4);
+    	gamePadButton4.whileHeld(new IntakeUp() );
+    	gamePadButton4.whenReleased(new IntakeLifterOff());
 
     	gamePadButton5 = new JoystickButton(gamePad,5);
     	gamePadButton5.whenPressed(new ShootBall());
         
     	gamePadButton6 = new JoystickButton(gamePad, 6);
     	gamePadButton6.whileHeld(new SpitBall());
+    	gamePadButton6.whenReleased(new IntakeOff());
     	
     	gamePadButton8 = new JoystickButton(gamePad, 8);
-    	gamePadButton8.whileHeld(new IntakeBall());
+        gamePadButton8.whileHeld(new IntakeBall());
+    	gamePadButton8.whenReleased(new IntakeOff());
             
         
 

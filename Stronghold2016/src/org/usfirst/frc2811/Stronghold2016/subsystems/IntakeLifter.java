@@ -43,7 +43,7 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.setReverseSoftLimit(minAmountofTicks); //TODO find what this needs to beintakeMotorLifter
     	//intakeMotorLifter.ConfigFwdLimitSwitchNormallyOpen(true);//FIXME is this right?
     	//intakeMotorLifter.ConfigRevLimitSwitchNormallyOpen(true); //FIXME is this right?
-    	intakeMotorLifter.setPID(.05,0, .0001); //TODO Testbench values. figure out if we need this/ tune it
+    	intakeMotorLifter.setPID(.1,0, .0001); //TODO Testbench values. figure out if we need this/ tune it
     	intakeMotorLifter.enable();
     	intakeMotorLifter.clearStickyFaults();
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
@@ -90,13 +90,15 @@ public class IntakeLifter extends Subsystem {
      */
     public boolean setHomingIntake(){
     	//go up works correctly on robot with positive direction
-    	double goUp= 0.2; 
+    	double goUp= 0.5; 
     	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);//TODO make sure it actually going up
     	intakeMotorLifter.set(goUp);
+    	System.out.println("Motor Value" + intakeMotorLifter.getOutputVoltage());
+    	//intakeMotorLifter.clearStickyFaults();
     	
     	//TODO: If homing doesn't intake, it's because we grabbed the wrong switch
     	// Verify the isUpSwitchPressed functions work correctly, and then this will return like we expect
-    	if(isUpSwitchPressed()){
+    	if(intakeMotorLifter.isFwdLimitSwitchClosed()){
 	    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
 	    	intakeMotorLifter.setEncPosition(0);
 	    	intakeMotorLifter.clearIAccum();
@@ -113,6 +115,7 @@ public class IntakeLifter extends Subsystem {
     	}
     
     }
+    
     
     /**
      * @param 
@@ -207,7 +210,9 @@ public class IntakeLifter extends Subsystem {
 	public boolean onTarget() {
 		return onTarget(5);
 	}
-
+	//public void clearStickyFaults(){
+		//intakeMotorLifter.clearStickyFaults();
+	//}
 	/**
 	 * 
 	 * @return current setpoint in degrees
@@ -261,11 +266,11 @@ public class IntakeLifter extends Subsystem {
 			return true;
 		}
 		else{
-			intakeMotorLifter.set(.25);
+			intakeMotorLifter.set(.6);
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Move arm upward until it hits a switch.
 	 * @return true if at Down position
@@ -277,11 +282,14 @@ public class IntakeLifter extends Subsystem {
 			return true;
 		}
 		else{
-			intakeMotorLifter.set(-.25);
+			intakeMotorLifter.set(-.2);
 			return true;
 		}
 	}
-
+public void doNotLift(){
+	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+	intakeMotorLifter.set(0);
+}
 	/**
 	 * Allows the arm to be moved manually, if needed
 	 * @param speed of motor in PercentVbus
@@ -289,6 +297,7 @@ public class IntakeLifter extends Subsystem {
 	public void moveManually(double speed){
 		intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		intakeMotorLifter.set(speed);
+		//intakeMotorLifter.clearStickyFaults();
 		}
 }
 
