@@ -28,6 +28,25 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
+ *  <br>
+ *  Press F2, click popup, or view OI to see a diagram of the controller
+ *  <pre>
+ *           _____                    _____           
+ *           |  7  |                  |  8  |         
+ *           |_____|                  |_____|          
+ *           |__5__|                  |__6__|         
+ *         __________                __________       
+ *        |  / | \   \______________/          |       
+ *        | |--+--|                       4    |      
+ *        |  \ | /      9       10      1   3  |      
+ *        |  POV 0                        2    |      
+ *       /      ___                    ___      \     
+ *      /      / 3 \                  / 1 \      \    
+ *     |      |4 + 4|________________|2 + 2|      |   
+ *     |       \_3_/                  \_1_/       |   
+ *     |       /                          \       |   
+ *      \_____/                            \_____/    
+ *</pre>
  */
 public class OI {
     //// CREATING BUTTONS
@@ -120,7 +139,6 @@ public class OI {
     	gamePadButton8.whileHeld(new IntakeBall());
             
         
-
 
 
 

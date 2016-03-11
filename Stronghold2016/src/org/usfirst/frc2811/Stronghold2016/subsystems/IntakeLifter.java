@@ -37,7 +37,7 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
     	intakeMotorLifter.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
     	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
-    	intakeMotorLifter.setVoltageRampRate(1); //FIXME find what a sane value is, this might be to slow
+    	intakeMotorLifter.setVoltageRampRate(2); //FIXME find what a sane value is, this might be to slow
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
     	//intakeMotorLifter.setForwardSoftLimit(maxAmountofTicks); // TODO find what this needs to be
     	//intakeMotorLifter.setReverseSoftLimit(minAmountofTicks); //TODO find what this needs to beintakeMotorLifter
@@ -70,11 +70,12 @@ public class IntakeLifter extends Subsystem {
     	// Dan suspects this is the correct version on the robot
     	intakeMotorLifter.reverseOutput(true);
     	intakeMotorLifter.reverseSensor(false);
-    	//with these settings
-    	//angle decreases downward
-    	//ticks decrease downward
 
-	
+    	
+    	//Until PID works, set the mode to VBus and disable
+    	intakeMotorLifter.disable();
+    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+
 	}
 
     public void initDefaultCommand() {
@@ -93,7 +94,9 @@ public class IntakeLifter extends Subsystem {
     	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);//TODO make sure it actually going up
     	intakeMotorLifter.set(goUp);
     	
-    	if(intakeMotorLifter.isFwdLimitSwitchClosed()){
+    	//TODO: If homing doesn't intake, it's because we grabbed the wrong switch
+    	// Verify the isUpSwitchPressed functions work correctly, and then this will return like we expect
+    	if(isUpSwitchPressed()){
 	    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
 	    	intakeMotorLifter.setEncPosition(0);
 	    	intakeMotorLifter.clearIAccum();
@@ -134,6 +137,7 @@ public class IntakeLifter extends Subsystem {
      * @param angle Target position in degree 
      */
     public void setAngle(double angle){
+    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
     	intakeMotorLifter.set(angleToTicks(angle));
     }
     
@@ -213,14 +217,78 @@ public class IntakeLifter extends Subsystem {
 		return ticksToAngle(intakeMotorLifter.getSetpoint());
 	} 	 
     
+	/**
+	 * Disables the PID controller
+	 */
 	public void disable() {
 		// TODO Auto-generated method stub
 		intakeMotorLifter.disable();
 	} 	 
 
+	/**
+	 * Enable PID Controller
+	 */
 	public void enable() {
-		// TODO Auto-generated method stub
+    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
 		intakeMotorLifter.enable();
 	} 	 
+
+	//TODO: Verify that these are, in fact, the correct switches 
+	/**
+	 * 
+	 * @return true if the switch in the Up position of the arm is pressed
+	 */
+	public boolean isUpSwitchPressed(){
+		return intakeMotorLifter.isFwdLimitSwitchClosed();
+	}
+	
+	/**
+	 * 
+	 * @return true if the switch in the Down position of the arm is pressed
+	 */
+	public boolean isDownSwitchPressed(){
+		return intakeMotorLifter.isRevLimitSwitchClosed();
+	}
+
+	/**
+	 * Move arm upward until it hits a switch.
+	 * @return true if at up position
+	 */
+	public boolean moveToUpPosition(){
+		intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		if(isUpSwitchPressed()){
+			intakeMotorLifter.set(0);
+			return true;
+		}
+		else{
+			intakeMotorLifter.set(.25);
+			return true;
+		}
+	}
+	
+	/**
+	 * Move arm upward until it hits a switch.
+	 * @return true if at Down position
+	 */
+	public boolean moveToDownPosition(){
+		intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		if(isDownSwitchPressed()){
+			intakeMotorLifter.set(0);
+			return true;
+		}
+		else{
+			intakeMotorLifter.set(-.25);
+			return true;
+		}
+	}
+
+	/**
+	 * Allows the arm to be moved manually, if needed
+	 * @param speed of motor in PercentVbus
+	 */
+	public void moveManually(double speed){
+		intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		intakeMotorLifter.set(speed);
+		}
 }
 
