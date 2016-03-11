@@ -37,7 +37,7 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
     	intakeMotorLifter.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
     	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
-    	intakeMotorLifter.setVoltageRampRate(2); //FIXME find what a sane value is, this might be to slow
+    	intakeMotorLifter.setVoltageRampRate(4); //FIXME find what a sane value is, this might be to slow
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
     	//intakeMotorLifter.setForwardSoftLimit(maxAmountofTicks); // TODO find what this needs to be
     	//intakeMotorLifter.setReverseSoftLimit(minAmountofTicks); //TODO find what this needs to beintakeMotorLifter
@@ -266,7 +266,7 @@ public class IntakeLifter extends Subsystem {
 			return true;
 		}
 		else{
-			intakeMotorLifter.set(.6);
+			intakeMotorLifter.set(.8);
 			return true;
 		}
 	}
@@ -282,7 +282,7 @@ public class IntakeLifter extends Subsystem {
 			return true;
 		}
 		else{
-			intakeMotorLifter.set(-.2);
+			intakeMotorLifter.set(-.4);
 			return true;
 		}
 	}

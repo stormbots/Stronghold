@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class Chassis extends PIDSubsystem{
 
     public AHRS navxGyro = new AHRS(SerialPort.Port.kMXP); 
-    private Solenoid gearShifter = new Solenoid(0, 0);
+    public Solenoid gearShifter = new Solenoid(0, 0);
     
     public ArcadeDrivePID chassisDrive;
     
@@ -73,7 +73,8 @@ public class Chassis extends PIDSubsystem{
      * Toggles the gear state of the robot Low<->High
      */
     public void shiftGears(){
-    	gearShifter.set(!gearShifter.get());
+    	//gearShifter.set(!gearShifter.get());
+    	gearShifter.set(false);
     }
     
     public void setOperatorControl(){
@@ -88,8 +89,10 @@ public class Chassis extends PIDSubsystem{
      * Drives using direct joystick reads. The boolean operatorControl must be true for it to work.
      */
     public void joystickDrive(){
-    	if(operatorControl) chassisDrive.arcadeDrive(Robot.oi.gamePad.getRawAxis(1), 
-    			Robot.oi.gamePad.getRawAxis(2), false);
+    	if(operatorControl){
+    		chassisDrive.arcadeDrive(Robot.oi.leftStick.getRawAxis(1), 
+    			Robot.oi.rightStick.getRawAxis(0), false);
+    	}
     }
     
     public void triggerDrive(){

@@ -172,6 +172,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putBoolean("On Target?", chassis.isOnTarget());
         SmartDashboard.putNumber("Z Accel", onboardAccelerometer.getZ());
         SmartDashboard.putBoolean("Is It Flat?", chassis.isRobotStable());
+        SmartDashboard.putBoolean("Shifter State", chassis.gearShifter.get());
         
         SmartDashboard.putNumber("Left Write Value", chassis.chassisDrive.leftSide.getSideSetpoint());
         SmartDashboard.putNumber("Left Rate", chassis.chassisDrive.leftSide.getSideEncoderRate());
