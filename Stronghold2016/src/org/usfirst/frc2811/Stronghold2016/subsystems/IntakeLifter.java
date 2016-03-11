@@ -45,7 +45,7 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.ConfigRevLimitSwitchNormallyOpen(true); //FIXME is this right?
     	intakeMotorLifter.setPID(.05,0, .0001); //TODO Testbench values. figure out if we need this/ tune it
     	intakeMotorLifter.enable();
-    
+    	intakeMotorLifter.clearStickyFaults();
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
     	
     	//Does not work on testbench
@@ -61,11 +61,26 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.reverseSensor(true);
     	
     	// Dan suspects this is the correct version on the robot
-    	intakeMotorLifter.reverseOutput(false);
+    	//intakeMotorLifter.reverseOutput(false);
+    	//intakeMotorLifter.reverseSensor(false);
+    	//with these settings
+    	//angle decreases downward
+    	//ticks decrease downward
+
+    	// Dan suspects this is the correct version on the robot
+    	intakeMotorLifter.reverseOutput(true);
     	intakeMotorLifter.reverseSensor(false);
+    	//with these settings
+    	//angle decreases downward
+    	//ticks decrease downward
+
+	
 	}
 
     public void initDefaultCommand() {
+    }
+    public double getTicks(){
+    	return intakeMotorLifter.getEncPosition();
     }
     
     /**

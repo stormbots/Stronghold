@@ -195,6 +195,7 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
         intakeLifter.disable();
-        System.out.println(intakeLifter.getCurrentAngle());
+        System.out.println("Current Angle:" +intakeLifter.getCurrentAngle());
+        System.out.println("Current Ticks:" +intakeLifter.getTicks());
     }
 }
