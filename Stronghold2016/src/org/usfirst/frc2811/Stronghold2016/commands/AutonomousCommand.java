@@ -29,8 +29,9 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	   	//addSequential(new IntakeHoming());
-    	addSequential(new SketchyDrive(2));
+    	addSequential(new IntakeHoming(),2); //required to work for now for some reason
+    	addSequential(new IntakeDown(),2);
+    	addSequential(new SketchyDrive(4));
 
    	 //addSequential(new IntakeLifterAngle(0),2);   	
 	 //addSequential(new IntakeLifterAngle(90)); 

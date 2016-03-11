@@ -65,9 +65,9 @@ public class ShooterWheelPID extends Subsystem {
     	shooterMotorLeft.set(output);
     	shooterMotorRight.set(output);
 
-    	System.out.println( "motor rate:" + (int)shooterMotorLeft.getEncVelocity() );
+    	//System.out.println( "motor rate:" + (int)shooterMotorLeft.getEncVelocity() );
     	
-    	System.out.println("Shooter Error: "+ (int)shooterMotorLeft.getError());
+    	//System.out.println("Shooter Error: "+ (int)shooterMotorLeft.getError());
     }
     
      

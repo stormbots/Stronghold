@@ -48,6 +48,9 @@ public class ChassisSide extends PIDSubsystem {
 		
 	public void driveRate(double rate){
 		setSetpoint(rate);
+		
+		//frontMotor.set(rate);
+		//backMotor.set(rate);
 	}
 	
 	
@@ -92,9 +95,23 @@ public class ChassisSide extends PIDSubsystem {
 
 	@Override
 	protected void usePIDOutput(double output) {
-
-		frontMotor.set(output);
-		backMotor.set(output);
+		double maxcurrent=40;
+		if(Robot.powerPanel.getCurrent(0)<maxcurrent||
+			Robot.powerPanel.getCurrent(1)<maxcurrent||
+		   	Robot.powerPanel.getCurrent(2)<maxcurrent||
+		   	Robot.powerPanel.getCurrent(3)<maxcurrent){
+			frontMotor.set(output);
+			backMotor.set(output);
+		}
+		else {
+			setSetpoint(getPIDController().getSetpoint()/2);
+			System.err.println("Drawing too much power!");
+			System.err.println("1: "+Robot.powerPanel.getCurrent(0));
+			System.err.println("2: "+Robot.powerPanel.getCurrent(1));
+			System.err.println("3: "+Robot.powerPanel.getCurrent(2));
+			System.err.println("4: "+Robot.powerPanel.getCurrent(3));
+		}
+	
 		
 	}
 

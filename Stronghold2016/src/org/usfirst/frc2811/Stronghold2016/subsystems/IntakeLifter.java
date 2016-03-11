@@ -44,7 +44,7 @@ public class IntakeLifter extends Subsystem {
     	//intakeMotorLifter.ConfigFwdLimitSwitchNormallyOpen(true);//FIXME is this right?
     	//intakeMotorLifter.ConfigRevLimitSwitchNormallyOpen(true); //FIXME is this right?
     	intakeMotorLifter.setPID(.1,0, .0001); //TODO Testbench values. figure out if we need this/ tune it
-    	intakeMotorLifter.enable();
+    	//intakeMotorLifter.enable();
     	intakeMotorLifter.clearStickyFaults();
     	intakeMotorLifter.enableLimitSwitch(true, true);//FIXME I think this enables the limit switches, but not sure
     	
@@ -73,7 +73,7 @@ public class IntakeLifter extends Subsystem {
 
     	
     	//Until PID works, set the mode to VBus and disable
-    	intakeMotorLifter.disable();
+    	//intakeMotorLifter.disable();
     	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 
 	}
@@ -99,10 +99,10 @@ public class IntakeLifter extends Subsystem {
     	//TODO: If homing doesn't intake, it's because we grabbed the wrong switch
     	// Verify the isUpSwitchPressed functions work correctly, and then this will return like we expect
     	if(intakeMotorLifter.isFwdLimitSwitchClosed()){
-	    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
+	    	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
 	    	intakeMotorLifter.setEncPosition(0);
 	    	intakeMotorLifter.clearIAccum();
-	    	intakeMotorLifter.enable();
+	    	//intakeMotorLifter.enable();
 	    	
 	    	//Print some status things
 	    	System.out.println("Enabled? "+ intakeMotorLifter.isEnabled());
@@ -234,8 +234,8 @@ public class IntakeLifter extends Subsystem {
 	 * Enable PID Controller
 	 */
 	public void enable() {
-    	intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
-		intakeMotorLifter.enable();
+    	//intakeMotorLifter.changeControlMode(CANTalon.TalonControlMode.Position);
+		//intakeMotorLifter.enable();
 	} 	 
 
 	//TODO: Verify that these are, in fact, the correct switches 
