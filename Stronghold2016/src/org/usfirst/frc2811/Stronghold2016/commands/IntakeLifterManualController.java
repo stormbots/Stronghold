@@ -18,21 +18,23 @@ public class IntakeLifterManualController extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        System.out.println("starting intake liver command");
-
+        System.out.println("Moving Lifter Manually");
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         double angle=4;
         if(Robot.oi.gamePad.getPOV(0)==0){
-            Robot.intakeLifter.setAngleRelative(angle);
+            //Robot.intakeLifter.setAngleRelative(angle);
+            Robot.intakeLifter.moveManually(1);
         }
         else if(Robot.oi.gamePad.getPOV(0)==180){
-            Robot.intakeLifter.setAngleRelative(-angle);
+            //Robot.intakeLifter.setAngleRelative(-angle);
+            Robot.intakeLifter.moveManually(1);
         }
         else {
-        	//do nothing
+        	//Stop the motor
+            Robot.intakeLifter.moveManually(0);
         }
         
     }
@@ -40,7 +42,7 @@ public class IntakeLifterManualController extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return false;
     }
 
     // Called once after isFinished returns true
@@ -50,5 +52,6 @@ public class IntakeLifterManualController extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+        Robot.intakeLifter.moveManually(0);
     }
 }
