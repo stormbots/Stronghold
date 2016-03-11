@@ -28,12 +28,19 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-/*
-    	addSequential(new IntakeHoming());   	
-		addSequential(new BreachDefenses(defense)); 
-       	addSequential(new SetAngle(goal));
-		addSequential(new ShootBall());
-*/
+    	
+   	 //addSequential(new IntakeLifterAngle(0),2);   	
+   	 addSequential(new IntakeHoming()); 
+	 addSequential(new IntakeLifterAngle(90));   	
+	 //addSequential(new IntakeLifterAngle(10),2);   	
+	 //addSequential(new IntakeLifterAngle(0),2);   	
+	 //addSequential(new IntakeLifterAngle(-10),2);
+	 
+	 
+    	//addSequential(new BreachDefenses(defense));
+       	//addSequential(new ResetAlignment(goal));
+    	//addSequential(new ShootBall());
+    	
     }
 
    

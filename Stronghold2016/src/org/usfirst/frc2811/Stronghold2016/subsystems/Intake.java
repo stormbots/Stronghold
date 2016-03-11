@@ -25,23 +25,37 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 
-	private static SpeedController intakeMotorBelts = new Talon(4);
+	private static CANTalon intakeMotorBelts = new CANTalon(6); //competition bot slot 6
     private static Solenoid intakeSolenoid = new Solenoid(0, 1);
-    private DigitalInput ballReadySwitch = new DigitalInput(8);
     private boolean extended = false;
     private double intakespeed = .25; // TODO double check that this spins right way, also if it needs to be faster/slower
         // Put methods for controlling this subsystem
+    
     // here. Call these from Commands.
 
+    public void Intake(){
+    	intakeSolenoid.set(false);  
+    	intakeMotorBelts.clearStickyFaults();
+    	intakeMotorBelts.enableLimitSwitch(false, false);
+    }
+
+    /**
+     * This function is mostly useless
+     */
     public void initDefaultCommand() {
-    	intakeSolenoid.set(false);
-    	
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
+
     }
     public boolean isBallReady(){
-    	return ballReadySwitch.get();
+    	//TODO: May be the Reverse limit
+    	return intakeMotorBelts.isFwdLimitSwitchClosed();
     }
+    public boolean isBallUnderIntakeArm(){
+    	//TODO: May be the Reverse limit
+    	return intakeMotorBelts.isRevLimitSwitchClosed();
+    }
+
     
     public void intakeSet(double speed){
     	intakeMotorBelts.set(speed);

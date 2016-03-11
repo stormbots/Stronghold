@@ -22,14 +22,12 @@ public class Shooter extends Subsystem {
  
     // Initialize your subsystem here
     public Shooter() {
- 
-        // Use these to get going:
+         // Use these to get going:
         // setSetpoint() -  Sets where the PID controller should move the system
         //                  to
         // enable() - Enables the PID controller.
     	
     	shooterWheelPID = new ShooterWheelPID();
-
     }
 
     public void initDefaultCommand() {
@@ -114,6 +112,7 @@ public class Shooter extends Subsystem {
 	double calculatedoutput = FPSToTicksPer10MS(distanceToFPS(distanceToTarget));
 
 	 System.out.println("Feet Per second:"+ distanceToFPS(distanceToTarget));
+	 //System.out.printlin("" + )
 	 System.out.println("Calculated output:"+ calculatedoutput);
 
 	 //Plan for fudging the numbers

@@ -1,5 +1,6 @@
 package org.usfirst.frc2811.Stronghold2016.commands;
 
+import org.usfirst.frc2811.Stronghold2016.OI;
 import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -7,29 +8,39 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class IntakeManual extends Command {
+public class IntakeLifterManualController extends Command {
 
-    public IntakeManual() {
+    public IntakeLifterManualController() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        System.out.println("starting intake liver command");
+
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.oi.gamePad.getRawAxis(3)>.1){
-    		Robot.intakeLifter.setMotor(Robot.oi.gamePad.getRawAxis(3));
-    	} else {
-    		Robot.intakeLifter.setMotor(0);
-    	}
+        double angle=4;
+        if(Robot.oi.gamePad.getPOV(0)==0){
+            Robot.intakeLifter.setAngleRelative(angle);
+        }
+        else if(Robot.oi.gamePad.getPOV(0)==180){
+            Robot.intakeLifter.setAngleRelative(-angle);
+        }
+        else {
+        	//do nothing
+        }
+        
     }
+    
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     // Called once after isFinished returns true

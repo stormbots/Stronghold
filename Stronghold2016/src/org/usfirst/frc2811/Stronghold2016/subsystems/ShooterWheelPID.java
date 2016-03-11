@@ -21,17 +21,30 @@ public class ShooterWheelPID extends Subsystem {
     // here. Call these from Commands.
     
 	public ShooterWheelPID(){
-        shooterMotorLeft = new CANTalon(4);
+		double p=0.5;
+		double i=0.01;
+		double d=0.01;
+        shooterMotorLeft = new CANTalon(4); //Competition bot slot 4
         shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.Speed);
-        shooterMotorLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+        shooterMotorLeft.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
         shooterMotorLeft.clearStickyFaults();
-        shooterMotorLeft.setPID(0.5,0.01, 0.01);
+        shooterMotorLeft.setPID(p,i,d); 
         
-        shooterMotorRight = new CANTalon(4);
+        shooterMotorRight = new CANTalon(5); //competition bot slot 5
         shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.Speed);
         shooterMotorRight.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
         shooterMotorRight.clearStickyFaults();
-        shooterMotorRight.setPID(1,0,0);
+        shooterMotorRight.setPID(p,i,d);
+
+        //These motors should not exceed 50 Amps
+        // This is roughly 5000 RPM
+        // Gearbox is a 1:1 gearbox
+        //TODO Add rate limiting based on calculations
+        shooterMotorRight.configMaxOutputVoltage(5); //still too high!
+        shooterMotorLeft.configMaxOutputVoltage(5);  // still too high!
+
+        shooterMotorRight.setVoltageRampRate(0.5); 
+        shooterMotorLeft.setVoltageRampRate(0.5);        
 	}
 	
     public void initDefaultCommand() {     
@@ -40,10 +53,6 @@ public class ShooterWheelPID extends Subsystem {
     }
     /*
     public void setVelocityInTicks(double ticksPerSecond){
-    	 shooterMotorLeft.changeControlMode(CANTalon.TalonControlMode.Speed);
-    	 shooterMotorRight.changeControlMode(CANTalon.TalonControlMode.Speed);
-    	shooterMotorLeft.set(ticksPerSecond);
-    	shooterMotorRight.set(ticksPerSecond);
     	//Are ducks lactose intolerant?
     	//useful, non-tangential things
     	//stuff that makes the code better
