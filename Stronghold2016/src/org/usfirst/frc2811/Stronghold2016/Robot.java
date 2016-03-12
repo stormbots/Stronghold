@@ -120,8 +120,8 @@ public class Robot extends IterativeRobot {
         //Initialize optiosn for autonomous selector
         
         autonomousOptions=new SendableChooser();
-        autonomousOptions.addDefault("Reach Obstacle", new AutonomousReachOnly());
-        autonomousOptions.addObject("Cross Low Bar", new AutonomousCrossLowBar());
+        autonomousOptions.addObject("Reach Obstacle", new AutonomousReachOnly());
+        autonomousOptions.addDefault("Cross Low Bar", new AutonomousCrossLowBar());
         autonomousOptions.addObject("Reach Low Bar After Delay", new AutonomousCrossLowBarAfterDelay());
         autonomousOptions.addObject("Cross Portcullus (point lifter toward gate!)", new AutonomousCrossPortcullus());
         autonomousOptions.addObject("Cross Rock Wall/Rampart/Rough Terrain", new AutonomousCrossOther());
