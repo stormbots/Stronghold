@@ -18,15 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class AutonomousCommand extends CommandGroup {
+public class AutonomousCrossPortcullus extends CommandGroup {
 
-    public AutonomousCommand(int defense, int goal) {
+    public AutonomousCrossPortcullus() {
     	//This should be helpful! 
     	// Selecting autonomous modes via Smart Dashboard
     	// https://wpilib.screenstepslive.com/s/4485/m/26401/l/255419-choosing-an-autonomous-program-from-smartdashboard
     	
     		
-    		/*
+    	/*
     	// 	Group A: Porticulis = 1, Cheval de Frise = 2
     	// 	Group B: Ramparts = 3, Moat = 4
     	// 	Group C: Drawbridge = 5, Sally Port = 6
@@ -34,22 +34,21 @@ public class AutonomousCommand extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	addSequential(new SketchyDrive(1));
-    	addSequential(new IntakeHoming(),2); //required to work for now for some reason
-    	//addSequential(new IntakeDown(),2);
-    	addSequential(new SketchyDrive(3));
+    	//Make sure lifter is up
+    	addSequential(new IntakeHoming(),1);
+    	
+    	//approach the gate backwards
+    	addSequential(new SketchyDrive(-.75,4));
+    	
+    	//back away from gate and lower
+    	addSequential(new SketchyDrive(.75,.5));
+    	addSequential(new IntakeDown(),3);
+    	
+    	//Plow through gate backwards and hope for the best
+    	addSequential(new SketchyDrive(-.75,4));
 
-   	 //addSequential(new IntakeLifterAngle(0),2);   	
-	 //addSequential(new IntakeLifterAngle(90)); 
-	// addSequential(new SketchyDrive(),2);
-	 //addSequential(new IntakeLifterAngle(10),2);   	
-	 //addSequential(new IntakeLifterAngle(0),2);   	
-	 //addSequential(new IntakeLifterAngle(-10),2);
-	 
-	 
-    	//addSequential(new BreachDefenses(defense));
-       	//addSequential(new ResetAlignment(goal));
-    	//addSequential(new ShootBall());
+    	//raise the lifter again
+    	addSequential(new IntakeUp(),3);
     	
     }
 

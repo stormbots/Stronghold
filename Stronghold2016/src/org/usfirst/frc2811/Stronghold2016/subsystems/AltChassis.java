@@ -16,7 +16,7 @@ public class AltChassis extends Subsystem {
 	private SpeedController m1 = new Talon(1);
 	private SpeedController m2 = new Talon(2);
 	private SpeedController m3 = new Talon(3);
-	private RobotDrive chassisDrive = new RobotDrive(m0,m1,m2,m3);
+	public RobotDrive chassisDrive = new RobotDrive(m0,m1,m2,m3);
 	// Put methods for controlling this subsystem
     // here. Call these from Commands.
 

@@ -12,7 +12,7 @@ public class ChassisSide extends PIDSubsystem {
 	private SpeedController backMotor;
 	private Encoder gearboxEncoder;
 	
-	private static double tickRateMax = 8000;
+	private static double tickRateMax = 12000;
 	private static double tickRateMin = -tickRateMax;
 	
 	private static double rateTolerance = .01;
@@ -54,9 +54,7 @@ public class ChassisSide extends PIDSubsystem {
 		} else {
 			setSetpoint(rate);
 		}
-		
-		
-		
+
 		//frontMotor.set(rate);
 		//backMotor.set(rate);
 	}
