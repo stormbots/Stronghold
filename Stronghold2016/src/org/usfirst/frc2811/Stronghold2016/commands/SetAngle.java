@@ -27,25 +27,26 @@ public class SetAngle extends Command {
 
     // Called just before this Command runs the first time
     public void initialize() {
-    	Robot.chassis.resetPID();    	    	
+    	//Robot.chassis.resetPID();    	    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     public void execute() {
-    	Robot.chassis.setRotation(angle);
+    	//Robot.chassis.setRotation(angle);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     public boolean isFinished() {
     	System.out.println("Attempting to determine if robot should stop");
-        return Robot.chassis.isOnTarget();//||!Robot.oi.button4.get();
+        //return Robot.chassis.isOnTarget();//||!Robot.oi.button4.get();
+    	return true;
     	//return false;
     }
 
     // Called once after isFinished returns true
     public void end() {
-    	Robot.chassis.resetPID();
-    	Robot.chassis.setOperatorControl();
+    	//Robot.chassis.resetPID();
+    	//Robot.chassis.setOperatorControl();
     }
 
     // Called when another command which requires one or more of the same

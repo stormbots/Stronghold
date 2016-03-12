@@ -21,7 +21,7 @@ public class ChassisSide extends PIDSubsystem {
 	
 	private static double P=1;
 	private static double I=0.0001;
-	private static double D=0.001;
+	private static double D=0.01;
 	
 	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
@@ -47,7 +47,15 @@ public class ChassisSide extends PIDSubsystem {
 	
 		
 	public void driveRate(double rate){
-		setSetpoint(rate);
+		if(Math.abs(rate)<.1){
+			getPIDController().reset();
+			getPIDController().enable();
+			setSetpoint(0);
+		} else {
+			setSetpoint(rate);
+		}
+		
+		
 		
 		//frontMotor.set(rate);
 		//backMotor.set(rate);
@@ -96,20 +104,19 @@ public class ChassisSide extends PIDSubsystem {
 	@Override
 	protected void usePIDOutput(double output) {
 		double maxcurrent=40;
-		if(Robot.powerPanel.getCurrent(0)<maxcurrent||
-			Robot.powerPanel.getCurrent(1)<maxcurrent||
-		   	Robot.powerPanel.getCurrent(2)<maxcurrent||
-		   	Robot.powerPanel.getCurrent(3)<maxcurrent){
+		if(Robot.powerPanel.getCurrent(0)>maxcurrent||
+			Robot.powerPanel.getCurrent(1)>maxcurrent||
+		   	Robot.powerPanel.getCurrent(2)>maxcurrent||
+		   	Robot.powerPanel.getCurrent(3)>maxcurrent){
+				setSetpoint(getPIDController().getSetpoint()/2);
+				System.err.println("Drawing too much power!");
+				System.err.println("1: "+Robot.powerPanel.getCurrent(0));
+				System.err.println("2: "+Robot.powerPanel.getCurrent(1));
+				System.err.println("3: "+Robot.powerPanel.getCurrent(2));
+				System.err.println("4: "+Robot.powerPanel.getCurrent(3));
+		} else {
 			frontMotor.set(output);
 			backMotor.set(output);
-		}
-		else {
-			setSetpoint(getPIDController().getSetpoint()/2);
-			System.err.println("Drawing too much power!");
-			System.err.println("1: "+Robot.powerPanel.getCurrent(0));
-			System.err.println("2: "+Robot.powerPanel.getCurrent(1));
-			System.err.println("3: "+Robot.powerPanel.getCurrent(2));
-			System.err.println("4: "+Robot.powerPanel.getCurrent(3));
 		}
 	
 		
