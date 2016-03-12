@@ -12,6 +12,11 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBar;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDelay;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossOther;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossPortcullus;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousReachOnly;
 import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeLifterManualController;
@@ -24,10 +29,12 @@ import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
 import 	edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import 	edu.wpi.first.wpilibj.Compressor;
 import  edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.NamedSendable;
 import 	edu.wpi.first.wpilibj.PowerDistributionPanel;
 import  edu.wpi.first.wpilibj.command.Command;
 import  edu.wpi.first.wpilibj.command.Scheduler;
 import  edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -41,6 +48,7 @@ public class Robot extends IterativeRobot {
 
     public static int counter = 1;
 	
+    SendableChooser autonomousOptions;
 	Command autonomousCommand;
     Command joystickDrive;
     Command intakeManual;
@@ -106,7 +114,16 @@ public class Robot extends IterativeRobot {
         System.out.println("RobotInit End, Statement #" + counter);
         counter++;
 
-
+        //Initialize optiosn for autonomous selector
+        
+        autonomousOptions=new SendableChooser();
+        autonomousOptions.addDefault("Reach Obstacle", new AutonomousReachOnly());
+        autonomousOptions.addObject("Cross Low Bar", new AutonomousCrossLowBar());
+        autonomousOptions.addObject("Reach Low Bar After Delay", new AutonomousCrossLowBarAfterDelay());
+        autonomousOptions.addObject("Cross Portcullus (point lifter toward gate!)", new AutonomousCrossPortcullus());
+        autonomousOptions.addObject("Cross Rock Wall/Rampart/Rough Terrain", new AutonomousCrossOther());
+        SmartDashboard.putData("Select autonomous mode", autonomousOptions);
+        
         // OI must be constructed after subsystems. If the OI creates Commands
         //(which it very likely will), subsystems are not guaranteed to be
         // constructed yet. Thus, their requires() statements may grab null
@@ -126,10 +143,12 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         //System.out.println("Intake encoder Ticks" + intakeLifter.getTicks());
         //System.out.println("Current Angle"+intakeLifter.getCurrentAngle());
+
     }
 
     public void autonomousInit() {
         // schedule the autonomous command (example)
+    	autonomousCommand= (Command) autonomousOptions.getSelected();
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
