@@ -20,12 +20,10 @@ public class ShooterManual extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.oi.gamePad.getRawAxis(1)>.25){
-    		Robot.shooter.shooterWheelPID.setMotorVelocity(Robot.oi.gamePad.getRawAxis(1));
-    	} else {
-    		Robot.shooter.shooterWheelPID.setMotorVelocity(0);
-    	}
+    	double rate=(-Robot.oi.leftStick.getRawAxis(2)+1)*1000;
+    	Robot.shooter.shooterWheelPID.setMotorVelocity(rate);
     	
+    	System.out.println("Rate +"+rate);
     }
 
     // Make this return true when this Command no longer needs to run execute()

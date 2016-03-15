@@ -28,7 +28,7 @@ public class Intake extends Subsystem {
 	private static CANTalon intakeMotorBelts = new CANTalon(6); //competition bot slot 6
     private static Solenoid intakeSolenoid = new Solenoid(0, 1);
     private boolean extended = false;
-    private double intakespeed = .35; // TODO double check that this spins right way, also if it needs to be faster/slower
+    private double intakespeed = .7; // TODO double check that this spins right way, also if it needs to be faster/slower
         // Put methods for controlling this subsystem
     
     // here. Call these from Commands.

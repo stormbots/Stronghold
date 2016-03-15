@@ -21,6 +21,7 @@ import org.usfirst.frc2811.Stronghold2016.commands.IntakeUp;
 import org.usfirst.frc2811.Stronghold2016.commands.SetAngle;
 import org.usfirst.frc2811.Stronghold2016.commands.ShiftGears;
 import org.usfirst.frc2811.Stronghold2016.commands.ShootBall;
+import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.commands.SpitBall;
 import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
 
@@ -142,8 +143,8 @@ public class OI {
     	gamePadButton4.whileHeld(new IntakeUp() );
     	gamePadButton4.whenReleased(new IntakeLifterOff());
 
-    	gamePadButton5 = new JoystickButton(gamePad,5);
-    	gamePadButton5.whenPressed(new ShootBall());
+    	//gamePadButton5 = new JoystickButton(gamePad,5);
+    	//gamePadButton5.whenPressed(new ShooterManual());
         
     	gamePadButton6 = new JoystickButton(gamePad, 6);
     	gamePadButton6.whileHeld(new SpitBall());
