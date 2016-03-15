@@ -14,6 +14,9 @@ package org.usfirst.frc2811.Stronghold2016.subsystems;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.usfirst.frc2811.Stronghold2016.VisionTarget;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -216,50 +219,29 @@ public class Vision extends Subsystem {
 	 * @return double the x coord
 	 */
 	public double getTargetCoordY() {
-		if (this.tableConnected()) {
-			
-			if (grip.getNumberArray("centerX", defaultValue).length < 1) {
-				System.out.println("NO TARGET FOUND. RETURNING -9999.");
-				return -9999;
-			}
-			
-			double[] coordinates = grip.getNumberArray("centerX", defaultValue);
-			System.out.println("Pre-Map targetCoordY result: " + coordinates[0]);
-			
-			System.out.println("Post-Map targetCoordY result: " + (coordinates[0] - this.cameraPixelsX/2));
-			
-			// GRIP maps (0,0) to top left
-			// We want to remap the coordinate to be relative to center=(0,0)
-			
-			return (this.cameraPixelsX - coordinates[0]) - this.cameraPixelsX/2;
+		VisionTarget t = this.getBestTarget();
+		
+		if (t == null) {
+			System.out.println("NULL RCVD WHEN FETCHING BEST TARGET");
+			return -9999;
 		} else {
-			System.out.println(unconnectedError);
-			return defaultSingleValue;
+			return t.getY() - t.getWidth()/2;
 		}
 	}
 	
 	/**
-	 * Returns the Y part of the target coordinate
-	 * @return the Y part of the target center coordinate
+	 * Returns the X part of the target coordinate, after image "rotation"
+	 * @return the X part of the target center coordinate after image "rotation"
 	 */
 	public double getTargetCoordX() {
-		if (this.tableConnected()) {
-			//double coordinate = grip.getNumber("centerY", defaultSingleValue);
-			double[] coordinate = grip.getNumberArray("centerY", defaultValue);
-			if (coordinate.length==0){
-				System.out.println("NO TARGET FOUND. RETURNING -9999.");
-				return -9999;
-			}
-			
-			System.out.println("getTargetCoordX result: " + coordinate[0]);
-			
-			// remap from GRIP pixel mapping to center-based pixel mapping
-			
-			System.out.println("-(" + coordinate[0] + " - " + this.cameraPixelsY/2 + ")");
-			return -(coordinate[0] - this.cameraPixelsY/2); //return first value of centerY arrays
+		VisionTarget t = this.getBestTarget();
+		
+		if (t == null) {
+			System.out.println("NULL RCVD WHEN FETCHING BEST TARGET");
+			return -9999;
 		} else {
-			System.out.println(unconnectedError);
-			return defaultSingleValue;
+			// return left-based goal X coordinate
+			return t.getX() - t.getWidth()/2;
 		}
 	}
 	
@@ -328,7 +310,9 @@ public class Vision extends Subsystem {
 	 */
 	public double getXAngleToTarget() {
 		
-		double objectPositionX = this.getTargetCoordX();
+		VisionTarget t = this.getBestTarget();
+		
+		double objectPositionX = t.getX();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -336,7 +320,7 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetX = (objectPositionX - (this.cameraPixelsX/2.0)) * (FOVs[0]/2/this.cameraPixelsX);
+		double angleOffsetX = (objectPositionX - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
 
 		return angleOffsetX;
 	}
@@ -349,7 +333,9 @@ public class Vision extends Subsystem {
 	 */
 	public double getYAngleToTarget() {
 		
-		double objectPositionY = this.getTargetCoordY();
+		VisionTarget t = this.getBestTarget();
+		
+		double objectPositionY = t.getY();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -357,7 +343,7 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetY = (objectPositionY - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
+		double angleOffsetY = (objectPositionY - (this.cameraPixelsX/2.0)) * (FOVs[01]/2/this.cameraPixelsX);
 		
 		return angleOffsetY + this.cameraOffsetAngleY;
 	}
@@ -369,11 +355,11 @@ public class Vision extends Subsystem {
 	public double getRealXOffsetToTarget() {
 		double angleToTarget = this.getXAngleToTarget();
 		
-		System.out.println("getRealXOffsetToTarget -> angleToTarget = " + angleToTarget);
+		//System.out.println("getRealXOffsetToTarget -> angleToTarget = " + angleToTarget);
 		
 		double distanceToTarget = this.getDistanceToTarget();
 		
-		System.out.println("getRealXOffsetToTarget -> distanceToTarget = " + distanceToTarget);
+		//System.out.println("getRealXOffsetToTarget -> distanceToTarget = " + distanceToTarget);
 		
 		//tan(angleToTarget) = offsetToCamera / distanceToTarget
 		//offsetToCamera = distanceToTarget * tan(angleToTarget)
@@ -399,6 +385,42 @@ public class Vision extends Subsystem {
 	public double getRealDistanceToTarget() {
 		// Should be as simple as this since these distances are in parallel directions
 		return this.getDistanceToTarget() + this.cameraOffsetDistanceY;
+	}
+	
+	public VisionTarget getBestTarget() {
+		ArrayList<VisionTarget> targets = new ArrayList<VisionTarget>();
+		
+		if (this.tableConnected()) {
+			double[] coordsX = this.getValArray("centerY");
+			
+			// make sure we have a target first
+			if (coordsX.length < 1) {
+				return null;
+			}
+	
+			// hope we get all these values before GRIP ticks again
+			// and targets potentially disappear, which would cause an out
+			// of bounds issue.
+			double[] coordsY = this.getValArray("centerX");
+			
+			double[] heights = this.getValArray("width");
+			double[] widths = this.getValArray("heights");
+			
+			double[] areas = this.getValArray("area");
+			double[] solidity = this.getValArray("solidity");
+			
+			for (int i = 0; i < (this.getValArray("centerY").length); i++) {
+				targets.add(new VisionTarget(coordsX[i], coordsY[i], heights[i], widths[i], areas[i], solidity[i]));
+			}
+			
+			// sort by area first using Comparable interface spec (will sort by area, in this case)
+			targets.sort(null);
+			
+			return targets.get(0);
+		} else {
+			System.out.println(unconnectedError);
+			return null;
+		}
 	}
 	
     // Put methods for controlling this subsystem
