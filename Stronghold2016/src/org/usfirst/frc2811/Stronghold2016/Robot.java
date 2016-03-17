@@ -68,8 +68,8 @@ public class Robot extends IterativeRobot {
     public static Intake intake;
     public static Shooter shooter;
     
-    //public static Chassis chassis;
-    public static AltChassis chassis;
+    public static Chassis chassis;
+    //public static AltChassis chassis;
 	public static IntakeLifter intakeLifter;
 	public static IntakeLifterManualController lifterController;
     
@@ -90,8 +90,9 @@ public class Robot extends IterativeRobot {
         shooter = new Shooter();
 
         //TODO Find/Set Chassis rotation PID values
-        //chassis = new Chassis();
-        chassis = new AltChassis();
+        chassis = new Chassis();
+        //chassis = new AltChassis();
+        
         intakeLifter = new IntakeLifter();
 
         // OI must be constructed after subsystems. If the OI creates Commands
@@ -189,7 +190,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
-        /*
+        
         SmartDashboard.putData("Gyro", chassis.navxGyro);
         
         
@@ -210,7 +211,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Rotation Setpoint", chassis.getSetpoint());
         SmartDashboard.putNumber("Rotation Current Position", chassis.navxGyro.getAngle());
         SmartDashboard.putNumber("NavX Yaw", chassis.navxGyro.getYaw());
-		*/
+		
 
     }
 

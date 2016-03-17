@@ -19,9 +19,9 @@ public class ChassisSide extends PIDSubsystem {
 	
 	private boolean oppositeMotors;
 	
-	private static double P=1;
-	private static double I=0.0001;
-	private static double D=0.01;
+	private static double P=0;
+	private static double I=0;
+	private static double D=0;
 	
 	public ChassisSide(String name, SpeedController front, SpeedController back, Encoder wheelEncoder, boolean opposingMotors) {
 		super(name, P,I,D);
@@ -101,6 +101,7 @@ public class ChassisSide extends PIDSubsystem {
 
 	@Override
 	protected void usePIDOutput(double output) {
+		/*
 		double maxcurrent=40;
 		if(Robot.powerPanel.getCurrent(0)>maxcurrent||
 			Robot.powerPanel.getCurrent(1)>maxcurrent||
@@ -116,7 +117,9 @@ public class ChassisSide extends PIDSubsystem {
 			frontMotor.set(output);
 			backMotor.set(output);
 		}
-	
+		*/
+		frontMotor.set(getSetpoint()+output);
+		backMotor.set(getSetpoint()+output);
 		
 	}
 
