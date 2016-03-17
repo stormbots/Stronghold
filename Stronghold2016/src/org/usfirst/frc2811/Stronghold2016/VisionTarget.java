@@ -48,13 +48,17 @@ public class VisionTarget implements Comparable<VisionTarget> {
 		
 		return (int)(this.area - t2.area);
 	}
-	
+	/**
+	 * @return Y-coordinate (which is X in our rotated system)
+	 */
 	public double getX() {
-		return this.coordinateX;
-	}
-	
-	public double getY() {
 		return this.coordinateY;
+	}
+	/**
+	 * @return X-coordinate (which is Y in our rotated system)
+	 */
+	public double getY() {
+		return this.coordinateX;
 	}
 	
 	public double getArea() {

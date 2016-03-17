@@ -46,7 +46,7 @@ public class Vision extends Subsystem {
 	/**
 	 * Default/fallback/failure value for single number NetworkTables data types
 	 */
-	private double defaultSingleValue = 0;
+	//private double defaultSingleValue = 0;
 	
 	/**
 	 * Error message to display if the GRIP NetworkTable does not exist or cannot be connected to
@@ -67,9 +67,9 @@ public class Vision extends Subsystem {
 	private double cameraOffsetDistanceX = 0;
 	
 	/**
-	 * Distance up or down from the shooter to the camera
-	 * Camera above shooter: Positive value
-	 * Camera below shooter: Negative value
+	 * Distance forward or backward from the shooter to the camera
+	 * Camera in front of shooter: Positive value
+	 * Camera behind[ shooter: Negative value
 	 */
 	private double cameraOffsetDistanceY = 0;
 	
@@ -100,7 +100,7 @@ public class Vision extends Subsystem {
 	 * 
 	 * @param networkTableName Network Table name for GRIP to post values to
 	 * @param offsetX Left/Right offset of camera, in feet, relative to shooter. left: < 0; right > 0
-	 * @param offsetY Up/Down offset of camera, in feet, relative to shooter. down: < 0; up > 0
+	 * @param offsetY Front/back offset of camera, in feet, relative to shooter. down: < 0; up > 0
 	 * @param cameraAngleOffset Angular offset of camera... how many degrees upward are we looking by default?
 	 * @param diagonalFieldOfView The diagonal field of view (in degrees) of the camera used by the subsystem
 	 * @param cameraPixelsX Number of horizontal pixels provided by the camera used by the subsystem
@@ -205,7 +205,7 @@ public class Vision extends Subsystem {
 	 * @param tableKey The key on the GRIP NetworkTable to get values from
 	 * @return Values in tableKey on the GRIP NetworkTable
 	 */
-	public double[] getValArray(String tableKey){ //can be used to get number array values such as area
+	private double[] getValArray(String tableKey){ //can be used to get number array values such as area
 		if (this.tableConnected()) {
 			return grip.getNumberArray(tableKey, defaultValue);
 		} else {
@@ -215,8 +215,8 @@ public class Vision extends Subsystem {
 	}
 	
 	/*
-	 * Get X part of coordinate
-	 * @return double the x coord
+	 * Get Y part of coordinate
+	 * @return double the Y coord
 	 */
 	public double getTargetCoordY() {
 		VisionTarget t = this.getBestTarget();
@@ -225,7 +225,7 @@ public class Vision extends Subsystem {
 			System.out.println("NULL RCVD WHEN FETCHING BEST TARGET");
 			return -9999;
 		} else {
-			return t.getY() - t.getWidth()/2;
+			return this.remapX(t.getX());
 		}
 	}
 	
@@ -241,7 +241,7 @@ public class Vision extends Subsystem {
 			return -9999;
 		} else {
 			// return left-based goal X coordinate
-			return t.getX() - t.getWidth()/2;
+			return this.remapY(t.getY() - t.getHeight()/2);
 		}
 	}
 	
@@ -278,12 +278,15 @@ public class Vision extends Subsystem {
 	 * @return Whether or not the robot/shooter is aligned with the target, +- angleTolerance degrees.
 	 */
 	public boolean isOnTarget(double angleTolerance) {
+		VisionTarget t = this.getBestTarget();
+		double expectedDegreesOffset = (t.getHeight() / 2) * this.diagonalFieldOfViewToXYFieldOfView()[1];
+		
 		double horizontalAngleOffset = this.getXAngleToTarget();
 		
 		/* Return true if the robot needs to turn less than angleTolerance degrees to be aligned
 		 * with the target
 		 */
-		return Math.abs(horizontalAngleOffset) <= angleTolerance;
+		return Math.abs(horizontalAngleOffset - expectedDegreesOffset) <= angleTolerance;
 	}
 	
 	/**
@@ -312,7 +315,7 @@ public class Vision extends Subsystem {
 		
 		VisionTarget t = this.getBestTarget();
 		
-		double objectPositionX = t.getX();
+		double objectPositionX = this.remapX(t.getY());
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -320,9 +323,17 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetX = (objectPositionX - (this.cameraPixelsY/2.0)) * (FOVs[1]/2/this.cameraPixelsY);
+		double angleOffsetX = objectPositionX * (FOVs[1]/2/this.cameraPixelsY);
 
 		return angleOffsetX;
+	}
+	
+	private double remapY(double raw) {
+		return raw - (this.cameraPixelsX / 2);
+	}
+	
+	private double remapX(double raw) {
+		return this.cameraPixelsY / 2 - raw;
 	}
 	
 	/**
@@ -335,7 +346,7 @@ public class Vision extends Subsystem {
 		
 		VisionTarget t = this.getBestTarget();
 		
-		double objectPositionY = t.getY();
+		double objectPositionY = this.remapY(t.getY());
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -343,40 +354,9 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetY = (objectPositionY - (this.cameraPixelsX/2.0)) * (FOVs[01]/2/this.cameraPixelsX);
+		double angleOffsetY = objectPositionY  * (FOVs[0]/2/this.cameraPixelsX);
 		
 		return angleOffsetY + this.cameraOffsetAngleY;
-	}
-	
-	/**
-	 * @return IN THEORY, the true X (horizontal) offset in feet from the shooter to the target.
-	 * <br>GUIDE: greater than 0: need to drive rightward || less than 0: need to drive leftward
-	 */
-	public double getRealXOffsetToTarget() {
-		double angleToTarget = this.getXAngleToTarget();
-		
-		//System.out.println("getRealXOffsetToTarget -> angleToTarget = " + angleToTarget);
-		
-		double distanceToTarget = this.getDistanceToTarget();
-		
-		//System.out.println("getRealXOffsetToTarget -> distanceToTarget = " + distanceToTarget);
-		
-		//tan(angleToTarget) = offsetToCamera / distanceToTarget
-		//offsetToCamera = distanceToTarget * tan(angleToTarget)
-		
-		// We're constructing a right triangle on a plane parallel to the field
-		// With (usually) long leg distanceToTarget and an adjacent angle derived from
-		// camera FOV. Math.tan() helps work out the ratio to get the small leg length.
-		double offsetXToCamera = distanceToTarget * Math.toDegrees(Math.tan(angleToTarget));
-		
-		// If the target is to the left, the offset increases our net X offset
-		// Otherwise, it decreases our offset if the target is to the right.
-		if (angleToTarget < 0) {
-			// the negative sign denotes that movement leftward is required
-			return -(Math.abs(offsetXToCamera) + this.cameraOffsetDistanceX);
-		} else {
-			return Math.abs(offsetXToCamera) - this.cameraOffsetDistanceX;
-		}
 	}
 	
 	/**
@@ -387,7 +367,10 @@ public class Vision extends Subsystem {
 		return this.getDistanceToTarget() + this.cameraOffsetDistanceY;
 	}
 	
-	public VisionTarget getBestTarget() {
+	/**
+	 * @return VisionTarget instance of the largest goal detected by GRIP
+	 */
+	private VisionTarget getBestTarget() {
 		ArrayList<VisionTarget> targets = new ArrayList<VisionTarget>();
 		
 		if (this.tableConnected()) {
