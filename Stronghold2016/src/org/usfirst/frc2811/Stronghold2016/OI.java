@@ -166,7 +166,7 @@ public class OI {
 
 /////////Intake Operations
     	threeAxisJoystick = new Joystick(4);
-		threeAxisButton2 = new JoystickButton(gamePad,2);
+		//threeAxisButton2 = new JoystickButton(threeAxisJoystick,2);
 		threeAxisButton2 = new JoystickButton(threeAxisJoystick,2);
 		threeAxisButton2.whenPressed(new IntakeHoming());
 

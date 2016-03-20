@@ -100,7 +100,7 @@ public class IntakeLifter extends Subsystem {
     public void setPosition(double position){
     	//double pgain=smartDashboard.getNumber("p");
     	double pgain=.004;
-    	double igain=0.00001;
+    	double igain=0.000001;
     	double error=(position-intakeLifterMotor.getEncPosition());
     	double p=pgain*error;
     	iterm=iterm+igain*error;

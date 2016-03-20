@@ -209,7 +209,7 @@ public class Robot extends IterativeRobot {
 		*/
 
         
-        intakeLifter.setPosition(oi.threeAxisJoystick.getRawAxis(3)*1500);
+        intakeLifter.setPosition(oi.threeAxisJoystick.getRawAxis(3)*1000);
         intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
 
 
