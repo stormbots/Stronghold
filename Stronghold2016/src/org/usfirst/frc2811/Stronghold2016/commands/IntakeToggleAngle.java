@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeToggleAngle extends Command {
 
-	boolean goUp=false;
-	boolean goDown=false;
-	
     public IntakeToggleAngle() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -19,15 +16,6 @@ public class IntakeToggleAngle extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if(Robot.intakeLifter.isUpSwitchPressed()){
-    		goUp=true;
-    	}
-    	else if( Robot.intakeLifter.isDownSwitchPressed()){
-    		goDown=true;
-    	}
-    	else{ //neither switch is pressed
-    		goUp=true;
-    	}
     		
     }
 
@@ -38,16 +26,8 @@ public class IntakeToggleAngle extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if(goUp){
-    		return Robot.intakeLifter.moveToUpPosition();
-    		}
-    	else if(goDown){
-    		return Robot.intakeLifter.moveToUpPosition();
-    		}
-    	else{
-    		return true;
-    		}
         //return Robot.intakeLifter.onTarget(5);
+    	return true;
     }
 
     // Called once after isFinished returns true
