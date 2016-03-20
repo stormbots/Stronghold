@@ -22,7 +22,6 @@ public class IntakeLifterOff extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	System.out.println("Executing IntakeLifterOff");
-    	Robot.intakeLifter.doNotLift();
     }
 
     // Make this return true when this Command no longer needs to run execute()
