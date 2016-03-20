@@ -43,28 +43,27 @@ public class IntakeBall extends Command {
     protected void execute() {
     	
     	//TODO check if limit switch is default open or closed
-    	if(Robot.intake.isBallReady()==false && Robot.intakeLifter.getCurrentAngle()<45){
+   /* 	if(Robot.intake.isBallReady()==false && Robot.intakeLifter.getCurrentAngle()<45){
     		Robot.intake.intakeBall();
     	}
     	
-    	
+    	*/
     	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	//if it already has a ball, or if it grabs one, command exits, otherwise, intake stays on
-    	if(Robot.intake.isBallReady()==true){
+    /*	if(Robot.intake.isBallReady()==true){
     		Robot.intake.intakeSet(0);
     		System.out.println("Ball Aquired");
-    		return true;
-    	}
-    	//Allows command to exit if we were unable turn on intake due to lifter angle
-    	if (Robot.intakeLifter.getCurrentAngle()>45){
+    		return true; } */
+    	    	//Allows command to exit if we were unable turn on intake due to lifter angle
+    	 /*if (Robot.intakeLifter.getCurrentAngle()>45){
     		System.out.println("Angle to high to intake ball");
     		return true;
     	}
-    			
+    		*/	
     		
         return false;
     }

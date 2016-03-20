@@ -21,21 +21,27 @@ public class IntakeHoming extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.intakeLifter.setHomingIntake();
+    	Robot.intakeLifter.intakeLifterHoming();
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return Robot.intakeLifter.setHomingIntake();
+       return Robot.intakeLifter.intakeLifterHoming();
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.intakeLifter.resetEncoderPosition();
+    	Robot.intakeLifter.intakeLifterPIDInit();
     	System.out.println("Finishing Homing Command");
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	Robot.intakeLifter.resetEncoderPosition();
+    	Robot.intakeLifter.intakeLifterPIDInit();
+    	System.out.println("Killed Homing Command");
     }
 }

@@ -14,7 +14,6 @@ package org.usfirst.frc2811.Stronghold2016;
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
-import  org.usfirst.frc2811.Stronghold2016.subsystems.Intake;
 import org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
@@ -50,7 +49,6 @@ public class Robot extends IterativeRobot {
    
     public static OI oi;
     public static Vision vision;
-    public static Intake intake;
     public static Shooter shooter;
     public static Chassis chassis;
 	public static IntakeLifter intakeLifter;
@@ -68,7 +66,6 @@ public class Robot extends IterativeRobot {
         onboardAccelerometer = new BuiltInAccelerometer();
         
    		vision = new Vision();
-        intake = new Intake();
         shooter = new Shooter();
         //TODO Find/Set Chassis rotation PID values
         chassis = new Chassis();
@@ -123,6 +120,7 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
         joystickDrive.start();
         
+        intakeLifter.resetEncoderPosition();
     }
 
     /**
@@ -134,6 +132,10 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
+        
+        intakeLifter.setPosition(oi.threeAxisJoystick.getRawAxis(3)*1500);
+        intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
+
 
        // SmartDashboard.putData("Compressor", compressor);
      //   SmartDashboard.putData("Gyro", chassis.navxGyro);
