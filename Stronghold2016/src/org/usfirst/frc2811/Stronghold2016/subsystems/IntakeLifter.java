@@ -28,6 +28,7 @@ public class IntakeLifter extends Subsystem {
      * This is used to hold part of the PID
      */
     double iterm=0;
+	private boolean homed;
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -60,13 +61,15 @@ public class IntakeLifter extends Subsystem {
     }
     
     public boolean intakeLifterHoming(){
+    	homed=false;
     	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
     	intakeLifterMotor.enable();
     	//intakeLifterMotor.set(0.25); //goes up on practice bot
     	//intakeLifterMotor.set(0.25); //goes down on competition bot
-    	intakeLifterMotor.set(-.15);
+    	intakeLifterMotor.set(0.15);
     	if(intakeLifterMotor.isFwdLimitSwitchClosed()){
     		intakeLifterPIDInit();
+    		homed=true;
     		return true;
     	}
     	return false;
@@ -99,6 +102,9 @@ public class IntakeLifter extends Subsystem {
     
     public void setPosition(double position){
     	//double pgain=smartDashboard.getNumber("p");
+    	
+    	if(!homed)return;
+    	
     	double pgain=.004;
     	double igain=0.000001;
     	double error=(position-intakeLifterMotor.getEncPosition());
