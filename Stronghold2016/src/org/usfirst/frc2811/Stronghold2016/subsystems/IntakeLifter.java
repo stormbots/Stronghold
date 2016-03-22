@@ -62,11 +62,11 @@ public class IntakeLifter extends Subsystem {
     
     public boolean intakeLifterHoming(){
     	homed=false;
-    	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+    	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.Current);
     	intakeLifterMotor.enable();
     	//intakeLifterMotor.set(0.25); //goes up on practice bot
     	//intakeLifterMotor.set(0.25); //goes down on competition bot
-    	intakeLifterMotor.set(0.15);
+    	intakeLifterMotor.set(-4);
     	if(intakeLifterMotor.isFwdLimitSwitchClosed()){
     		intakeLifterPIDInit();
     		homed=true;
