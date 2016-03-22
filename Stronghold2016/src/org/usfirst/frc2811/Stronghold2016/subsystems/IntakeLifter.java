@@ -29,6 +29,7 @@ public class IntakeLifter extends Subsystem {
      */
     double iterm=0;
 	private boolean homed;
+	private boolean enabled;
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -79,6 +80,7 @@ public class IntakeLifter extends Subsystem {
     	intakeMotor.enable();
     	intakeMotor.set(speed);
     }
+    
     public void resetEncoderPosition(){
     	System.out.println("initial value"+	intakeLifterMotor.get());
     	intakeLifterMotor.setEncPosition(-1500);
@@ -104,6 +106,7 @@ public class IntakeLifter extends Subsystem {
     	//double pgain=smartDashboard.getNumber("p");
     	
     	if(!homed)return;
+    	if(!enabled)return;
     	
     	double pgain=.004;
     	double igain=0.000001;
@@ -140,5 +143,7 @@ public class IntakeLifter extends Subsystem {
 		System.out.println("Pos: " +intakeLifterMotor.getPosition());
 		System.out.println("error : " +intakeLifterMotor.getClosedLoopError());
     }
+    
+
 }
 

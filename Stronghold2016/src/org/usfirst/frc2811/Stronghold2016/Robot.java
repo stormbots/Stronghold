@@ -17,6 +17,7 @@ import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDel
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossOther;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossPortcullus;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousReachOnly;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeAngleMonitor;
 import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.subsystems.AltChassis;
@@ -211,13 +212,15 @@ public class Robot extends IterativeRobot {
         System.out.println("Joystick Flapper :" + oi.threeAxisJoystick.getRawAxis(3));
         if(oi.threeAxisJoystick.getRawAxis(3)<-.95){
         	intakeLifter.intakeLifterHoming();
-        	
+        }
+        else if(oi.threeAxisJoystick.getRawButton(10)){
+        	intakeLifter.setPosition(1000);
         }
         else{
             intakeLifter.setPosition(oi.threeAxisJoystick.getRawAxis(3)*1500);
 
         }
-        intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
+       // intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
 
 
 

@@ -7,27 +7,25 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class IntakeToggleAngle extends Command {
+public class IntakeBallOut extends Command {
 
-    public IntakeToggleAngle() {
+    public IntakeBallOut() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    		
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//doing nothing, work is in isFinished
+    	Robot.intakeLifter.spinIntake(-1);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        //return Robot.intakeLifter.onTarget(5);
-    	return true;
+        return true;
     }
 
     // Called once after isFinished returns true

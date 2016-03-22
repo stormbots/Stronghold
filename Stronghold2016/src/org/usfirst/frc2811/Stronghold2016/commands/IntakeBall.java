@@ -33,6 +33,7 @@ public class IntakeBall extends Command {
     	//TODO check if limit switch is default open or closed
     	//if(Robot.intake.isBallReady()==false && Robot.intakeLifter.getCurrentAngle()<45){
     		//Robot.intake.intakeBall();
+    	Robot.intakeLifter.spinIntake(1);
     	//}
       
     }
