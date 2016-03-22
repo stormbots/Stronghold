@@ -209,18 +209,6 @@ public class Robot extends IterativeRobot {
 
 		*/
 
-        System.out.println("Joystick Flapper :" + oi.threeAxisJoystick.getRawAxis(3));
-        if(oi.threeAxisJoystick.getRawAxis(3)<-.95){
-        	intakeLifter.intakeLifterHoming();
-        }
-        else if(oi.threeAxisJoystick.getRawButton(10)){
-        	intakeLifter.setPosition(1000);
-        }
-        else{
-            intakeLifter.setPosition(oi.threeAxisJoystick.getRawAxis(3)*1500);
-
-        }
-       // intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
 
 
 
