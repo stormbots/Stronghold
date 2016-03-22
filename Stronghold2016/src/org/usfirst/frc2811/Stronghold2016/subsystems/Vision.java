@@ -222,11 +222,11 @@ public class Vision extends Subsystem {
 		VisionTarget t = this.getBestTarget();
 		
 		if (t == null) {
-			System.out.println("NULL RCVD WHEN FETCHING BEST TARGET");
+			System.out.println("ERR: Null target. Returning -9999.");
 			return -9999;
-		} else {
-			return this.remapX(t.getX());
 		}
+		
+		return t.getMappedY();
 	}
 	
 	/**
@@ -237,12 +237,11 @@ public class Vision extends Subsystem {
 		VisionTarget t = this.getBestTarget();
 		
 		if (t == null) {
-			System.out.println("NULL RCVD WHEN FETCHING BEST TARGET");
+			System.out.println("ERR: Null target. Returning -9999.");
 			return -9999;
-		} else {
-			// return left-based goal X coordinate
-			return this.remapY(t.getY() - t.getHeight()/2);
 		}
+		
+		return t.getMappedX();
 	}
 	
 	/**
@@ -253,7 +252,7 @@ public class Vision extends Subsystem {
 		
 		// goal center height is 8'1". Subtract the camera height to get the height difference (opp in trig)
 		// this height is the distance from the ground to the middle of the target/goal
-		double goalHeight = 8.0 + (double)1/12.0 - this.cameraHeight;
+		double goalHeight = 4.0 + (double)2.0/12.0 - this.cameraHeight;
 		
 		/*  tan(angle) = goalHeight / distanceX
 		    
@@ -312,10 +311,10 @@ public class Vision extends Subsystem {
 	 * @return double angleHorizontal. Left - negative; Right - positive
 	 */
 	public double getXAngleToTarget() {
-		
+	
 		VisionTarget t = this.getBestTarget();
 		
-		double objectPositionX = this.remapX(t.getY());
+		double objectPositionX = t.getMappedX();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -328,12 +327,29 @@ public class Vision extends Subsystem {
 		return angleOffsetX;
 	}
 	
-	private double remapY(double raw) {
-		return raw - (this.cameraPixelsX / 2);
-	}
+//	private double remapY(double raw) {
+//		return (this.cameraPixelsX / 2) - raw;
+//	}
+//	
+//	private double remapX(double raw) {
+//		return this.cameraPixelsY / 2 - raw;
+//	}
 	
-	private double remapX(double raw) {
-		return this.cameraPixelsY / 2 - raw;
+	public void testRemaps() {
+		VisionTarget topLeft = new VisionTarget(300, 340, 100, 100, 123, .0005);
+		VisionTarget topRight = new VisionTarget(800, 380, 100, 100, 124, .0004);
+		
+		VisionTarget bottomLeft = new VisionTarget(500, 330, 100, 100, 125, .0006);
+		VisionTarget bottomRight = new VisionTarget(920, 500, 100, 100, 128, .0235);
+		
+		System.out.println("TOP LEFT maps from (" + topLeft.getRawX() + "," + topLeft.getRawY() + ") to "
+				+ "(" + topLeft.getMappedX() + "," + topLeft.getMappedY() + ").");
+		System.out.println("TOP RIGHT maps from (" + topRight.getRawX() + "," + topRight.getRawY() + ") to "
+				+ "(" + topRight.getMappedX() + "," + topRight.getMappedY() + ").");
+		System.out.println("BOTTOM LEFT maps from (" + bottomLeft.getRawX() + "," + bottomLeft.getRawY() + ") to "
+				+ "(" + bottomLeft.getMappedX() + "," + bottomLeft.getMappedY() + ").");
+		System.out.println("BOTTOM RIGHT maps from (" + bottomRight.getRawX() + "," + bottomRight.getRawY() + ") to "
+				+ "(" + bottomRight.getMappedX() + "," + bottomRight.getMappedY() + ").");
 	}
 	
 	/**
@@ -346,7 +362,7 @@ public class Vision extends Subsystem {
 		
 		VisionTarget t = this.getBestTarget();
 		
-		double objectPositionY = this.remapY(t.getY());
+		double objectPositionY = t.getMappedY();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
 		
@@ -387,12 +403,12 @@ public class Vision extends Subsystem {
 			double[] coordsY = this.getValArray("centerX");
 			
 			double[] heights = this.getValArray("width");
-			double[] widths = this.getValArray("heights");
+			double[] widths = this.getValArray("height");
 			
 			double[] areas = this.getValArray("area");
 			double[] solidity = this.getValArray("solidity");
 			
-			for (int i = 0; i < (this.getValArray("centerY").length); i++) {
+			for (int i = 0; i < (coordsX.length); i++) {
 				targets.add(new VisionTarget(coordsX[i], coordsY[i], heights[i], widths[i], areas[i], solidity[i]));
 			}
 			

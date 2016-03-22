@@ -51,14 +51,35 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	/**
 	 * @return Y-coordinate (which is X in our rotated system)
 	 */
-	public double getX() {
+	public double getRawX() {
 		return this.coordinateY;
 	}
+	
+	/**
+	 * Return mapped Y-coordinate (which is X in the rotated system)
+	 */
+	public double getMappedX() {
+		// first, move to center-based coordinate
+		double x = this.coordinateY;
+		double mappedX = (360 - x);
+		
+		return mappedX;
+	}
+	
 	/**
 	 * @return X-coordinate (which is Y in our rotated system)
 	 */
-	public double getY() {
+	public double getRawY() {
 		return this.coordinateX;
+	}
+	
+	/**
+	 * Return mapped X-coordinate (which is Y in the rotated system)
+	 */
+	public double getMappedY() {
+		double y = this.coordinateX;
+		
+		return 640 - y;
 	}
 	
 	public double getArea() {
@@ -75,6 +96,10 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	
 	public double getSolidity() {
 		return this.solidity;
+	}
+	
+	public String toString() {
+		return "Height: " + this.height + "\n" + "Width: " + this.width + "\n" + "X: " + this.coordinateX + "\n" + "Y: " + this.coordinateY;
 	}
 	
 }

@@ -67,7 +67,7 @@ public class Robot extends IterativeRobot {
         //onboardAccelerometer = new BuiltInAccelerometer();
         
         //TODO: Set vision offsetX and offsetY correctly. 0.5 is a dummy value for now.
-   		vision = new Vision("GRIP/myContoursReport", .75, -1 * (6.5/12.0), 1.0, 40, 68.5, 1280, 720);
+   		vision = new Vision("GRIP/myContoursReport", 38.5/12.0, -1 * (6.5/12.0), 1.0, 40, 68.5, 1280, 720);
         //intake = new Intake();
         //shooter = new Shooter();
         //TODO Find/Set Chassis rotation PID values
@@ -136,7 +136,9 @@ public class Robot extends IterativeRobot {
 //        SmartDashboard.putBoolean("On Target?", chassis.isOnTarget()) ;
 //        chassis.setRotation(0);
     	
-    	vision.getTargetCoordX();
+    	//System.out.println("X remapped: " + vision.getTargetCoordX());
+    	//System.out.println("Y remapped: " + vision.getTargetCoordY());
+    	vision.testRemaps();
     	//System.out.println("Distance from shooter to target: " + vision.getRealXOffsetToTarget());
     	//System.out.println("Horizontal angle to target: " + vision.getXAngleToTarget());
     	//System.out.println("Vertical angle to target: " + vision.getYAngleToTarget());
