@@ -17,6 +17,7 @@ public class IntakeHoming extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("Initializing Homing Command");
+    	Robot.intakeJoystickControl.cancel();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -33,6 +34,7 @@ public class IntakeHoming extends Command {
     protected void end() {
     	Robot.intakeLifter.resetEncoderPosition();
     	Robot.intakeLifter.intakeLifterPIDInit();
+    	Robot.intakeJoystickControl.start();
     	System.out.println("Finishing Homing Command");
     }
 
@@ -41,6 +43,7 @@ public class IntakeHoming extends Command {
     protected void interrupted() {
     	Robot.intakeLifter.resetEncoderPosition();
     	Robot.intakeLifter.intakeLifterPIDInit();
+    	Robot.intakeJoystickControl.start();
     	System.out.println("Killed Homing Command");
     }
 }

@@ -17,7 +17,7 @@ import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDel
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossOther;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossPortcullus;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousReachOnly;
-import org.usfirst.frc2811.Stronghold2016.commands.IntakeAngleMonitor;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeJoystickControl;
 import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.subsystems.AltChassis;
@@ -60,8 +60,9 @@ public class Robot extends IterativeRobot {
     SendableChooser autonomousOptions;
 	Command autonomousCommand;
     Command joystickDrive;
-    Command intakeManual;
+	public static IntakeJoystickControl intakeJoystickControl;
     //Command shooterManual;
+
 
     //Command testIntake;
     //public static Command resetAlignment;
@@ -111,7 +112,8 @@ public class Robot extends IterativeRobot {
         // instantiate the command used for the autonomous period
         autonomousCommand = new AutonomousCommand(0,0);
         joystickDrive = new JoystickDrive();
-        //lifterController = new IntakeLifterManual();
+        intakeJoystickControl =new IntakeJoystickControl();
+        
         //shooterManual = new ShooterManual();
         //testIntake = new TestIntake();
 
@@ -147,6 +149,7 @@ public class Robot extends IterativeRobot {
      */
     public void disabledInit(){
 
+        if (intakeJoystickControl != null) intakeJoystickControl.cancel();
     }
 
     public void disabledPeriodic() {
@@ -182,6 +185,8 @@ public class Robot extends IterativeRobot {
         //else {System.out.println("Could not start ShooterManual; Was null");}
 
         intakeLifter.resetEncoderPosition();
+        
+        if (intakeJoystickControl != null) intakeJoystickControl.start();
     }
 
     /**
@@ -219,18 +224,6 @@ public class Robot extends IterativeRobot {
 
 		*/
 
-        System.out.println("Joystick Flapper :" + oi.threeAxisJoystick.getRawAxis(3));
-        if(oi.threeAxisJoystick.getRawAxis(3)<-.95){
-        	intakeLifter.intakeLifterHoming();
-        }
-        else if(oi.threeAxisJoystick.getRawButton(10)){
-        	intakeLifter.setPosition(1000);
-        }
-        else{
-            intakeLifter.setPosition(oi.threeAxisJoystick.getRawAxis(3)*1500);
-
-        }
-       // intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
 
 
 

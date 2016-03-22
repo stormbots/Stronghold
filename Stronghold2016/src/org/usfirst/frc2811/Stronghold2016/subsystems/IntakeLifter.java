@@ -94,13 +94,6 @@ public class IntakeLifter extends Subsystem {
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
     }
-    //Part One checking direction of motor and correct limit switch
-    public void setMotorVoltage(){
-    	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-    	intakeLifterMotor.enable();
-    	intakeLifterMotor.set(0.25);
-    	
-    }
     
     public void setPosition(double position){
     	//double pgain=smartDashboard.getNumber("p");
@@ -136,6 +129,8 @@ public class IntakeLifter extends Subsystem {
 
 	    Timer.delay(.05);
     }
+    
+    
     public void readStuff(){
     	System.out.println("=================");
 		System.out.println("Setpoint: " +intakeLifterMotor.getSetpoint());
@@ -144,6 +139,41 @@ public class IntakeLifter extends Subsystem {
 		System.out.println("error : " +intakeLifterMotor.getClosedLoopError());
     }
     
+	public boolean onTarget(int angle) {
+		// TODO Auto-generated method stub
+    	return intakeLifterMotor.getClosedLoopError()< tickAngleMap.angleToTicks(angle);
+	}
+    public boolean isOnTarget(){
+    	return onTarget(5);
+    }
+    
+    public void setAngle(double degrees){
+    	setPosition(tickAngleMap.angleToTicks(degrees));
+    }
+    public double  getAngle(){
+    	return tickAngleMap.ticksToAngle(intakeLifterMotor.getEncPosition());
+    }
+    
+    /**
+     * Tiny class used to hold some angle and tick values
+     * Positions are based at nominal values, probably measured from all the way up (homed)
+     * and parallel to floor. 
+     */
+    private static class tickAngleMap{
+    	static double upTicks=-1500;
+    	static double upAngle=100;
+    	static double downAngle=45;
+    	static double downTicks=1500;
+    	static double angleToTicks(double degrees){ 
+    		return map(degrees,downAngle,upAngle,downTicks,upTicks);
+    	}
+    	static double ticksToAngle(double ticks){ 
+    		return map(ticks,downTicks,upTicks,downAngle,upAngle);
+	   	}
+    	static double map(double x, double in_min, double in_max, double out_min, double out_max)	{
+		  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+		}
+    }
 
 }
 
