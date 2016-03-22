@@ -33,12 +33,8 @@ public class AltChassis extends Subsystem {
     }
     
     public void joystickDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.leftStick.getRawAxis(1), Robot.oi.rightStick.getRawAxis(0));
+    	chassisDrive.arcadeDrive(Robot.oi.getMoveValue(), Robot.oi.getRotateValue());
     	
-    }
-    
-    public void triggerDrive(){
-    	chassisDrive.arcadeDrive(Robot.oi.triggerMath(),Robot.oi.xBox.getRawAxis(0));
     }
 }
 
