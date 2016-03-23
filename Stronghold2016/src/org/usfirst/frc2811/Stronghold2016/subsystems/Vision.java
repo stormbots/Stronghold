@@ -250,9 +250,14 @@ public class Vision extends Subsystem {
 	public double getDistanceToTarget() {
 		double angleToTarget = this.getYAngleToTarget();
 		
+		if (angleToTarget > -9998 && angleToTarget < -10000) {
+			System.out.println("NO TARGET");
+			return -9999;
+		}
+		
 		// goal center height is 8'1". Subtract the camera height to get the height difference (opp in trig)
 		// this height is the distance from the ground to the middle of the target/goal
-		double goalHeight = 4.0 + (double)2.0/12.0 - this.cameraHeight;
+		double goalHeight = 3 + 6.5/12.0 - this.cameraHeight;
 		
 		/*  tan(angle) = goalHeight / distanceX
 		    
@@ -314,6 +319,11 @@ public class Vision extends Subsystem {
 	
 		VisionTarget t = this.getBestTarget();
 		
+		if (t == null) {
+			System.out.println("NO TARGET. RETURNING -9999.");
+			return -9999;
+		}
+		
 		double objectPositionX = t.getMappedX();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
@@ -322,7 +332,7 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetX = objectPositionX * (FOVs[1]/2/this.cameraPixelsY);
+		double angleOffsetX = objectPositionX * (FOVs[1]/this.cameraPixelsY);
 
 		return angleOffsetX;
 	}
@@ -362,6 +372,11 @@ public class Vision extends Subsystem {
 		
 		VisionTarget t = this.getBestTarget();
 		
+		if (t == null) {
+			System.out.println("ERR: No target detected. Returning -9999");
+			return -9999;
+		}
+		
 		double objectPositionY = t.getMappedY();
 		
 		double[] FOVs = this.diagonalFieldOfViewToXYFieldOfView();
@@ -370,7 +385,7 @@ public class Vision extends Subsystem {
 		 * Multiply by half of the FOV per pixel on that axis because we have FOV/2 field of view
 		 * in each direction on that axis.
 		 */
-		double angleOffsetY = objectPositionY  * (FOVs[0]/2/this.cameraPixelsX);
+		double angleOffsetY = objectPositionY  * (FOVs[0]/this.cameraPixelsX);
 		
 		return angleOffsetY + this.cameraOffsetAngleY;
 	}
@@ -386,7 +401,7 @@ public class Vision extends Subsystem {
 	/**
 	 * @return VisionTarget instance of the largest goal detected by GRIP
 	 */
-	private VisionTarget getBestTarget() {
+	public VisionTarget getBestTarget() {
 		ArrayList<VisionTarget> targets = new ArrayList<VisionTarget>();
 		
 		if (this.tableConnected()) {

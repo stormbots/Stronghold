@@ -79,7 +79,7 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	public double getMappedY() {
 		double y = this.coordinateX;
 		
-		return 640 - y;
+		return y - 640;
 	}
 	
 	public double getArea() {

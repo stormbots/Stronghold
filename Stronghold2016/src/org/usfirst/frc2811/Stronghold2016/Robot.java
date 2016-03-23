@@ -67,7 +67,7 @@ public class Robot extends IterativeRobot {
         //onboardAccelerometer = new BuiltInAccelerometer();
         
         //TODO: Set vision offsetX and offsetY correctly. 0.5 is a dummy value for now.
-   		vision = new Vision("GRIP/myContoursReport", 38.5/12.0, -1 * (6.5/12.0), 1.0, 40, 68.5, 1280, 720);
+   		vision = new Vision("GRIP/myContoursReport", 31.5/12.0, -1 * (6.5/12.0), 1.0, 30, 68.5, 1280, 720);
         //intake = new Intake();
         //shooter = new Shooter();
         //TODO Find/Set Chassis rotation PID values
@@ -138,10 +138,22 @@ public class Robot extends IterativeRobot {
     	
     	//System.out.println("X remapped: " + vision.getTargetCoordX());
     	//System.out.println("Y remapped: " + vision.getTargetCoordY());
-    	vision.testRemaps();
+    	//vision.testRemaps();
     	//System.out.println("Distance from shooter to target: " + vision.getRealXOffsetToTarget());
     	//System.out.println("Horizontal angle to target: " + vision.getXAngleToTarget());
-    	//System.out.println("Vertical angle to target: " + vision.getYAngleToTarget());
+//    	System.out.println("Vertical angle to target: " + vision.getYAngleToTarget());
+//    	System.out.println("Horizontal angle to target: " + vision.getXAngleToTarget());
+//    	
+//    	VisionTarget t = vision.getBestTarget();
+//    	
+//    	if (t != null) {
+//    		System.out.println("Target Area: " + t.getArea());
+//    	} else {
+//    		System.out.println("No target.");
+//    	}
+    	System.out.println("Y Angle to target: " + vision.getYAngleToTarget());
+    	System.out.println("Distance to target: " + vision.getDistanceToTarget());
+   
     }
 
     /**
