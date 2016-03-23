@@ -90,15 +90,10 @@ public class Chassis extends PIDSubsystem{
      */
     public void joystickDrive(){
     	if(operatorControl){
-    		chassisDrive.arcadeDrive(Robot.oi.leftStick.getRawAxis(1), 
-    			Robot.oi.rightStick.getRawAxis(0), false);
+    		chassisDrive.arcadeDrive(Robot.oi.getMoveValue(), Robot.oi.getRotateValue(), false);
     	}
     }
-    
-    public void triggerDrive(){
-    	if(operatorControl) chassisDrive.arcadeDrive(Robot.oi.triggerMath(), Robot.oi.xBox.getRawAxis(0));
-    }
-       
+ 
   
     /**
      * Allows for manual setting of movement values   
