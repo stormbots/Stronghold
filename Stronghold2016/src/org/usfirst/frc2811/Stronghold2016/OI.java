@@ -18,6 +18,7 @@ import org.usfirst.frc2811.Stronghold2016.commands.IntakeHoming;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeLifterOff;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeOff;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeJoystickControl;
+import org.usfirst.frc2811.Stronghold2016.commands.IntakeLifterAngle;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeUp;
 import org.usfirst.frc2811.Stronghold2016.commands.SetAngle;
 import org.usfirst.frc2811.Stronghold2016.commands.ShiftGears;
@@ -176,10 +177,13 @@ public class OI{
 
 /////////Intake Operations
     	threeAxisJoystick = new Joystick(4);
-		//threeAxisButton2 = new JoystickButton(threeAxisJoystick,2);
 		
+    	threeAxisButton2 = new JoystickButton(threeAxisJoystick,2);
+		threeAxisButton2.whenPressed(new IntakeHoming());
 		
 		threeAxisButton10 = new JoystickButton(threeAxisJoystick,10);
+		threeAxisButton10.whileHeld(new IntakeLifterAngle(-12));//TODO Lets find out of this angle is correct
+		
 		
 		threeAxisButton11= new JoystickButton(threeAxisJoystick,11);
 		threeAxisButton11.whileHeld(new IntakeBallOut());

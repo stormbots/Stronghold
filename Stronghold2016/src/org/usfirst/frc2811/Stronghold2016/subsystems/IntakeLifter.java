@@ -51,9 +51,17 @@ public class IntakeLifter extends Subsystem {
     	intakeMotor.set(0);
 
     }
+    
+    public boolean intakeIsSwitchPressed(){
+    	if(intakeMotor.isFwdLimitSwitchClosed()){
+    		return true;
+    	}
+    	return false;
+    }
     public void intakeLifterPIDInit(){
     	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.Current);    	
-    	intakeLifterMotor.setPID(.251, 0.00, 00); //works good for the arm prototype
+    	//intakeLifterMotor.setPID(.251, 0.00, 00); //works good for the arm prototype
+    	intakeLifterMotor.setPID(.251, 0.00, 0); //competition
     	intakeLifterMotor.setIZone(100);
     	intakeLifterMotor.enable();
     	resetEncoderPosition();
@@ -99,7 +107,7 @@ public class IntakeLifter extends Subsystem {
     	//double pgain=smartDashboard.getNumber("p");
     	
     	if(!homed)return;
-    	if(!enabled)return;
+    	//if(!enabled)return;
     	
     	double pgain=.004;
     	double igain=0.000001;
@@ -119,6 +127,14 @@ public class IntakeLifter extends Subsystem {
     	if(out>5)out=5;
     	if(out<-5)out=-5;
     	
+    	if(out>0){
+    		out=out/5;
+    		System.out.println("Going Down?");
+    	}
+    	else{
+    		System.out.println("Going Up?");    		
+    	}
+    	
     	intakeLifterMotor.set(out);
     	
     	System.out.println("=================");
@@ -137,6 +153,10 @@ public class IntakeLifter extends Subsystem {
 		System.out.println("EncPos: " +intakeLifterMotor.getEncPosition());
 		System.out.println("Pos: " +intakeLifterMotor.getPosition());
 		System.out.println("error : " +intakeLifterMotor.getClosedLoopError());
+		System.out.println("Current Angle" + getAngle());
+		System.out.println(tickAngleMap.ticksToAngle(1000));
+		System.out.println("intakeMotor" + intakeMotor.getEncPosition());
+		//Intake Inti posiion -1482304 to -1476564
     }
     
 	public boolean onTarget(int angle) {
@@ -161,9 +181,9 @@ public class IntakeLifter extends Subsystem {
      */
     private static class tickAngleMap{
     	static double upTicks=-1500;
-    	static double upAngle=100;
-    	static double downAngle=45;
-    	static double downTicks=1500;
+    	static double upAngle=107;
+    	static double downAngle=0;
+    	static double downTicks=692;
     	static double angleToTicks(double degrees){ 
     		return map(degrees,downAngle,upAngle,downTicks,upTicks);
     	}

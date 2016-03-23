@@ -22,18 +22,14 @@ public class IntakeJoystickControl extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        System.out.println("Joystick Flapper :" + Robot.oi.getLifterPaddlePosition());
         if(Robot.oi.getLifterPaddlePosition()<-.95){
         	Robot.intakeLifter.intakeLifterHoming();
         }
-        else if(Robot.oi.threeAxisJoystick.getRawButton(10)){
-        	Robot.intakeLifter.setPosition(1000);
-        }
         else{
+            System.out.println("Joystick Flapper :" + Robot.oi.getLifterPaddlePosition());
         	Robot.intakeLifter.setPosition(Robot.oi.getLifterPaddlePosition()*1500);
 
         }
-       // intakeLifter.spinIntake(oi.threeAxisJoystick.getRawAxis(1));
 
     }
 

@@ -36,9 +36,9 @@ public class AutonomousCrossLowBarAfterDelay extends CommandGroup {
     	*/
     	addSequential(new IntakeHoming(),1); //required to work for now for some reason
     	addSequential(new Wait(6));
-    	addSequential(new SketchyDrive(1));
-    	addSequential(new IntakeDown(),2);
-    	addSequential(new SketchyDrive(3));
+    	addSequential(new SketchyDrive(.5));
+    	addSequential(new IntakeLifterAngle(0));
+    	addSequential(new SketchyDrive(2));
     	    	
     }
 
