@@ -14,7 +14,9 @@ package org.usfirst.frc2811.Stronghold2016.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Shooter tops out with getEncVelocity() of  ~53000. 
+ * Tested speed for shooting a high goal from the batter is rate of 38176 ticks 
+
  */
 public class Shooter extends Subsystem {
 	
