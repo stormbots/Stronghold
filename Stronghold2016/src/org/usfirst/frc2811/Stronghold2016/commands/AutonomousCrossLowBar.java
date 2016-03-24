@@ -38,7 +38,7 @@ public class AutonomousCrossLowBar extends CommandGroup {
     	addSequential(new IntakeHoming()); 
     	addSequential(new SketchyDrive(.5));
     	addSequential(new IntakeLifterAngle(0));
-    	addSequential(new SketchyDrive(1.5));
+    	addSequential(new SketchyDrive(2));
     	addSequential(new IntakeHoming());
     	    	
     }

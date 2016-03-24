@@ -14,8 +14,10 @@ package org.usfirst.frc2811.Stronghold2016;
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBar;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDelay;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossMoat;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossOther;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossPortcullus;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossRockWall;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousReachOnly;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeJoystickControl;
 import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
@@ -132,8 +134,10 @@ public class Robot extends IterativeRobot {
         autonomousOptions.addObject("Reach Obstacle", new AutonomousReachOnly());
         autonomousOptions.addDefault("Cross Low Bar", new AutonomousCrossLowBar());
         autonomousOptions.addObject("Reach Low Bar After Delay", new AutonomousCrossLowBarAfterDelay());
+        autonomousOptions.addObject("Cross Rock Wall", new AutonomousCrossRockWall());
+        autonomousOptions.addObject("Cross Moat", new AutonomousCrossMoat());
+        autonomousOptions.addObject("Cross Rampart(untested)", new AutonomousCrossOther());
         autonomousOptions.addObject("Cross Portcullus (point lifter toward gate!)", new AutonomousCrossPortcullus());
-        autonomousOptions.addObject("Cross Rock Wall/Rampart/Rough Terrain", new AutonomousCrossOther());
         SmartDashboard.putData("Select autonomous mode", autonomousOptions);
         
         // OI must be constructed after subsystems. If the OI creates Commands

@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class AutonomousCrossOther extends CommandGroup {
+public class AutonomousCrossMoat extends CommandGroup {
 
-    public AutonomousCrossOther() {
+    public AutonomousCrossMoat() {
     	//This should be helpful! 
     	// Selecting autonomous modes via Smart Dashboard
     	// https://wpilib.screenstepslive.com/s/4485/m/26401/l/255419-choosing-an-autonomous-program-from-smartdashboard
@@ -37,10 +37,10 @@ public class AutonomousCrossOther extends CommandGroup {
     	//rock wall wants low gear and 3.5 seconds
     	//moat wants high gear  100% speed and 5 seconds
     	
+    	addSequential(new IntakeHoming()); 
     	addSequential(new ShiftGearsHigh());
-    	addSequential(new IntakeHoming()); //required to work for now for some reason
-    	addSequential(new SketchyDrive(1,4));
-    	
+    	addSequential(new SketchyDrive(1,5));
+    	addSequential(new IntakeHoming()); 
     }
 
    
