@@ -11,46 +11,59 @@
 
 package org.usfirst.frc2811.Stronghold2016.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc2811.Stronghold2016.Robot;
+
 
 /**
  *
  */
 public class IntakeBall extends Command {
 
+	double startTime=0;
     public IntakeBall() {
 
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.intakeJoystickControl.cancel();
+
+    	Robot.intakeLifter.setAngle(-12);
+    	startTime=Timer.getFPGATimestamp();
+
     }
 
     // Called  when this Command is scheduled to run
     protected void execute() {
-    	
     	//TODO check if limit switch is default open or closed
-    	//if(Robot.intake.isBallReady()==false && Robot.intakeLifter.getCurrentAngle()<45){
-    		//Robot.intake.intakeBall();
-    	Robot.intakeLifter.spinIntake(1);
-    	//}
-      
+
+    	//Robot.intakeLifter.spinIntake(1);
+    	
+    	System.out.println("Match Time" + Timer.getFPGATimestamp());
+    	System.out.println("Start Time" + startTime);
+    	if(Timer.getFPGATimestamp()>2+startTime){
+        	//Robot.intakeLifter.setAngle(-20);
+    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	//if it already has a ball, or if it grabs one, command exits, otherwise, intake stays on
-
+    protected boolean isFinished() {    	
     	return true;
     }
     
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.intakeJoystickControl.start();
+
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	Robot.intakeJoystickControl.start();
+
     }
 }

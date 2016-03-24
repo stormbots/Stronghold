@@ -51,9 +51,17 @@ public class IntakeLifter extends Subsystem {
     	intakeMotor.set(0);
 
     }
+    
+    public boolean intakeIsSwitchPressed(){
+    	if(intakeMotor.isFwdLimitSwitchClosed()){
+    		return true;
+    	}
+    	return false;
+    }
     public void intakeLifterPIDInit(){
     	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.Current);    	
-    	intakeLifterMotor.setPID(.251, 0.00, 00); //works good for the arm prototype
+    	//intakeLifterMotor.setPID(.251, 0.00, 00); //works good for the arm prototype
+    	intakeLifterMotor.setPID(.251, 0.00, 0); //competition
     	intakeLifterMotor.setIZone(100);
     	intakeLifterMotor.enable();
     	resetEncoderPosition();
@@ -94,19 +102,12 @@ public class IntakeLifter extends Subsystem {
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
     }
-    //Part One checking direction of motor and correct limit switch
-    public void setMotorVoltage(){
-    	intakeLifterMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-    	intakeLifterMotor.enable();
-    	intakeLifterMotor.set(0.25);
-    	
-    }
     
     public void setPosition(double position){
     	//double pgain=smartDashboard.getNumber("p");
     	
     	if(!homed)return;
-    	if(!enabled)return;
+    	//if(!enabled)return;
     	
     	double pgain=.004;
     	double igain=0.000001;
@@ -126,6 +127,14 @@ public class IntakeLifter extends Subsystem {
     	if(out>5)out=5;
     	if(out<-5)out=-5;
     	
+    	if(out>0){
+    		out=out/5;
+    		System.out.println("Going Down?");
+    	}
+    	else{
+    		System.out.println("Going Up?");    		
+    	}
+    	
     	intakeLifterMotor.set(out);
     	
     	System.out.println("=================");
@@ -136,14 +145,55 @@ public class IntakeLifter extends Subsystem {
 
 	    Timer.delay(.05);
     }
+    
+    
     public void readStuff(){
     	System.out.println("=================");
 		System.out.println("Setpoint: " +intakeLifterMotor.getSetpoint());
 		System.out.println("EncPos: " +intakeLifterMotor.getEncPosition());
 		System.out.println("Pos: " +intakeLifterMotor.getPosition());
 		System.out.println("error : " +intakeLifterMotor.getClosedLoopError());
+		System.out.println("Current Angle" + getAngle());
+		System.out.println(tickAngleMap.ticksToAngle(1000));
+		System.out.println("intakeMotor" + intakeMotor.getEncPosition());
+		//Intake Inti posiion -1482304 to -1476564
     }
     
+	public boolean onTarget(int angle) {
+		// TODO Auto-generated method stub
+    	return intakeLifterMotor.getClosedLoopError()< tickAngleMap.angleToTicks(angle);
+	}
+    public boolean isOnTarget(){
+    	return onTarget(5);
+    }
+    
+    public void setAngle(double degrees){
+    	setPosition(tickAngleMap.angleToTicks(degrees));
+    }
+    public double  getAngle(){
+    	return tickAngleMap.ticksToAngle(intakeLifterMotor.getEncPosition());
+    }
+    
+    /**
+     * Tiny class used to hold some angle and tick values
+     * Positions are based at nominal values, probably measured from all the way up (homed)
+     * and parallel to floor. 
+     */
+    private static class tickAngleMap{
+    	static double upTicks=-1500;
+    	static double upAngle=107;
+    	static double downAngle=0;
+    	static double downTicks=692;
+    	static double angleToTicks(double degrees){ 
+    		return map(degrees,downAngle,upAngle,downTicks,upTicks);
+    	}
+    	static double ticksToAngle(double ticks){ 
+    		return map(ticks,downTicks,upTicks,downAngle,upAngle);
+	   	}
+    	static double map(double x, double in_min, double in_max, double out_min, double out_max)	{
+		  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+		}
+    }
 
 }
 

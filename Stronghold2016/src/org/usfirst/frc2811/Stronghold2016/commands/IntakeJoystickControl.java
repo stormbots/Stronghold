@@ -5,11 +5,13 @@ import org.usfirst.frc2811.Stronghold2016.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * Reads the joystick and puts the Intake where we want it
+ * To disable, call Robot.intakeJoyStickControl.cancel(), 
+ * and then run Robot.intakeJoyStickControl.enable() to restart. 
  */
-public class ShiftGears extends Command {
+public class IntakeJoystickControl extends Command {
 
-    public ShiftGears() {
+    public IntakeJoystickControl() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
@@ -20,12 +22,20 @@ public class ShiftGears extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.chassis.shiftGears();
+        if(Robot.oi.getLifterPaddlePosition()<-.95){
+        	Robot.intakeLifter.intakeLifterHoming();
+        }
+        else{
+            System.out.println("Joystick Flapper :" + Robot.oi.getLifterPaddlePosition());
+        	Robot.intakeLifter.setPosition(Robot.oi.getLifterPaddlePosition()*1500);
+
+        }
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+    	return false;
     }
 
     // Called once after isFinished returns true
