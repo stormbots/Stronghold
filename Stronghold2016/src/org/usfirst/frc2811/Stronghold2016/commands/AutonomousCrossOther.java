@@ -34,8 +34,8 @@ public class AutonomousCrossOther extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	addSequential(new IntakeHoming(),1); //required to work for now for some reason
-    	addSequential(new SketchyDrive(5));
+    	addSequential(new IntakeHoming()); //required to work for now for some reason
+    	addSequential(new SketchyDrive(3.5));
     	
     }
 

@@ -162,7 +162,12 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         // schedule the autonomous command (example)
     	autonomousCommand= (Command) autonomousOptions.getSelected();
+    	
+        intakeLifter.resetEncoderPosition();
+    	Robot.intakeJoystickControl.cancel();
+    	
         if (autonomousCommand != null) autonomousCommand.start();
+        
     }
 
     /**
@@ -170,6 +175,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+
 
     }
 

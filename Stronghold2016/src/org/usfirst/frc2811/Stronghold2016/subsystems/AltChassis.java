@@ -31,7 +31,14 @@ public class AltChassis extends Subsystem {
     public void shiftGears(){
     	shifter.set(!shifter.get());
     }
-    
+
+    public void shiftGearsHigh(){
+    	shifter.set(true);
+    }
+    public void shiftGearsLow(){
+    	shifter.set(false);
+    }
+
     public void joystickDrive(){
     	chassisDrive.arcadeDrive(Robot.oi.getMoveValue(), Robot.oi.getRotateValue());
     	

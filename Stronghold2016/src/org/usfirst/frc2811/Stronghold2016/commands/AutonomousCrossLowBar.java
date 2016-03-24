@@ -34,10 +34,12 @@ public class AutonomousCrossLowBar extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	addSequential(new IntakeHoming(),1); //required to work for now for some reason
-    	//addSequential(new SketchyDrive(.5));
+    	addSequential(new ShiftGearsLow());
+    	addSequential(new IntakeHoming()); 
+    	addSequential(new SketchyDrive(.5));
     	addSequential(new IntakeLifterAngle(0));
-    	//addSequential(new SketchyDrive(2));
+    	addSequential(new SketchyDrive(1.5));
+    	addSequential(new IntakeHoming());
     	    	
     }
 
