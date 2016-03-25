@@ -24,10 +24,15 @@ public class ShooterSequence extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
+
+    	// unwind ball for just a moment to make sure it's all the way in but away from shooter
+    	addSequential(new IntakeAdjustBallPosition(.75,2),.25);	
+    	addSequential(new Wait(.125));	
+    	addSequential(new IntakeAdjustBallPosition(-.75,1),.25);
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
-    	addSequential(new SpitBall(),.1);	//unwind ball for just a moment to make sure it's away from shooter
-    	addSequential(new ShootBall(),1);	//Disable intake forward stops and spin the ball inward
+    	addSequential(new ShooterSetSpeedForBatterShot(3));
+    	addSequential(new ShootBall(1));	//Disable intake forward stops and spin the ball inward
     }
 }

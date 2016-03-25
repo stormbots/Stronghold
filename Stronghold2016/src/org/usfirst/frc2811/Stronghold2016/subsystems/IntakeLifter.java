@@ -83,10 +83,34 @@ public class IntakeLifter extends Subsystem {
     	}
     	return false;
     }
-    public void spinIntake(double speed){
+    public boolean spinIntake(double speed){
     	intakeMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
     	intakeMotor.enable();
     	intakeMotor.set(speed);
+    	return true;
+    }
+    
+    /**
+     * Spin the intake, but cap the rotation at a set number of turns
+     * run resetIntakeBeltPosition() to initialize the current position
+     * @param speed
+     * @param rotations, as seen by the wheel holding the ball itself.
+     * @return true if the intake is still moving
+     */
+    public boolean spinIntake(double speed,double rotations){
+    	// One rotation measured as change from -1482304 to  -1476564;
+    	double tickPerRotation=5740;
+    	if(Math.abs(intakeMotor.get())<Math.abs(rotations*tickPerRotation)){
+    		spinIntake(speed);
+    		return true;
+    	}
+		else{
+    		spinIntake(0);
+    		return false;
+		}
+    }
+    public void resetIntakeBeltPosition(){
+    	intakeMotor.setPosition(0);
     }
     
     public void resetEncoderPosition(){
@@ -174,6 +198,10 @@ public class IntakeLifter extends Subsystem {
     	return tickAngleMap.ticksToAngle(intakeLifterMotor.getEncPosition());
     }
     
+    public void  enableIntakeLimits(boolean enabled){
+    	intakeLifterMotor.enableLimitSwitch(enabled, enabled);;
+    }
+        
     /**
      * Tiny class used to hold some angle and tick values
      * Positions are based at nominal values, probably measured from all the way up (homed)

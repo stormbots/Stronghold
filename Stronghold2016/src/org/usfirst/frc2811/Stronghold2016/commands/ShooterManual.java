@@ -20,8 +20,9 @@ public class ShooterManual extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double rate=(-Robot.oi.leftStick.getRawAxis(2)+1)*1000;
-    	Robot.shooter.shooterWheelPID.setMotorVelocity(rate);
+    	double rate=0; // TODO If doing this, get value from a oi.getShooterSpeed() function;
+    	//double rate=(-Robot.oi.leftStick.getRawAxis(2)+1)*1000;
+    	Robot.shooter.setVelocityRaw(rate);
     	
     	System.out.println("Rate +"+rate);
     }
