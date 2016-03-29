@@ -28,7 +28,7 @@ public class IntakeLifterAngle extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Robot.intakeLifter.onTarget(10);
+    	return Robot.intakeLifter.onTarget(5);
     }
 
     // Called once after isFinished returns true

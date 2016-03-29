@@ -11,6 +11,8 @@
 
 package org.usfirst.frc2811.Stronghold2016.subsystems;
 
+import org.usfirst.frc2811.Stronghold2016.Robot;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -22,6 +24,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Shooter extends Subsystem {
 	  CANTalon motorRight;
 	  CANTalon motorLeftFollower;
+	  
+	  public double maxCurrent=0;
 
  
     // Initialize your subsystem here
@@ -73,6 +77,15 @@ public class Shooter extends Subsystem {
     
     
     public void initDefaultCommand() {
+    }
+    
+    public double maxCurrentDraw(){
+    	if(Robot.powerPanel.getCurrent(12)>maxCurrent){
+    		maxCurrent = Robot.powerPanel.getCurrent(12);
+    	} else if (Robot.powerPanel.getCurrent(13)>maxCurrent){
+    		maxCurrent = Robot.powerPanel.getCurrent(13);
+    	}
+    	return maxCurrent;
     }
     
     public double distanceToFPS(double distance){
@@ -185,7 +198,8 @@ public class Shooter extends Subsystem {
 		 //tested successful velocity 
 		 // 53000 is the speed the wheel was moving when we made a goal with
 		 // the competition bot from the batter
-		 setVelocityRaw(53000);
+		 setVelocityRaw(53000*.3);
+		 System.out.println("Shooter Velocity" + motorRight.get());
 		 }
 
 	 public boolean isAtTargetVelocity() {

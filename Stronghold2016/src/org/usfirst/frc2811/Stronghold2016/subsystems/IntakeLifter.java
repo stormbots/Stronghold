@@ -199,7 +199,8 @@ public class IntakeLifter extends Subsystem {
     }
     
     public void  enableIntakeLimits(boolean enabled){
-    	intakeLifterMotor.enableLimitSwitch(enabled, enabled);;
+    	intakeMotor.enableLimitSwitch(enabled, enabled);;
+    
     }
         
     /**

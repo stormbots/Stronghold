@@ -179,6 +179,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        intakeLifter.readStuff();
 
 
     }
@@ -209,6 +210,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);
         
+        SmartDashboard.putBoolean("Gear", chassis.shifterState());
+        SmartDashboard.putNumber("Max Shooter Current",shooter.maxCurrentDraw());
         /*
         SmartDashboard.putData("Gyro", chassis.navxGyro);
         

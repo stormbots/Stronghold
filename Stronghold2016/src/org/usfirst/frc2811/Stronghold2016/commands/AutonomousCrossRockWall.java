@@ -37,9 +37,9 @@ public class AutonomousCrossRockWall extends CommandGroup {
     	//rock wall wants low gear and 3.5 seconds
     	//moat wants high gear  100% speed and 5 seconds
     	
-    	addSequential(new ShiftGearsHigh());
+    	addSequential(new ShiftGearsLow());
     	addSequential(new IntakeHoming());
-    	addSequential(new SketchyDrive(1,3.5));    	
+    	addSequential(new SketchyDrive(1,2.5));    	
     	addSequential(new IntakeHoming()); 
     }
 

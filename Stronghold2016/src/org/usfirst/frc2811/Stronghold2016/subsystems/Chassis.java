@@ -131,6 +131,10 @@ public class Chassis extends PIDSubsystem{
     public boolean isRobotStable(){
     	return Math.abs(Robot.onboardAccelerometer.getZ()-1)<.1;
     }
+    
+    public boolean shifterState(){
+    	return gearShifter.get();
+    }
         
     /**
      * @return Whether or not the robot is aligned to an angle (in degrees)

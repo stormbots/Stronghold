@@ -33,10 +33,14 @@ public class AltChassis extends Subsystem {
     }
 
     public void shiftGearsHigh(){
-    	shifter.set(true);
+    	shifter.set(false);
     }
     public void shiftGearsLow(){
-    	shifter.set(false);
+    	shifter.set(true);
+    }
+    
+    public boolean shifterState(){
+    	return shifter.get();
     }
 
     public void joystickDrive(){

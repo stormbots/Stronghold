@@ -26,13 +26,17 @@ public class ShooterSequence extends CommandGroup {
         // arm.
 
     	// unwind ball for just a moment to make sure it's all the way in but away from shooter
-    	addSequential(new IntakeAdjustBallPosition(.75,2),.25);	
-    	addSequential(new Wait(.125));	
-    	addSequential(new IntakeAdjustBallPosition(-.75,1),.25);
+    	addSequential(new IntakeAdjustBallPosition(-.25,2),.25);
+    	addSequential(new Wait(.125));
+    	addSequential(new IntakeAdjustBallPosition(.25,2),.25);	
+    		
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
-    	addSequential(new ShooterSetSpeedForBatterShot(3));
-    	addSequential(new ShootBall(1));	//Disable intake forward stops and spin the ball inward
+    	addSequential(new ShooterSetSpeedForBatterShot(3),2);
+    	addSequential(new Wait(1));
+    	addSequential(new ShootBall(1),3);	//Disable intake forward stops and spin the ball inward
+    	addSequential(new ShooterOff());
+    	addSequential(new IntakeOff());
     }
 }
