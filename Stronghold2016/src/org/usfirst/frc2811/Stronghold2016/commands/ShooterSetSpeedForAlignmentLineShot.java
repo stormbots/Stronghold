@@ -7,11 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ShooterSetSpeedForBatterShot extends Command {
+public class ShooterSetSpeedForAlignmentLineShot extends Command {
 
-    public ShooterSetSpeedForBatterShot(double maxWaitTime) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+    public ShooterSetSpeedForAlignmentLineShot(double maxWaitTime) {
     	setTimeout(maxWaitTime);
     }
     
@@ -23,7 +21,7 @@ public class ShooterSetSpeedForBatterShot extends Command {
     protected void execute() {
 
     	
-    	double rawVelocity = 37500;// Doesn't actually work for shooting at batter Robot Doen't Shoot from Batter
+    	double rawVelocity = 37500;//TODO this value for the Alignment Line and Many More
 		Robot.shooter.setVelocityToShootFromBatter(rawVelocity );
     	
     }

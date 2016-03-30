@@ -194,11 +194,11 @@ public class Shooter extends Subsystem {
 	 	//setVelocityRaw(rateRPM);
 	 }
 	 
-	 public void setVelocityToShootFromBatter() {
+	 public void setVelocityToShootFromBatter(double rawVelocity) {
 		 //tested successful velocity 
 		 // 53000 is the speed the wheel was moving when we made a goal with
 		 // the competition bot from the batter
-		 setVelocityRaw(53000*.3);
+		 setVelocityRaw(rawVelocity);// Works from Batter setVelocityRaw(53000*.3);
 		 System.out.println("Shooter Velocity" + motorRight.get());
 		 }
 
