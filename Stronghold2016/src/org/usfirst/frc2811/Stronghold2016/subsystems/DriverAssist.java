@@ -11,20 +11,31 @@ import edu.wpi.first.wpilibj.Timer;
 public class DriverAssist {
 
 	int session;
+	boolean killSwitch = false;
     Image frame;
     //Image frame2;
 	
 	public DriverAssist() {
-		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
         //frame2 = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
         //frame2 = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
         // the camera name (ex "cam0") can be found through the roborio web interface
-        session = NIVision.IMAQdxOpenCamera("cam0",
-                NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-        NIVision.IMAQdxConfigureGrab(session);
+        
+		try { 
+			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+			session = NIVision.IMAQdxOpenCamera("cam0",
+	                NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+	        NIVision.IMAQdxConfigureGrab(session);
+		} catch (Exception e) {
+			killSwitch=true;
+			System.err.println("Cannot initialize camera stream! Driver Assist disabled until next robotInit.");
+		}
 	}
 	
 	public void periodic() {
+		if (killSwitch) {
+			return;
+		}
+		
 		NIVision.IMAQdxStartAcquisition(session);
 
         /**
