@@ -49,6 +49,8 @@ public class IntakeLifter extends Subsystem {
     	intakeMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
     	intakeMotor.enable();
     	intakeMotor.set(0);
+    	enableIntakeLimits(false);
+    	
 
     }
     
@@ -199,8 +201,9 @@ public class IntakeLifter extends Subsystem {
     }
     
     public void  enableIntakeLimits(boolean enabled){
-    	intakeMotor.enableLimitSwitch(enabled, enabled);;
-    
+    	//intakeMotor.enableLimitSwitch(enabled, enabled);;
+    	intakeMotor.enableLimitSwitch(false, false);;
+
     }
         
     /**

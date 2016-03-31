@@ -24,15 +24,15 @@ public class ShooterSequenceForOuterWorks extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new IntakeAdjustBallPosition(-.25,2),.25);
+    	addSequential(new IntakeAdjustBallPosition(-.25,1),2);
     	addSequential(new Wait(.125));
-    	addSequential(new IntakeAdjustBallPosition(.25,2),.25);	
+    	//addSequential(new IntakeAdjustBallPosition(.25,2),.25);	
     		
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
     	addSequential(new ShooterSetSpeedForOuterWorksShot(3),2);
-    	addSequential(new Wait(1));
+    	addSequential(new Wait(2));
     	addSequential(new ShootBall(1),3);	//Disable intake forward stops and spin the ball inward
     	addSequential(new ShooterOff());
     	addSequential(new IntakeOff());

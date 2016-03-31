@@ -40,12 +40,16 @@ public class IntakeAdjustBallPosition extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	//Don't adjust the ball if starts going past our intake sensor
+    	/*
     	if(speed<0 && !Robot.intakeLifter.intakeIsSwitchPressed()){
     		return true;
     	}
     	else{
     		return !Robot.intakeLifter.spinIntake(speed,rotations);
     	}
+    	*/
+		return !Robot.intakeLifter.spinIntake(speed,rotations);
+    	 
     }
 
     // Called once after isFinished returns true
