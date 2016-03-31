@@ -24,7 +24,7 @@ public class ShooterSequenceForOuterWorks extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new IntakeAdjustBallPosition(-.25,1),2);
+    	addSequential(new IntakeAdjustBallPosition(-.25,0.5),0.25);
     	addSequential(new Wait(.125));
     	//addSequential(new IntakeAdjustBallPosition(.25,2),.25);	
     		

@@ -26,7 +26,7 @@ public class ShooterSequenceForBatter extends CommandGroup {
         // arm.
 
     	// unwind ball for just a moment to make sure it's all the way in but away from shooter
-    	addSequential(new IntakeAdjustBallPosition(-.25,1),2);
+    	addSequential(new IntakeAdjustBallPosition(-.25,0.5),0.25);
     	addSequential(new Wait(.125));
     	//addSequential(new IntakeAdjustBallPosition(.25,2),.25);	
     		

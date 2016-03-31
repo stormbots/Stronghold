@@ -21,7 +21,7 @@ public class ShooterSetSpeedForOuterWorksShot extends Command {
     	    protected void execute() {
 
     	    	
-    	    	double rawVelocity = 6250;//TODO Change this value for the Outer Works
+    	    	double rawVelocity = 6500;//TODO Change this value for the Outer Works
     			Robot.shooter.setVelocityToShootFromBatter(rawVelocity );
     	    	
     	    }

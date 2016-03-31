@@ -49,6 +49,7 @@ public class IntakeLifter extends Subsystem {
     	intakeMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
     	intakeMotor.enable();
     	intakeMotor.set(0);
+    	intakeMotor.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
     	enableIntakeLimits(false);
     	
 
@@ -104,6 +105,7 @@ public class IntakeLifter extends Subsystem {
     	double tickPerRotation=5740;
     	if(Math.abs(intakeMotor.get())<Math.abs(rotations*tickPerRotation)){
     		spinIntake(speed);
+    		System.out.println("Encoder Value For Intake Ball" + intakeMotor.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative));
     		return true;
     	}
 		else{
