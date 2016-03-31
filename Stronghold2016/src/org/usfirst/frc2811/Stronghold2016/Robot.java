@@ -24,6 +24,7 @@ import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.subsystems.AltChassis;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Chassis;
+import org.usfirst.frc2811.Stronghold2016.subsystems.DriverAssist;
 import org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
 import 	org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBar;
 import 	org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDelay;
@@ -35,7 +36,6 @@ import 	org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import 	org.usfirst.frc2811.Stronghold2016.subsystems.AltChassis;
 import	org.usfirst.frc2811.Stronghold2016.subsystems.IntakeLifter;
 import  org.usfirst.frc2811.Stronghold2016.subsystems.Shooter;
-import  org.usfirst.frc2811.Stronghold2016.subsystems.Vision;
 
 import 	edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import 	edu.wpi.first.wpilibj.Compressor;
@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
     public static BuiltInAccelerometer onboardAccelerometer;
    
     public static OI oi;
-    public static Vision vision;
+    public static DriverAssist driverAssist;
     public static Shooter shooter;
     
     //public static Chassis chassis;
@@ -97,7 +97,7 @@ public class Robot extends IterativeRobot {
         powerPanel = new PowerDistributionPanel();
         onboardAccelerometer = new BuiltInAccelerometer();
         
-        vision = new Vision();
+        driverAssist = new DriverAssist();
         shooter = new Shooter();
 
         //TODO Find/Set Chassis rotation PID values
@@ -160,6 +160,8 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         //System.out.println("Intake encoder Ticks" + intakeLifter.getTicks());
         //System.out.println("Current Angle"+intakeLifter.getCurrentAngle());
+        
+        driverAssist.periodic();
 
     }
 
@@ -180,6 +182,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
 
+        driverAssist.periodic();
 
     }
 
@@ -203,7 +206,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
+        //Scheduler.getInstance().run();
         
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
@@ -234,8 +237,7 @@ public class Robot extends IterativeRobot {
 
 		*/
 
-
-
+        driverAssist.periodic();
 
     }
 
@@ -245,5 +247,6 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
         intakeLifter.readStuff();
+        driverAssist.periodic();
     }
 }
