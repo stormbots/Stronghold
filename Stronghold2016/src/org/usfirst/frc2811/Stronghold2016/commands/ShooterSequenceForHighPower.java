@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class ShooterSequenceForBatter extends CommandGroup {
+public class ShooterSequenceForHighPower extends CommandGroup {
     
-    public  ShooterSequenceForBatter() {
+    public  ShooterSequenceForHighPower() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -33,7 +33,7 @@ public class ShooterSequenceForBatter extends CommandGroup {
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
-    	addSequential(new ShooterSetSpeedForBatterShot(3),2);
+    	addSequential(new ShooterSetSpeedForHighPowerShot(3),2);
     	addSequential(new Wait(2));
     	addSequential(new ShootBall(1),3);	//Disable intake forward stops and spin the ball inward
     	addSequential(new ShooterOff());

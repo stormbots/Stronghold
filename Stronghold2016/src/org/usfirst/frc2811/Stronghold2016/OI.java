@@ -27,7 +27,10 @@ import org.usfirst.frc2811.Stronghold2016.commands.ShiftGears;
 import org.usfirst.frc2811.Stronghold2016.commands.ShootBall;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForAlignmentLine;
-import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForBatter;
+import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForHighPower;
+import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForLowBar;
+import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForLowPower;
+import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForMidPower;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterSequenceForOuterWorks;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeHoming;
 //import org.usfirst.frc2811.Stronghold2016.commands.TestShooter;
@@ -120,6 +123,9 @@ public class OI{
 	public JoystickButton threeAxisButton2;
 	public JoystickButton threeAxisButton3;
 	public JoystickButton threeAxisButton4;
+	public JoystickButton threeAxisButton5;
+	public JoystickButton threeAxisButton6;
+	public JoystickButton threeAxisButton7;
 	public JoystickButton threeAxisButton9;
 	public JoystickButton threeAxisButton10;
 	public JoystickButton threeAxisButton11;
@@ -187,23 +193,33 @@ public class OI{
     	threeAxisJoystick = new Joystick(4);
     	
     	threeAxisButton1 = new JoystickButton(threeAxisJoystick,1);
-		threeAxisButton1.whenPressed(new ShooterSequenceForBatter());
+		threeAxisButton1.whenPressed(new ShooterSequenceForAlignmentLine());
 		
 		threeAxisButton2 = new JoystickButton(threeAxisJoystick,2);
 		threeAxisButton2.whenPressed(new ShooterSequenceForOuterWorks());
 		
-		//threeAxisButton3 = new JoystickButton(threeAxisJoystick,3);
-		//threeAxisButton3.whenPressed(new ShooterSequenceForAlignmentLine());
+		threeAxisButton3 = new JoystickButton(threeAxisJoystick,3);
+		threeAxisButton3.whenPressed(new ShooterSequenceForLowBar());
 		
-    	threeAxisButton4 = new JoystickButton(threeAxisJoystick,4);
-		threeAxisButton4.whenPressed(new IntakeHoming());
-		
-		threeAxisButton9 = new JoystickButton(threeAxisJoystick,9);
-		threeAxisButton9.whileHeld(new IntakeLifterAngle(-10));//TODO Lets find out of this angle is correct
+		threeAxisButton4 = new JoystickButton(threeAxisJoystick,4);
+		threeAxisButton4.whenPressed(new ShooterSequenceForLowPower());
 
-		threeAxisButton10= new JoystickButton(threeAxisJoystick,10);
-		threeAxisButton10.whileHeld(new IntakeInSlow());
-		threeAxisButton10.whenReleased(new IntakeOff());
+		threeAxisButton5 = new JoystickButton(threeAxisJoystick,5);
+		threeAxisButton5.whenPressed(new ShooterSequenceForMidPower());
+
+		threeAxisButton6 = new JoystickButton(threeAxisJoystick,6);
+		threeAxisButton6.whenPressed(new ShooterSequenceForHighPower());
+				
+		
+    	//threeAxisButton7 = new JoystickButton(threeAxisJoystick,7);
+		//threeAxisButton7.whenPressed(new IntakeHoming());
+		
+		threeAxisButton10 = new JoystickButton(threeAxisJoystick,10);
+		threeAxisButton10.whileHeld(new IntakeLifterAngle(-10));//TODO Lets find out of this angle is correct
+
+		//threeAxisButton10= new JoystickButton(threeAxisJoystick,10);
+		//threeAxisButton10.whileHeld(new IntakeInSlow());
+		//threeAxisButton10.whenReleased(new IntakeOff());
 		
 		threeAxisButton11= new JoystickButton(threeAxisJoystick,11);
 		threeAxisButton11.whileHeld(new IntakeBallOut());

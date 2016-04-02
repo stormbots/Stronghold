@@ -33,6 +33,8 @@ public class Shooter extends Subsystem {
         motorRight = new CANTalon(5); // Talon Address 5 on the robot
         motorRight.reverseOutput(true); //WORKS! :D
         motorRight.reset();
+        motorRight.setPID(0, 0, 0);
+        motorRight.setF(0.01);
 
         //MotorLeft has the easy task of just doing what 5 is told. 
         motorLeftFollower = new CANTalon(4); // Talon Address 5 on the robot
@@ -40,6 +42,7 @@ public class Shooter extends Subsystem {
         motorLeftFollower.set(5);
         motorLeftFollower.reverseOutput(true);
         motorLeftFollower.enableBrakeMode(false);
+        motorLeftFollower.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
         
         
         motorRight.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
@@ -180,6 +183,7 @@ public class Shooter extends Subsystem {
     
 	 public void setVelocityRaw(double rateInTicks) {
 			motorRight.set(rateInTicks);
+			System.out.println("RawVelocity" +motorRight.get());
 	 }
 
 	 public void setWheelRPM(double rateRPM_NotImplimented) {

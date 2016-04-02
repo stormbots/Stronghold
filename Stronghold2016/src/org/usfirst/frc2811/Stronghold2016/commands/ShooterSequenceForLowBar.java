@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class ShooterSequenceForAlignmentLine extends CommandGroup {
+public class ShooterSequenceForLowBar extends CommandGroup {
     
-    public  ShooterSequenceForAlignmentLine() {
+    public  ShooterSequenceForLowBar() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -24,14 +24,16 @@ public class ShooterSequenceForAlignmentLine extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new IntakeAdjustBallPosition(-.25,0.5),.25);
+
+    	// unwind ball for just a moment to make sure it's all the way in but away from shooter
+    	addSequential(new IntakeAdjustBallPosition(-.25,0.5),0.25);
     	addSequential(new Wait(.125));
     	//addSequential(new IntakeAdjustBallPosition(.25,2),.25);	
     		
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
-    	addSequential(new ShooterSetSpeedForAlignmentLineShot(3),2);
+    	addSequential(new ShooterSetSpeedForLowBarShot(3),2);
     	addSequential(new Wait(2));
     	addSequential(new ShootBall(1),3);	//Disable intake forward stops and spin the ball inward
     	addSequential(new ShooterOff());

@@ -39,7 +39,8 @@ public class AutonomousCrossRockWall extends CommandGroup {
     	
     	addSequential(new ShiftGearsLow());
     	addSequential(new IntakeHoming());
-    	addSequential(new SketchyDrive(1,2.5));    	
+    	addSequential(new Wait(10));
+    	addSequential(new SketchyDrive(1,2));    	
     	addSequential(new IntakeHoming()); 
     }
 

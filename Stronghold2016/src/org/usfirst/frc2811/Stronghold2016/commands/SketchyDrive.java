@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public class SketchyDrive extends Command {
 
 	private double rate=0;
+	private double rateLeft = 0;
+	private double rateRight = 0;
 	
 	/**
 	 * Drive forward X seconds at sane speed
@@ -20,6 +22,7 @@ public class SketchyDrive extends Command {
         // eg. requires(chassis);
     	this.setTimeout(timeout);
     	rate=-0.75;
+    	
     }
     
     /**
@@ -33,6 +36,14 @@ public class SketchyDrive extends Command {
     	this.setTimeout(timeout);
     	rate=-speed;
     }
+    public SketchyDrive(double speedLeft, double speedRight,double timeout) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	this.setTimeout(timeout);
+    	rateLeft = -speedLeft;
+    	rateRight = -speedRight;
+    	
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
@@ -42,6 +53,7 @@ public class SketchyDrive extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.chassis.chassisDrive.arcadeDrive(rate,0);
+    	
 
     }
 
