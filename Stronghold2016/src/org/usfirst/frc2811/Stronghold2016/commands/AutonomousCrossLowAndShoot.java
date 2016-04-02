@@ -40,10 +40,10 @@ public class AutonomousCrossLowAndShoot extends CommandGroup {
     	addSequential(new Wait(.5));
     	addSequential(new IntakeLifterAngle(0));
     	addSequential(new Wait(.5));
-    	addSequential(new SketchyDrive(0.75,0.8,1.75));
+    	addSequential(new SketchyDrive(0.5,0.55,2.75));
     	addSequential(new Wait(2));
     	addSequential(new SketchyDrive(0.45,0,.7));
-    	addSequential(new SketchyDrive(0.5,0.55,0.5));
+    	addSequential(new SketchyDrive(0.5,0.55,0.45));
     	
     	addSequential(new IntakeAdjustBallPosition(-.25,0.5),0.25);
     	addSequential(new Wait(.125));
