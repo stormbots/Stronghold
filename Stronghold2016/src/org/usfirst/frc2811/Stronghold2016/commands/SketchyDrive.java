@@ -52,7 +52,12 @@ public class SketchyDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.chassis.chassisDrive.arcadeDrive(rate,0);
+    	if( rate != 0){
+        	Robot.chassis.chassisDrive.arcadeDrive(rate,0);    		    		
+    	}
+    	else{
+        	Robot.chassis.chassisDrive.setLeftRightMotorOutputs(rateLeft, rateRight);    		    		    		
+    	}
     	
 
     }

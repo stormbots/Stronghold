@@ -12,6 +12,7 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowAndShoot;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBar;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDelay;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossMoat;
@@ -138,6 +139,8 @@ public class Robot extends IterativeRobot {
         autonomousOptions.addObject("Cross Moat", new AutonomousCrossMoat());
         autonomousOptions.addObject("Cross Rampart(untested)", new AutonomousCrossOther());
         autonomousOptions.addObject("Cross Portcullus (point lifter toward gate!)", new AutonomousCrossPortcullus());
+        autonomousOptions.addObject("Low bar + shoot",new AutonomousCrossLowAndShoot());
+        
         SmartDashboard.putData("Select autonomous mode", autonomousOptions);
         
         // OI must be constructed after subsystems. If the OI creates Commands
