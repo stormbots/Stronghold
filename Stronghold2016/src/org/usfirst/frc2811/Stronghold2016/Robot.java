@@ -21,6 +21,7 @@ import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossPortcullus;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossRockWall;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousReachOnly;
 import org.usfirst.frc2811.Stronghold2016.commands.IntakeJoystickControl;
+import org.usfirst.frc2811.Stronghold2016.commands.SketchyDriveFeet;
 import 	org.usfirst.frc2811.Stronghold2016.commands.JoystickDrive;
 import org.usfirst.frc2811.Stronghold2016.commands.ShooterManual;
 import org.usfirst.frc2811.Stronghold2016.subsystems.AltChassis;
@@ -140,6 +141,7 @@ public class Robot extends IterativeRobot {
         autonomousOptions.addObject("Cross Rampart(untested)", new AutonomousCrossOther());
         autonomousOptions.addObject("Cross Portcullus (point lifter toward gate!)", new AutonomousCrossPortcullus());
         autonomousOptions.addObject("Low bar + shoot",new AutonomousCrossLowAndShoot());
+        autonomousOptions.addObject("EXP Drive 5 feet",new SketchyDriveFeet(-.5,-.5,2,2,2));
         
         SmartDashboard.putData("Select autonomous mode", autonomousOptions);
         
