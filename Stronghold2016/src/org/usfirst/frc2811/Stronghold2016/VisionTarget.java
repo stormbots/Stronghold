@@ -46,7 +46,13 @@ public class VisionTarget implements Comparable<VisionTarget> {
 			return 1;
 		}
 		
-		return (int)(this.area - t2.area);
+		if (this.area > t2.area) {
+			return 1;
+		} else if (this.area == t2.area) {// yes, this is double comparison... oh well
+			return 0;
+		} else { // must be less if not gt/eq
+			return -1; 
+		}
 	}
 	/**
 	 * @return Y-coordinate (which is X in our rotated system)
