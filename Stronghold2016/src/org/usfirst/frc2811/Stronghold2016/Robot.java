@@ -12,6 +12,7 @@
 package org.usfirst.frc2811.Stronghold2016;
 
 import  org.usfirst.frc2811.Stronghold2016.commands.AutonomousCommand;
+import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossCheval;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowAndShoot;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBar;
 import org.usfirst.frc2811.Stronghold2016.commands.AutonomousCrossLowBarAfterDelay;
@@ -60,7 +61,7 @@ import  edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
     public static int counter = 1;
-	
+	public static boolean operatorControl = false;
     SendableChooser autonomousOptions;
 	Command autonomousCommand;
     Command joystickDrive;
@@ -142,6 +143,7 @@ public class Robot extends IterativeRobot {
         autonomousOptions.addObject("Cross Portcullus (point lifter toward gate!)", new AutonomousCrossPortcullus());
         autonomousOptions.addObject("Low bar + shoot",new AutonomousCrossLowAndShoot());
         autonomousOptions.addObject("EXP Drive 5 feet",new SketchyDriveFeet(-.5,-.5,2,2,2));
+        autonomousOptions.addObject("Cross Cheval", new AutonomousCrossCheval());
         
         SmartDashboard.putData("Select autonomous mode", autonomousOptions);
         
@@ -157,7 +159,7 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
-
+    	operatorControl = false;
         if (intakeJoystickControl != null) intakeJoystickControl.cancel();
     }
 
@@ -170,6 +172,7 @@ public class Robot extends IterativeRobot {
 
     public void autonomousInit() {
         // schedule the autonomous command (example)
+    	operatorControl = false;
     	autonomousCommand= (Command) autonomousOptions.getSelected();
     	
         intakeLifter.resetEncoderPosition();
@@ -184,12 +187,15 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        //System.out.println("Left Encoder:\t"+chassis.encoderLeft.get());
+        //System.out.println("Right Encoder:\t"+chassis.encoderRight.get());
         intakeLifter.readStuff();
 
 
     }
 
     public void teleopInit() {
+    	operatorControl = true;
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove

@@ -3,6 +3,7 @@ package org.usfirst.frc2811.Stronghold2016.commands;
 import org.usfirst.frc2811.Stronghold2016.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -14,6 +15,7 @@ public class SketchyDriveFeet extends Command {
 	private double feetLeft = 0;
 	private double feetRight = 0;
 	private boolean done=false;
+	public boolean isThisTimedOut = false;
 	
 	
 	
@@ -51,19 +53,21 @@ public class SketchyDriveFeet extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	done=Robot.chassis.manualDriveFeet(rateLeft, rateRight, feetLeft, feetRight);    		    		    		
+    	done=Robot.chassis.manualDriveFeet(rateLeft, rateRight, feetLeft, feetRight);
+    	SmartDashboard.putBoolean("AutoDriveTimedOut", isThisTimedOut);
 
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	
+    	isThisTimedOut = this.isTimedOut();
     	//the drive function 
     	if(done){
     		System.err.println("Done driving some feet!");
     		return true;
     	}
     	if(this.isTimedOut()){
+    		SmartDashboard.putBoolean("AutoDriveTimedOut", isThisTimedOut);
     		System.err.println("Bleh! Timed out");
     		return true;
     	}

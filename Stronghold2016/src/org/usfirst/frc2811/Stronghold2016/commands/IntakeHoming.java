@@ -34,7 +34,7 @@ public class IntakeHoming extends Command {
     protected void end() {
     	Robot.intakeLifter.resetEncoderPosition();
     	Robot.intakeLifter.intakeLifterPIDInit();
-    	Robot.intakeJoystickControl.start();
+    	if(Robot.operatorControl) Robot.intakeJoystickControl.start();
     	System.out.println("Finishing Homing Command");
     }
 

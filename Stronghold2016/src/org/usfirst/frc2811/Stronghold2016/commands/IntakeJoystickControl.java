@@ -22,6 +22,8 @@ public class IntakeJoystickControl extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if(!Robot.operatorControl)return;
+    	
         if(Robot.oi.getLifterPaddlePosition()<-.95){
         	Robot.intakeLifter.intakeLifterHoming();
         }

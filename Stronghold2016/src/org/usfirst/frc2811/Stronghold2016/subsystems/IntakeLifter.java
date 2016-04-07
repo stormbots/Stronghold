@@ -81,6 +81,7 @@ public class IntakeLifter extends Subsystem {
     	intakeLifterMotor.set(-4);
     	if(intakeLifterMotor.isFwdLimitSwitchClosed()){
     		intakeLifterPIDInit();
+    		resetEncoderPosition();
     		homed=true;
     		return true;
     	}
