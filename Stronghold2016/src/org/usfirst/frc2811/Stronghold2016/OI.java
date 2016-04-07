@@ -243,9 +243,10 @@ public class OI{
     
     public double getRotateValue(){
     	if(!DriverStation.getInstance().getJoystickName(2).equals("")){
-    		return xBox.getRawAxis(0);	
+    		return (Math.signum( xBox.getRawAxis(0)) * Math.pow(xBox.getRawAxis(0), 2));
+    		//return xBox.getRawAxis(0);
     	} else {
-    		return rightStick.getRawAxis(0);
+    		return (Math.signum( rightStick.getRawAxis(0)) * Math.pow(Math.abs(rightStick.getRawAxis(0)), ((double)2/3)));
     	}
     }
 
