@@ -29,11 +29,11 @@ public class AutonomousCrossCheval extends CommandGroup {
     	
     	addSequential(new ShiftGearsLow());
     	addSequential(new IntakeHoming());
-    	addSequential(new SketchyDriveFeet(-.5,-.55,4.33,4.33,3));
+    	addSequential(new SketchyDriveFeet(-.525,-.5,4.33,4.33,3));
     	Robot.intakeJoystickControl.cancel();
     	addSequential(new Wait(0.5));
     	addSequential(new IntakeLifterAngle(-15));
     	addSequential(new Wait(2.5));
-    	addSequential(new SketchyDriveFeet(-.9,-1,8,8,3));
+    	addSequential(new SketchyDriveFeet(-.925,-.9,8,8,3));
     }
 }

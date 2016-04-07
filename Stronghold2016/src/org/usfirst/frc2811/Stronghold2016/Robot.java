@@ -223,6 +223,8 @@ public class Robot extends IterativeRobot {
         
         SmartDashboard.putBoolean("Gear", chassis.shifterState());
         SmartDashboard.putNumber("Max Shooter Current",shooter.maxCurrentDraw());
+        SmartDashboard.putNumber("chassis.encoderLeft", chassis.encoderLeft.get());
+        SmartDashboard.putNumber("chassis.encoderRight", chassis.encoderRight.get());
         /*
         SmartDashboard.putData("Gyro", chassis.navxGyro);
         
