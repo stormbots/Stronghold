@@ -312,10 +312,10 @@ public class Vision extends Subsystem {
 				// hope we get all these values before GRIP ticks again
 				// and targets potentially disappear, which would cause an out
 				// of bounds issue.
-				double[] coordsY = this.getValArray("centerX");
+				double[] coordsY = this.getValArray("centerY");
 				
-				double[] heights = this.getValArray("width");
-				double[] widths = this.getValArray("height");
+				double[] heights = this.getValArray("height");
+				double[] widths = this.getValArray("width");
 				
 				double[] areas = this.getValArray("area");
 				double[] solidity = this.getValArray("solidity");
@@ -361,7 +361,7 @@ public class Vision extends Subsystem {
 		
 		double centerOffsetX = t.getMappedX();
 		
-		return (centerOffsetX - (t.getWidth() / 2));
+		return (centerOffsetX - (t.getHeight() / 2));
 	}
 	
 	public boolean targetDetected() {

@@ -61,7 +61,7 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	public double getMappedX() {
 		// first, move to center-based coordinate
 		double x = this.coordinateY;
-		double mappedX = x - 360;
+		double mappedX = x - 240;
 		
 		return mappedX;
 	}
@@ -79,7 +79,7 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	public double getMappedY() {
 		double y = this.coordinateX;
 		
-		return 640-y;
+		return 320-y;
 	}
 	
 	public double getArea() {
