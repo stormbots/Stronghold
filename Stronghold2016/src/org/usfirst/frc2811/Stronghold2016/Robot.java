@@ -99,7 +99,7 @@ public class Robot extends IterativeRobot {
         powerPanel = new PowerDistributionPanel();
         onboardAccelerometer = new BuiltInAccelerometer();
         
-        vision=new Vision("GRIP/myContoursReport", -.8, 1, 030, 68.5, 480, 640);
+        vision = new Vision("GRIP/myContoursReport", 9.0/12.0, 0, 39, 68.5, 640, 480);
         shooter = new Shooter();
 
         //TODO Find/Set Chassis rotation PID values

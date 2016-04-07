@@ -77,10 +77,10 @@ public class Vision extends Subsystem {
 	/**
 	 * Initialize the Vision subsystem
 	 * 
-	 * @param networkTableName Network Table name for GRIP to post values to
-	 * @param offsetX Left/Right offset of camera, in feet, relative to shooter. left: < 0; right > 0
+	 * @param tableName Network Table name for GRIP to post values to
+	 * @param cameraHeight The height of the camera off of the ground
 	 * @param offsetY Front/back offset of camera, in feet, relative to shooter. down: < 0; up > 0
-	 * @param cameraAngleOffset Angular offset of camera... how many degrees upward are we looking by default?
+	 * @param cameraOffsetAngleY Angular offset of camera... how many degrees upward are we looking by default?
 	 * @param diagonalFieldOfView The diagonal field of view (in degrees) of the camera used by the subsystem
 	 * @param cameraPixelsX Number of horizontal pixels provided by the camera used by the subsystem
 	 * @param cameraPixelsY Number of vertical pixels provided by the camera used by the subsystem
