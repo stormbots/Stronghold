@@ -68,6 +68,9 @@ public class AutonomousCrossLowAndShoot extends CommandGroup {
     	addSequential(new SketchyDrive(0.5, 0.55, 3));
     	addSequential(new Wait(2));
     	addSequential(new SketchyDrive(0.45, 0, 0.6));
+    	
+    	addSequential(new VisionTurnToTarget());
+    	
     	addSequential(new SketchyDrive(0.5, 0.525, 0.45));
     	addSequential(new Wait(0.5));
     	

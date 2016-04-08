@@ -334,6 +334,11 @@ public class Vision extends Subsystem {
 			}
 		} else {
 			System.out.println(unconnectedError);
+			
+			//reconnect to table 
+			ntHandle = NetworkTable.getTable(tableName);
+
+			
 			return null;
 		}
 	}
@@ -361,7 +366,7 @@ public class Vision extends Subsystem {
 		
 		double centerOffsetX = t.getMappedX();
 		
-		return (centerOffsetX - (t.getHeight() / 2));
+		return (centerOffsetX - (t.getWidth() / 2));
 	}
 	
 	public boolean targetDetected() {
