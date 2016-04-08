@@ -83,7 +83,7 @@
   </connections>
   <settings>
     <teamNumber>2811</teamNumber>
-    <publishAddress>roborio-2811-frc.local</publishAddress>
+    <publishAddress>10.28.11.3</publishAddress>
     <deployAddress>roborio-2811-frc.local</deployAddress>
     <deployDir>/home/lvuser</deployDir>
     <deployUser>lvuser</deployUser>

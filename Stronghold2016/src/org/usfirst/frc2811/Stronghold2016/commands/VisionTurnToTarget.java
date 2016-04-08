@@ -12,6 +12,8 @@
 package org.usfirst.frc2811.Stronghold2016.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc2811.Stronghold2016.Robot;
 
 /**
@@ -34,6 +36,9 @@ public class VisionTurnToTarget extends Command {
     	// Robot.vision.targetDetected()
     	double offset = Robot.vision.centerOffsetThing();
 
+    	SmartDashboard.putNumber("Vision Target", offset);
+    	SmartDashboard.putBoolean("Vision Have Target", Robot.vision.targetDetected());
+    	
     	System.err.printf("Target offset is %.3f \n",offset);
     	
     	if( ! Robot.vision.targetDetected() ){
@@ -56,7 +61,7 @@ public class VisionTurnToTarget extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	//Robot.chassis.manualDrive(0, 0);
+		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, 0);
     }
 
     // Called when another command which requires one or more of the same
