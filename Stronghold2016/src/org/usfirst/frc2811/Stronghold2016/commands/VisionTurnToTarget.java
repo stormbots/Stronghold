@@ -33,10 +33,16 @@ public class VisionTurnToTarget extends Command {
     protected void execute() {
     	// Robot.vision.targetDetected()
     	double offset = Robot.vision.centerOffsetThing();
+
+    	System.err.printf("Target offset is %.3f \n",offset);
     	
-    	if (offset < 0) {
-    		// turn left
+    	if( ! Robot.vision.targetDetected() ){
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, 0);
+    	}
+    	else if (offset < 0) {
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, .5);
     	} else if (offset > 0) {
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(.5, 0);
     		// turn right
     	}
     }

@@ -21,7 +21,7 @@ public class ShooterSetSpeedForAlignmentLineShot extends Command {
     protected void execute() {
 
     	
-    	double rawVelocity = 6825;//TODO this value for the Alignment Line and Many More
+    	double rawVelocity = 6125;//TODO this value for the Alignment Line and Many More
 		Robot.shooter.setVelocityToShootFromBatter(rawVelocity );
     	
     }

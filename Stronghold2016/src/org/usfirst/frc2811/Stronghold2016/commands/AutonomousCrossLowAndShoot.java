@@ -36,7 +36,7 @@ public class AutonomousCrossLowAndShoot extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	addSequential(new ShiftGearsLow());
+    	/*addSequential(new ShiftGearsLow());
     	
     	addSequential(new IntakeHoming()); 
     	addSequential(new SketchyDriveFeet(0.5, 0.525, 1.5, 1.4, 1));//time*10
@@ -58,8 +58,24 @@ public class AutonomousCrossLowAndShoot extends CommandGroup {
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
-    	addSequential(new ShooterSetSpeedForMidPowerShot(3),2);
+    	*/
+    	addSequential(new ShiftGearsLow());
+    	addSequential(new IntakeHoming()); 
+    	addSequential(new SketchyDrive(0.5, 0.55));
+    	addSequential(new Wait(.5));
+    	addSequential(new IntakeLifterAngle(0));
+    	addSequential(new Wait(.5));
+    	addSequential(new SketchyDrive(0.5, 0.55, 3));
     	addSequential(new Wait(2));
+    	addSequential(new SketchyDrive(0.45, 0, 0.6));
+    	addSequential(new SketchyDrive(0.5, 0.525, 0.45));
+    	addSequential(new Wait(0.5));
+    	
+    	addSequential(new IntakeAdjustBallPosition(-.25,0.5),0.25);
+    	addSequential(new Wait(.125));
+    	
+    	addSequential(new ShooterSetSpeedForMidPowerShot(3),4);
+    	addSequential(new Wait(3));
     	addSequential(new ShootBall(1),3);	//Disable intake forward stops and spin the ball inward
     	addSequential(new ShooterOff());
     	addSequential(new IntakeOff());

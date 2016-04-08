@@ -209,6 +209,11 @@ public class OI{
 
 		threeAxisButton6 = new JoystickButton(threeAxisJoystick,6);
 		threeAxisButton6.whenPressed(new ShooterSequenceForHighPower());
+		
+		threeAxisButton9= new JoystickButton(threeAxisJoystick,9);
+		threeAxisButton9.whileHeld(new IntakeBallOut());
+		threeAxisButton9.whenReleased(new IntakeOff());
+		
 				
 		
     	//threeAxisButton7 = new JoystickButton(threeAxisJoystick,7);

@@ -23,7 +23,7 @@ public class ShooterSetSpeedForLowBarShot extends Command {
     protected void execute() {
 
     	
-    	double rawVelocity = 7125;// Doesn't actually work for shooting at batter Robot Doen't Shoot from Batter
+    	double rawVelocity = 6375;// Doesn't actually work for shooting at batter Robot Doen't Shoot from Batter
 		Robot.shooter.setVelocityToShootFromBatter(rawVelocity );
     	
     }

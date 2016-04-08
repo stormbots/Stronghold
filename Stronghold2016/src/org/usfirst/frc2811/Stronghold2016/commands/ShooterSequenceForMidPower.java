@@ -33,8 +33,8 @@ public class ShooterSequenceForMidPower extends CommandGroup {
     	
     	//addSequential(new AlignToTarget(),.1); //get vision code if applicable
     	//addSequential(new SetShooterDistance());	//spin shooter to align for target
-    	addSequential(new ShooterSetSpeedForMidPowerShot(3),2);
-    	addSequential(new Wait(2));
+    	addSequential(new ShooterSetSpeedForMidPowerShot(3),4);
+    	addSequential(new Wait(3));
     	addSequential(new ShootBall(1),3);	//Disable intake forward stops and spin the ball inward
     	addSequential(new ShooterOff());
     	addSequential(new IntakeOff());

@@ -12,6 +12,8 @@
 
 package org.usfirst.frc2811.Stronghold2016.commands;
 
+import org.usfirst.frc2811.Stronghold2016.Robot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,7 +36,7 @@ public class AutonomousCrossLowBar extends CommandGroup {
     	// 	Low Bar = 9
     	// 	Positions: [1][2][3][4][5]
     	*/
-    	addSequential(new ShiftGearsLow());
+    	/*addSequential(new ShiftGearsLow());
     	addSequential(new IntakeHoming()); 
     	addSequential(new SketchyDrive(.5));
     	addSequential(new Wait(.5));
@@ -44,7 +46,26 @@ public class AutonomousCrossLowBar extends CommandGroup {
     	addSequential(new SketchyDrive(2));
     	addSequential(new Wait(2));
     	//addSequential(new IntakeHoming());
-    	    	
+    	
+    	    	*/
+    	addSequential(new ShiftGearsLow());
+    	
+    	addSequential(new IntakeHoming()); 
+    	addSequential(new SketchyDriveFeet(0.5, 0.525, 1.5, 1.4, 1));//time*10
+    	addSequential(new Wait(.5));
+    	addSequential(new IntakeLifterAngle(-3));
+    	Robot.intakeJoystickControl.cancel();
+
+    	addSequential(new Wait(.5));
+    	addSequential(new SketchyDriveFeet(0.5, 0.525, 14, 13.9 ,3));//time*10
+    	addSequential(new Wait(2));
+    	addSequential(new SketchyDrive(0.45, 0, 0.6));
+    	addSequential(new Wait(.5));
+    	addSequential(new SketchyDrive(0.5, 0.525, 0.45));
+    	addSequential(new Wait(.5));
+    	addSequential(new IntakeAdjustBallPosition(-.25, 0.5), 0.25);
+    	addSequential(new Wait(.125));
+
     }
 
    

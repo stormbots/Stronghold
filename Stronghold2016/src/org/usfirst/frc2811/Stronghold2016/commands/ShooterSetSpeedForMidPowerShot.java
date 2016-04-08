@@ -23,7 +23,7 @@ public class ShooterSetSpeedForMidPowerShot extends Command {
     protected void execute() {
 
     	
-    	double rawVelocity = 7375;// Doesn't actually work for shooting at batter Robot Doen't Shoot from Batter
+    	double rawVelocity = 6625;// Doesn't actually work for shooting at batter Robot Doen't Shoot from Batter
 		Robot.shooter.setVelocityToShootFromBatter(rawVelocity );
     	
     }
