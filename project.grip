@@ -9,19 +9,19 @@
       <grip:Input step="0" socket="0"/>
       <grip:Input step="0" socket="1">
         <value>
-          <double>72.84172661870504</double>
-          <double>100.13651877133107</double>
+          <double>71.22302158273382</double>
+          <double>87.84982935153585</double>
         </value>
       </grip:Input>
       <grip:Input step="0" socket="2">
         <value>
-          <double>112.36510791366908</double>
+          <double>137.58992805755395</double>
           <double>255.0</double>
         </value>
       </grip:Input>
       <grip:Input step="0" socket="3">
         <value>
-          <double>213.2643884892086</double>
+          <double>142.1762589928057</double>
           <double>255.0</double>
         </value>
       </grip:Input>
@@ -50,7 +50,7 @@
         <value>20.0</value>
       </grip:Input>
       <grip:Input step="3" socket="4">
-        <value>70.0</value>
+        <value>80.0</value>
       </grip:Input>
       <grip:Input step="3" socket="5">
         <value>20.0</value>
