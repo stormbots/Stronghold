@@ -207,7 +207,7 @@ public class Robot extends IterativeRobot {
         //if(shooterManual !=null){ shooterManual.start();}
         //else {System.out.println("Could not start ShooterManual; Was null");}
 
-        intakeLifter.resetEncoderPosition();
+        //intakeLifter.resetEncoderPosition();
         
         if (intakeJoystickControl != null) intakeJoystickControl.start();
     }
@@ -216,8 +216,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	
         Scheduler.getInstance().run();
-        
+        operatorControl = true;
         SmartDashboard.putData("PDP", powerPanel);
         SmartDashboard.putData("Accelerometer",onboardAccelerometer);
         SmartDashboard.putData("Compressor", compressor);

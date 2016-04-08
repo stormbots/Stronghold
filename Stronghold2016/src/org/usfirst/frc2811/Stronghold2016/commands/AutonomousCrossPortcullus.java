@@ -36,15 +36,12 @@ public class AutonomousCrossPortcullus extends CommandGroup {
     	*/
     	//Make sure lifter is up
     	addSequential(new IntakeHoming());
+    	addSequential(new Wait(.5));
     	addSequential(new IntakeLifterAngle(-20),1.5);
-    	//approach the gate backwards
-    	addSequential(new SketchyDrive(-.525, -.5, 1.5));
+    	addSequential(new Wait(1.5));
+    	addSequential(new SketchyDrive(-.75, -.675, 3));
+    	addSequential(new Wait(.1));
     	
-    	//back away from gate and lower
-    	
-    	
-    	addSequential(new SketchyDrive(-.525,-0.5,3));
-    	addSequential(new Wait(0.25));
     	addSequential(new IntakeHoming());
     	//Plow through gate backwards and hope for the best
     	
