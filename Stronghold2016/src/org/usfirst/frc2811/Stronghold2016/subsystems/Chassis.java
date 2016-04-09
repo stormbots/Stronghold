@@ -43,10 +43,10 @@ public class Chassis extends PIDSubsystem{
     public Chassis(){
     	
     	super("GyroPID",.015,.003,.015);
-    	System.out.println("Chassis, Statement #" + Robot.counter);
+    	//System.out.println("Chassis, Statement #" + Robot.counter);
     	Robot.counter++;
     	chassisDrive = new ArcadeDrivePID();
-    	System.out.println("Chassis after ArcadeDrivePID, Statement #" + Robot.counter);
+    	//System.out.println("Chassis after ArcadeDrivePID, Statement #" + Robot.counter);
     	Robot.counter++;
 
     	chassisDrive.setSafetyEnabled(true);

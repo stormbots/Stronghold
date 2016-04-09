@@ -337,6 +337,11 @@ public class Vision extends Subsystem {
 			}
 		} else {
 			System.out.println(unconnectedError);
+			
+			//reconnect to table 
+			ntHandle = NetworkTable.getTable(tableName);
+
+			
 			return null;
 		}
 	}
@@ -369,9 +374,11 @@ public class Vision extends Subsystem {
 		// which happens to be our coordinate after remapping.
 		double centerOffsetX = t.getMappedX();
 		
+
 		// Return that offset plus half the width of the
 		// target to get the total net offset from the right side.
-		return (centerOffsetX - (t.getHeight() / 2));
+		return (centerOffsetX - (t.getWidth() / 2));
+
 	}
 	
 	public VisionTarget autonomousTargetingGetBestTarget() {
