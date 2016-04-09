@@ -58,7 +58,7 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	 * @return Y-coordinate (which is X in our rotated system)
 	 */
 	public double getRawX() {
-		return this.coordinateY;
+		return this.coordinateX;
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class VisionTarget implements Comparable<VisionTarget> {
 	 * @return X-coordinate (which is Y in our rotated system)
 	 */
 	public double getRawY() {
-		return this.coordinateX;
+		return this.coordinateY;
 	}
 	
 	/**
