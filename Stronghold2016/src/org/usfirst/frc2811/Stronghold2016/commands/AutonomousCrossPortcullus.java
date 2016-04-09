@@ -35,6 +35,7 @@ public class AutonomousCrossPortcullus extends CommandGroup {
     	// 	Positions: [1][2][3][4][5]
     	*/
     	//Make sure lifter is up
+    	addSequential(new ShiftGearsLow());
     	addSequential(new IntakeHoming());
     	addSequential(new Wait(.5));
     	addSequential(new IntakeLifterAngle(-20),1.5);
