@@ -28,7 +28,7 @@ public class VisionTurnToTarget extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
+    	Robot.chassis.shiftGearsLow();
     	SmartDashboard.putBoolean("Detecting Target...", true);
     }
 
@@ -46,9 +46,9 @@ public class VisionTurnToTarget extends Command {
     		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, 0);
     	}
     	else if (offset < 0) {
-    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, .5);
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, -.2125);
     	} else if (offset > 0) {
-    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(.5, 0);
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, 0.2);
     		// turn right
     	}
     }
@@ -56,7 +56,7 @@ public class VisionTurnToTarget extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	// if we're less than 15 pixels off, we're close enough
-    	return Robot.vision.targetDetected() && Math.abs(Robot.vision.centerOffsetThing()) < 15;
+    	return Robot.vision.targetDetected() && Math.abs(Robot.vision.centerOffsetThing()) < 5;
         //return Robot.chassis.isOnTarget();
     }
 
