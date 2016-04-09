@@ -37,7 +37,28 @@ public class VisionTurnToTarget extends Command {
     	double offset = Robot.vision.centerOffsetThing();
 
     	SmartDashboard.putNumber("Vision Target", offset);
-    	SmartDashboard.putBoolean("Vision Have Target", Robot.vision.targetDetected());
+    	
+    	//SmartDashboard.putBoolean("Vision Have Target", Robot.vision.targetDetected()); PREVIOUS
+    	SmartDashboard.putBoolean("Vision Have Target", Robot.vision.targetDetectedAutonomous());
+    	
+    	System.err.printf("Target offset is %.3f \n",offset);
+    	
+//    	if( ! Robot.vision.targetDetected() ){
+    	if( ! Robot.vision.targetDetectedAutonomous() ){
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, 0);
+    	} else if (offset < 0) {
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, .5);
+    	} else if (offset > 0) {
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(.5, 0);
+    		// turn right
+    	}
+    	
+    	/*  FOR RIGHT-ALIGNMENT:
+        // Robot.vision.targetDetected()
+    	double offset = Robot.vision.centerOffsetThingRight();
+
+    	SmartDashboard.putNumber("Vision Target", offset);
+    	SmartDashboard.putBoolean("Vision Have Target", Robot.vision.autonomousTargetingGetBestTarget());
     	
     	System.err.printf("Target offset is %.3f \n",offset);
     	
@@ -49,13 +70,27 @@ public class VisionTurnToTarget extends Command {
     	} else if (offset > 0) {
     		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(.5, 0);
     		// turn right
-    	}
+    	} 
+    	*/
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	// if we're less than 15 pixels off, we're close enough
     	return Math.abs(Robot.vision.centerOffsetThing()) < 15;
+    	
+    	// Right-alignment version
+    	//return Math.abs(Robot.vision.centerOffsetThing()) < 15;
+    	
+    	// Possibly better version:
+    	//return Robot.vision.isAlignedToLeft();
+    	
+    	// Better right-aligned version:
+    	// Same functionality, ultimately, since I changed
+    	// the tolerance of this method to 15px (prev: 40px).
+    	//return Robot.vision.isAlignedToRight();
+    	
         //return Robot.chassis.isOnTarget();
     }
 

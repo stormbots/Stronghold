@@ -298,35 +298,38 @@ public class Vision extends Subsystem {
 	 */
 	public VisionTarget getBestTarget() {
 		if (this.tableConnected()) {
-			
+
 			ArrayList<VisionTarget> targets = new ArrayList<VisionTarget>();
-			
+
 			try {
-				double[] coordsX = this.getValArray("centerY");
-				
+				// 8 Apr - used to be double[] coordsX = this.getValArray("centerY"); but that would cause the target to be (Y, Y) in the VisionTarget object
+				double[] coordsX = this.getValArray("centerX");
+
 				// make sure we have a target first
 				if (coordsX.length < 1) {
 					return null;
 				}
-		
+
 				// hope we get all these values before GRIP ticks again
 				// and targets potentially disappear, which would cause an out
 				// of bounds issue.
 				double[] coordsY = this.getValArray("centerY");
-				
+
 				double[] heights = this.getValArray("height");
 				double[] widths = this.getValArray("width");
-				
+
 				double[] areas = this.getValArray("area");
 				double[] solidity = this.getValArray("solidity");
-				
+
 				for (int i = 0; i < (coordsX.length); i++) {
 					targets.add(new VisionTarget(coordsX[i], coordsY[i], heights[i], widths[i], areas[i], solidity[i]));
 				}
-				
+
 				// sort by area first using Comparable interface spec (will sort by area, in this case)
 				targets.sort(null);
-				
+
+				// Return the best target, which should be a thing that's in a sane region of the
+				// frame and the thing with the largest area (so no one-pixel things get picked!).
 				return targets.get(0);
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("Caught ArrayIndexOutOfBoundsException. Some targets have disappeared!");
@@ -348,7 +351,10 @@ public class Vision extends Subsystem {
 		
 		double centerOffsetX = t.getMappedX();
 		
-		return (centerOffsetX - (t.getWidth() / 2) < 40);
+		// Apr 8 - Refactored the return to make use of the already
+		// existing centerOffsetThing() which does almost exactly
+		// what we want already.
+		return Math.abs(this.centerOffsetThing()) < 15;
 	}
 	
 	public double centerOffsetThing() {
@@ -359,13 +365,132 @@ public class Vision extends Subsystem {
 			return -9999;
 		}
 		
+		// The offset is equal to the distance from the center,
+		// which happens to be our coordinate after remapping.
 		double centerOffsetX = t.getMappedX();
 		
+		// Return that offset plus half the width of the
+		// target to get the total net offset from the right side.
 		return (centerOffsetX - (t.getHeight() / 2));
 	}
 	
+	public VisionTarget autonomousTargetingGetBestTarget() {
+		// much like getBestTarget, but with more filtering...
+		// note: this will expend more time!!!!
+		
+		if (this.tableConnected()) {
+
+			ArrayList<VisionTarget> targets = new ArrayList<VisionTarget>();
+
+			try {
+				// 8 Apr - used to be double[] coordsX = this.getValArray("centerY"); but that would cause the target to be (Y, Y) in the VisionTarget object
+				double[] coordsX = this.getValArray("centerX");
+
+				// make sure we have a target first
+				if (coordsX.length < 1) {
+					return null;
+				}
+
+				// hope we get all these values before GRIP ticks again
+				// and targets potentially disappear, which would cause an out
+				// of bounds issue.
+				double[] coordsY = this.getValArray("centerY");
+
+				double[] heights = this.getValArray("height");
+				double[] widths = this.getValArray("width");
+
+				double[] areas = this.getValArray("area");
+				double[] solidity = this.getValArray("solidity");
+
+				for (int i = 0; i < (coordsX.length); i++) {
+					targets.add(new VisionTarget(coordsX[i], coordsY[i], heights[i], widths[i], areas[i], solidity[i]));
+				}
+				
+				// remove targets in bad positions from the ArrayList				
+				for (VisionTarget t : targets) {
+					if (t.getMappedY() < -250) { // really, if we're this far down, it's probably not the target we're looking for. filter it out.
+						targets.remove(t);
+					} else if (t.getMappedX() > 200) { // too far off toward the edge to reasonably be our target (I think)...
+													   // effectively cuts off RIGHT 40 PX after remap (with respect to target detection)
+						targets.remove(t);
+					} else if (t.getMappedX() < -200) { // same as above EXCEPT for LEFT 40 PX
+						targets.remove(t);
+					}
+				}
+
+				// sort by area first using Comparable interface spec (will sort by area, in this case)
+				targets.sort(null);
+				
+				// Apr 8 - Now, since we've removed stuff,
+				// we need to check if we have anything...
+				// If we don't anymore, return null since that's
+				// what we already check for errors with.
+				// If we don't do this, the return targets.get(0)
+				// will throw an index out of bounds exception.
+				
+				if (targets.size() < 1) {
+					System.out.println("autonomousTargetingGetBestTarget: ERR: All potential targets removed due to auto constraints. Returning null.");
+					return null;
+				}
+
+				return targets.get(0);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("Caught ArrayIndexOutOfBoundsException. Some targets have disappeared!");
+				return null;
+			}
+		} else {
+			System.out.println(unconnectedError);
+			return null;
+		}
+	}
+	
+	// RIGHT version of centerOffsetThing()
+	public double centerOffsetThingRight() {
+		VisionTarget t = this.autonomousTargetingGetBestTarget();
+		
+		if (t == null) {
+			System.out.println("cameraOffsetThingRight: No good target. Returning -9999.");
+			return -9999;
+		}
+		
+		// The offset is equal to the distance from the center,
+		// which happens to be our coordinate after remapping.
+		double centerOffsetX = t.getMappedX();
+		
+		// Return that offset plus half the width of the
+		// target to get the total net offset from the right side.
+		return (centerOffsetX + (t.getWidth() / 2));
+	}
+	
+	public boolean isAlignedToRight() {
+		
+		// Change to this.getBestTarget() for non-auto stuff
+		VisionTarget t = this.autonomousTargetingGetBestTarget();
+		
+		if (t == null) {
+			System.out.println("isAlignedToLeft: No good target. Returning false.");
+			
+			// Saying we're aligned to a nonexistent target is silly.
+			// So we don't say that.
+			return false;
+		}
+		
+		// Apr 8 - Refactored the return to make use of the already
+		// existing centerOffsetThing() which does almost exactly
+		// what we want already.
+		return Math.abs(this.centerOffsetThingRight()) < 15;
+	}
+	
 	public boolean targetDetected() {
+		// Return if the best target we can find is in fact a thing
+		// and neither nothingness nor an error.
 		return !(this.getBestTarget() == null);
+	}
+	
+	public boolean targetDetectedAutonomous() {
+		// Return if the best target we can find is in fact a thing
+		// and neither nothingness nor an error.
+		return !(this.autonomousTargetingGetBestTarget() == null);
 	}
 	
     // Put methods for controlling this subsystem
