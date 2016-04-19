@@ -35,7 +35,7 @@ public class AutonomousReachOnly extends CommandGroup {
     	// 	Positions: [1][2][3][4][5]
     	*/
     	addSequential(new IntakeHoming()); //required to work for now for some reason
-    	addSequential(new SketchyDrive(1));
+    	addSequential(new ShooterSequenceForLowBar());
     	
     }
 

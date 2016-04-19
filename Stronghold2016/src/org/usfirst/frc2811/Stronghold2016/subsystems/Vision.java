@@ -413,7 +413,7 @@ public class Vision extends Subsystem {
 					targets.add(new VisionTarget(coordsX[i], coordsY[i], heights[i], widths[i], areas[i], solidity[i]));
 				}
 				
-				// remove targets in bad positions from the ArrayList				
+				/*// remove targets in bad positions from the ArrayList				
 				for (VisionTarget t : targets) {
 					if (t.getMappedY() < -250) { // really, if we're this far down, it's probably not the target we're looking for. filter it out.
 						targets.remove(t);
@@ -423,7 +423,7 @@ public class Vision extends Subsystem {
 					} else if (t.getMappedX() < -200) { // same as above EXCEPT for LEFT 40 PX
 						targets.remove(t);
 					}
-				}
+				}*/
 
 				// sort by area first using Comparable interface spec (will sort by area, in this case)
 				targets.sort(null);

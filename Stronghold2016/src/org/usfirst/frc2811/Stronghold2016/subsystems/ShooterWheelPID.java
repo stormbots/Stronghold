@@ -63,7 +63,10 @@ public class ShooterWheelPID extends Subsystem {
     	// shut up Austin ~Laurel
     }
     */
-   
+ /**
+  * Sets a velocity of the Motors  
+  * @param output
+  */
     public void setMotorVelocity(double output){
     	shooterMotorLeft.set(output);
     	shooterMotorRight.set(output);

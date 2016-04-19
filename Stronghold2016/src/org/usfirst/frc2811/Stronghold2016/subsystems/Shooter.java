@@ -81,7 +81,10 @@ public class Shooter extends Subsystem {
     
     public void initDefaultCommand() {
     }
-    
+    /** 
+     * Sets a max current that the shooter motors can draw
+     * @return
+     */
     public double maxCurrentDraw(){
     	if(Robot.powerPanel.getCurrent(12)>maxCurrent){
     		maxCurrent = Robot.powerPanel.getCurrent(12);
@@ -90,7 +93,12 @@ public class Shooter extends Subsystem {
     	}
     	return maxCurrent;
     }
-    
+/**
+ * This is untested physics equation converting distance from the target in the x direction to a velocity
+ * in feets per second and doesn't set a FPS unless distance is over 5 feet away 
+ * @param distance
+ * @return
+ */
     public double distanceToFPS(double distance){
     	double g = -32.174;//32 feet per second
     	double y = 7.7;//TODO double check target height
@@ -179,7 +187,10 @@ public class Shooter extends Subsystem {
     }
  	
     
-    
+/**    
+ * This sets the raw velocity of the Shooter using rates in ticks
+ * @param rateInTicks
+ */
     
 	 public void setVelocityRaw(double rateInTicks) {
 			motorRight.set(rateInTicks);
@@ -197,7 +208,10 @@ public class Shooter extends Subsystem {
 		 
 	 	//setVelocityRaw(rateRPM);
 	 }
-	 
+/**
+ * It set a velocity in ticks for the shoot from batter 
+ * @param rawVelocity
+ */
 	 public void setVelocityToShootFromBatter(double rawVelocity) {
 		 //tested successful velocity 
 		 // 53000 is the speed the wheel was moving when we made a goal with
@@ -205,7 +219,10 @@ public class Shooter extends Subsystem {
 		 setVelocityRaw(rawVelocity);// Works from Batter setVelocityRaw(53000*.3);
 		 System.out.println("Shooter Velocity" + motorRight.get());
 		 }
-
+/**
+ * This says if we are close enough velocity to the set velcoity
+ * @return
+ */
 	 public boolean isAtTargetVelocity() {
 		 return Math.abs(motorRight.getClosedLoopError())<2650;
 		 }

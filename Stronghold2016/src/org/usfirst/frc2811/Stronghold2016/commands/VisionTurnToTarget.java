@@ -48,9 +48,9 @@ public class VisionTurnToTarget extends Command {
     	if( ! Robot.vision.targetDetectedAutonomous() ){
     		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, 0);
     	} else if (offset < 0) {
-    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, .5);
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, .25);
     	} else if (offset > 0) {
-    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(.5, 0);
+    		Robot.chassis.chassisDrive.setLeftRightMotorOutputs(0, -.25);
     		// turn right
     	}
     	
